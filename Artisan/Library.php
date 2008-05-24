@@ -4,10 +4,15 @@ define('ARTISAN_NAME', 'Artisan');
 
 class Artisan_Library {
 
-	protected static $object_list = array();
+	private static $object_list = array();
 
-	public static function load($lib_name, $build = false) {
-		$class = ARTISAN_NAME . '_' . str_replace('/', '_', $lib_name);
+	public static function load($lib_name, $build = false, $system_class = true) {
+		$class_prefix = NULL;
+		if ( true === $system_class ) {
+			$class_prefix = ARTISAN_NAME . '_';
+		}
+
+		$class = $class_prefix . str_replace('/', '_', $lib_name);
 
 		$class_exists = class_exists($class, false);
 		$interface_exists = interface_exists($class, false);
