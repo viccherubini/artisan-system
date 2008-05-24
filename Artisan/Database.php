@@ -28,9 +28,9 @@ abstract class Artisan_Database {
 	
 	abstract public function escape($string);
 	
-	private function _start() { }
-	private function _cancel() { }
-	private function _end() { }
+	abstract protected function _start();
+	abstract protected function _cancel();
+	abstract protected function _end();
 	
 	abstract public function queue($query_list);
 }
