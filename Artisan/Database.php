@@ -4,21 +4,35 @@
 Artisan_Library::load('Database/Monitor');
 
 abstract class Artisan_Database {
-
+	protected static $config = array();
+	
 	public function __construct($config = array()) {
-		echo 'In database constructor<br />';
-		if ( count($config) > 0 ) {
-			print_r($config);
+		if ( true === is_array($config) && count($config) > 0 ) {
+			self::$config = $config;
 		}
 	}
 
 	abstract public function connect();
 
 	abstract public function disconnect();
-
-	abstract public function query($sql);
-
-	public function db() { echo 'in root db!<br />'; }
+	
+	abstract public function rowCount();
+	abstract public function rowsAffected();
+	
+	abstract public function query(Artisan_Sql $sql);
+	
+	abstract public function fetch();
+	abstract public function free();
+	
+	abstract public function isConnected();
+	
+	abstract public function escape($string);
+	
+	private function _start() { }
+	private function _cancel() { }
+	private function _end() { }
+	
+	abstract public function queue($query_list);
 }
 
 ?>
