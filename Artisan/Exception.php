@@ -5,27 +5,31 @@
  * by Artisan. Therefore, it does not contain the similar methods of other Artisan classes. 
  * Artisan has it's own Exception class to overcome some of the shortcomings of the built in PHP
  * Exception class.
-*/
+ */
+
+define('ARTISAN_ERROR_CORE', 100, false);
+define('ARTISAN_WARNING', 200, false);
+define('ARTISAN_NOTICE', 300, false);
 
 class Artisan_Exception extends Exception {
 	/**
 	 * The line number the error occured on.
-	*/
+	 */
 	private $_line_number;
 	
 	/**
 	 * The file name the error occured in.
-	*/
+	 */
 	private $_file_name;
 	
 	/**
 	 * The class name the error occured in.
-	*/
+	 */
 	private $_class_name;
 	
 	/**
 	 * The function name the error occured in.
-	*/
+	 */
 	private $_function_name;
 	
 	public function __construct($error_code, $error_message, $class_name = NULL, $function_name = NULL) {
@@ -39,12 +43,12 @@ class Artisan_Exception extends Exception {
 	
 	/**
 	 * Return the name of this class.
-	*/
+	 */
 	public function name() { return __CLASS__; }
 
 	/**
 	 * Overloaded Exception::toString() method. Stylizes how the error string looks.
-	*/
+	 */
 	public function toString() {
 		$error_class = NULL;
 		if ( false === empty($this->_class_name) ) {
@@ -61,25 +65,38 @@ class Artisan_Exception extends Exception {
 		return $error_class . $error_code;
 	}
 	
+	
+	public function __toString() {
+		return $this->toString();
+	}
+	
 	/**
 	 * Returns the file name the error occurred in.
-	*/
-	public function getFileName() { return $this->_file_name; }
+	 */
+	public function getFileName() {
+		return $this->_file_name;
+	}
 	
 	/**
 	 * Returns the line number the error occurred on.
-	*/
-	public function getLineNumber() { return $this->_line_number; }
+	 */
+	public function getLineNumber() {
+		return $this->_line_number;
+	}
 	
 	/**
 	 * Returns the class name the error occurred in.
-	*/
-	public function getClassName() { return $this->_class_name; }
+	 */
+	public function getClassName() {
+		return $this->_class_name;
+	}
 	
 	/**
 	 * Returns the function name the error occurred in.
-	*/
-	public function getFunctionName() { return $this->_function_name; }
+	 */
+	public function getFunctionName() {
+		return $this->_function_name;
+	}
 }
 
 ?>
