@@ -2,6 +2,7 @@
 
 
 Artisan_Library::load('Database/Monitor');
+Artisan_Library::load('Database/Exception');
 
 abstract class Artisan_Database {
 	protected static $config = array();
@@ -20,6 +21,7 @@ abstract class Artisan_Database {
 	abstract public function rowsAffected();
 	
 	abstract public function query(Artisan_Sql $sql);
+	abstract public function queryFetch(Artisan_Sql $sql);
 	
 	abstract public function fetch();
 	abstract public function free();
@@ -30,7 +32,7 @@ abstract class Artisan_Database {
 	
 	abstract protected function _start();
 	abstract protected function _cancel();
-	abstract protected function _end();
+	abstract protected function _commit();
 	
 	abstract public function queue($query_list);
 }
