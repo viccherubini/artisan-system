@@ -4,19 +4,27 @@ error_reporting(E_ALL);
 
 require_once 'Artisan/Library.php';
 
+Artisan_Library::load('Exception');
 Artisan_Library::load('Database');
 Artisan_Library::load('Database/Mysqli');
 
 $config = array(
 	'server' => 'localhost',
-	'username' => 'vic',
-	'password' => 'dba89da',
-	'dbname' => 'test'
+	'username' => 'vcherubini2',
+	'password' => 'xt97Hsdba!',
+	'dbname' => 'artisan'
 );
 	
 Artisan_Database_Monitor::set(new Artisan_Database_Mysqli($config));
 $db = Artisan_Database_Monitor::get();
-$db->connect();
+
+try {
+	$db->connect();
+} catch ( Artisan_Database_Exception $e ) {
+	echo $e;
+}
+
+$db->disconnect();
 
 echo '<hr />';
 echo 'Finished processing<br />';
