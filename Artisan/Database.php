@@ -5,14 +5,18 @@ Artisan_Library::load('Database/Monitor');
 Artisan_Library::load('Database/Exception');
 
 abstract class Artisan_Database {
-	protected static $config = array();
+	protected static $config = NULL;
 	
-	public function __construct($config = array()) {
-		if ( true === is_array($config) && count($config) > 0 ) {
+	public function __construct(Artisan_Config $config) {
+		if ( false === is_null($config) ) {
 			self::$config = $config;
 		}
 	}
 
+	public function setConfig(Artisan_Config $config) {
+		self::$config = $config;
+	}
+	
 	abstract public function connect();
 
 	abstract public function disconnect();
