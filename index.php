@@ -5,6 +5,7 @@ error_reporting(E_ALL);
 require_once 'Artisan/Library.php';
 
 Artisan_Library::load('Exception');
+/*
 Artisan_Library::load('Database');
 Artisan_Library::load('Database/Mysqli');
 
@@ -25,6 +26,17 @@ try {
 }
 
 $db->disconnect();
+*/
+
+Artisan_Library::load('Sql');
+Artisan_Library::load('Sql/Select');
+
+Artisan_Sql_Monitor::set(new Artisan_Sql_Select());
+$select = Artisan_Sql_Monitor::get();
+
+
+
+pprint_r(Artisan_Library::getObjectList());
 
 echo '<hr />';
 echo 'Finished processing<br />';
@@ -32,26 +44,8 @@ echo 'Memory: ' . round(( memory_get_peak_usage() / (1024*1024)), 4) . 'MB<br />
 
 
 
-class Test {
-	private $vo;
-
-	public function __construct(VO $a) {
-		$this->vo = $a;
-	}
-
-	public function g() {
-		echo $this->vo->v();
-	}
-
+function pprint_r($a) {
+	print '<pre>'; print_r($a); print '</pre>';
 }
 
-class VO {
-	private $value = NULL;
-
-	public function __construct($v) {
-		$this->value = $v;
-	}
-
-	public function v() { return $this->value; }
-}
 ?>
