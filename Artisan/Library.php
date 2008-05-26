@@ -42,6 +42,13 @@ class Artisan_Library {
 		return false;
 	}
 
+	public static function exists($lib_name) {
+		return in_array($lib_name, self::$object_list);
+	}
+	
+	public static function getObjectList() {
+		return self::$object_list;
+	}
 }
 
 ?>
