@@ -1,8 +1,5 @@
 <?php
 
-//$select = new select();
-//$select->from
-
 class Artisan_Sql_Select extends Artisan_Sql {
 	private $_sql = NULL;
 	
@@ -11,6 +8,10 @@ class Artisan_Sql_Select extends Artisan_Sql {
 	private $_alias = NULL;
 
 	private $_row_count = 50;
+	
+	private $_field_list = array();
+	
+	private $_where_type = 'AND';
 	
 	public function __construct() {
 	
@@ -45,10 +46,12 @@ class Artisan_Sql_Select extends Artisan_Sql {
 		return $this;
 	}
 	
-	public function where($fields, $type) {
-		$sql = parent::_where($this->_table, $fields, $type, $this->_alias);
+	public function where($fields, $type = 'AND') {
+		$this->_field_list = $fields;
+		$this->_where_type = $type;
 		
-		$this->_sql .= $sql;
+		//$sql = parent::_where($this->_table, $fields, $type, $this->_alias);
+		//$this->_sql .= $sql;
 		
 		return $this;
 	}
@@ -74,8 +77,8 @@ class Artisan_Sql_Select extends Artisan_Sql {
 		return $sql_join;
 	}
 	
-	public function between() {
-	
+	public function between($column, $value1, $value2) {
+		//$this->_sql .= parent::_where($this->_table, array($column), 
 	}
 	
 	public function groupBy($fields) {
@@ -85,7 +88,7 @@ class Artisan_Sql_Select extends Artisan_Sql {
 		return $this;
 	}
 	
-	public function orderBy($fields, $type = 'ASC') {
+	public function orderBy(BETWEEN$fields, $type = 'ASC') {
 		if ( false === is_array($fields) ) {
 			$fields = array($fields);
 		}
@@ -140,23 +143,64 @@ class Artisan_Sql_Select extends Artisan_Sql {
 		return $this;
 	}
 	
-	public function bind() {
-	
+	public function bind($field_data) {
+		$sql = parent::_where($this->_table, $this->_field_list, $field_data, $this->_where_type, $this->_alias);
+		$this->_sql .= $sql;
+		
+		return $this;
 	}
 	
 	public function query() {
-	
+		if ( true === Artisan_Library::exists('Database') ) {
+			$db = Artisan_Database_Monitor::get();
+			
+			if ( true === is_object($db) ) {
+				$result = $db->query($this);
+				return $result;
+			}
+		}
+		
+		return NULL;
 	}
 	
 	public function fetchAll() {
-	
+		$data = array();
+		if ( true === Artisan_Library::exists('Database') ) {
+			$db = Artisan_Database_Monitor::get();
+			
+			if ( true === is_object($db) ) {
+				$db->query($this);
+				
+				while ( $r = $db->fetch() ) {
+					$data[] = $r;
+				}
+			}
+		}
+		
+		return $data;
 	}
 	
 	public function fetchOne() {
-	
+		$data = array();
+		if ( true === Artisan_Library::exists('Database') ) {
+			$db = Artisan_Database_Monitor::get();
+			if ( true === is_object($db) ) {
+				$this->query();
+			
+				if ( $db->rowCount() > 0 ) {
+					$data = $db->fetch();
+				}
+			}
+		}
+		
+		return $data;
 	}
 	
 	public function __toString() {
+		return $this->_sql;
+	}
+	
+	public function retrieve() {
 		return $this->_sql;
 	}
 }
