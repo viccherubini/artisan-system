@@ -4,8 +4,18 @@ class Artisan_Config_Xml extends Artisan_Config {
 
 	private $_source = NULL;
 	
+	/**
+	 * Default constructor, sets the internal configuration XML.
+	 */
 	public function __construct($source) {
 		$this->_source = $source;
+	}
+	
+	/**
+	 * Default destructor, unsets the internal configuration XML.
+	 */
+	public function __destruct() {
+		unset($this->_source);
 	}
 	
 	/**
