@@ -26,7 +26,7 @@ class Artisan_Sql {
 		return $alias;
 	}
 	
-	public static function _where($table, $fields, $type = 'AND', $alias = NULL) {
+	public static function _where($table, $fields, $field_data, $type = 'AND', $alias = NULL) {
 		$type = strtoupper($type);
 		
 		if ( 'OR' != $type && 'AND' != $type ) {
@@ -40,11 +40,41 @@ class Artisan_Sql {
 		}
 		
 		$field_list = self::createFieldList($table, $fields, $alias);
-
-		$field_list = implode($type, $field_list);
-		$sql = ' WHERE ' . $field_list;
+	
+		$i=0;
+		$fl = NULL;
+		
+		$safe_data_function = '$this->safeData';
+		if ( true === Artisan_Library::exists('Database') ) {
+			$db = Artisan_Database_Monitor::get();
+			
+			if ( true === is_object($db) ) {
+				$safe_data_function = '$db->safeData';
+			}
+		}
+		
+		foreach ( $field_list as $field ) {
+			$data = "''";
+			if ( true === array_key_exists($i, $field_data) ) {
+				$data = $field_data[$i];
+			}
+			
+			$field = str_replace('?', "'" . $data . "'", $field);
+			$fl .= ( 0 === $i ? NULL : $type . ' ' ) . $field;
+			$i++;
+		}
+		
+		$sql = ' WHERE ' . $fl;
 		
 		return $sql;
+	}
+	
+	/**
+	 * If there is no database connection, use this function to
+	 * make a value safe for the database!
+	 */
+	private function safeData($str) {
+		return addslashes($str);
 	}
 }
 
