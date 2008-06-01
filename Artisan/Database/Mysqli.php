@@ -235,10 +235,6 @@ class Artisan_Database_Mysqli extends Artisan_Database {
 		
 		return $error;
 	}
-	
-	public function safeData($str) {
-		return $this->_db_conn->real_escape_string($str);
-	}
 }
 
 ?>

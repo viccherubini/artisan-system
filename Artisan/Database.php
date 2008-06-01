@@ -39,7 +39,6 @@ abstract class Artisan_Database {
 	abstract protected function _commit();
 	
 	abstract public function queue($query_list);
-	abstract public function safeData($str);
 }
 
 ?>
