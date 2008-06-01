@@ -4,8 +4,18 @@ class Artisan_Config_Array extends Artisan_Config {
 
 	private $_array = NULL;
 	
+	/**
+	 * Default constructor, sets the internal configuration array.
+	 */
 	public function __construct($array) {
 		$this->_array = $array;
+	}
+	
+	/**
+	 * Default destructor, unsets the internal configuration array.
+	 */
+	public function __destruct() {
+		unset($this->_array);
 	}
 	
 	/**
@@ -22,6 +32,8 @@ class Artisan_Config_Array extends Artisan_Config {
 	 */
 	public function load() {
 		parent::internalize($this->_array, $this);
+		
+		$this->_array = NULL;
 	}
 }
 
