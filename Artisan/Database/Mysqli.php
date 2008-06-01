@@ -19,11 +19,11 @@ class Artisan_Database_Mysqli extends Artisan_Database {
 	/**
 	 * Default constructor.
 	 */
-	public function __construct($config = array()) {
+	public function __construct(Artisan_Config $config = NULL) {
 		if ( true === empty($config) ) {
 			$this->_config = parent::$config;
 		} else {
-			if ( true === is_array($config) && count($config) > 0 ) {
+			if ( $config instanceof Artisan_Config ) {
 				$this->_config = $config;
 			}
 		}
@@ -39,15 +39,15 @@ class Artisan_Database_Mysqli extends Artisan_Database {
 	 * Connect to the database.
 	 */
 	public function connect() {
-		$server = $this->_config['server'];
-		$username = $this->_config['username'];
-		$password = $this->_config['password'];
-		$dbname = $this->_config['dbname'];
+		$server = $this->_config->server;
+		$username = $this->_config->username;
+		$password = $this->_config->password;
+		$dbname = $this->_config->dbname;
 		
 		$port = 3306;
-		if ( true === array_key_exists('port', $this->_config) ) {
-			if ( intval($this->_config['port']) > 0 ) {
-				$port = intval($this->_config['port']);
+		if ( true === @isset($this->_config->port) ) {
+			if ( intval($this->_config->port) > 0 ) {
+				$port = intval($this->_config->port);
 			}
 		}
 		
