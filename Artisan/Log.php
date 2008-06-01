@@ -3,7 +3,7 @@
 Artisan_Library::load('Log/Monitor');
 Artisan_Library::load('Log/Exception');
 
-class Artisan_Log {
+abstract class Artisan_Log {
 	
 	protected static $_log = array();
 	protected static $_flush_levels = array();
