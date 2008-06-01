@@ -103,7 +103,7 @@ class Artisan_Database_Mysqli extends Artisan_Database {
 	 * parameterized SQL.
 	 */
 	public function query(Artisan_Sql $sql) {
-		$result = $sql->execute();
+		$result = $this->_db_conn->query($sql->retrieve());//$sql->execute();
 		
 		if ( true === is_object($result) ) {
 			$this->_db_result = $result;
@@ -132,6 +132,8 @@ class Artisan_Database_Mysqli extends Artisan_Database {
 		if ( true === is_null($data) ) {
 			$this->free();
 		}
+		
+		return $data;
 	}
 	
 	/**
@@ -232,6 +234,10 @@ class Artisan_Database_Mysqli extends Artisan_Database {
 		}
 		
 		return $error;
+	}
+	
+	public function safeData($str) {
+		return $this->_db_conn->real_escape_string($str);
 	}
 }
 
