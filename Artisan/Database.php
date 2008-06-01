@@ -10,6 +10,21 @@ abstract class Artisan_Database {
 	public function __construct(Artisan_Config $config) {
 		if ( false === is_null($config) ) {
 			self::$config = $config;
+			
+			$type = @$config->type;
+			
+			if ( false === empty($type) ) {
+				$type = ucwords($type);
+				$class = 'Artisan_Database_' . $type;
+				
+				Artisan_Library::load('Database/' . $type);
+				
+				$db = new $class();
+				
+				return $db;
+				//$this = $db;
+			}
+			
 		}
 	}
 
