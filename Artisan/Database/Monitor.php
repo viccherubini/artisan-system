@@ -10,10 +10,21 @@ class Artisan_Database_Monitor {
 
 	public static function get(Artisan_Config $config = NULL) {
 		// Example of the Lazy Initialization pattern, default to use Mysql
+		
+		// Because of the unknown status of any database connections, there are no
+		// default database types to use.
+		
+		if ( NULL === self::$instance ) {
+			return NULL;
+		}
+		
+		return self::$instance;
+		
+		/*
 		if ( NULL === self::$instance || false === is_null($config) ) {
 			// Determine if a type is set in the configuration
-			$type = 'Mysql';
-			if ( true === $config->exists('type') ) {
+			$type = 'Mysqli';
+			if ( true === @isset($config->type) ) {
 				$type = ucwords($config->type);
 			}
 		
@@ -26,6 +37,7 @@ class Artisan_Database_Monitor {
 		}
 
 		return self::$instance;
+		*/
 	}
 
 }
