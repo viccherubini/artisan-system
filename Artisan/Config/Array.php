@@ -9,6 +9,7 @@ class Artisan_Config_Array extends Artisan_Config {
 	 */
 	public function __construct($array) {
 		$this->_array = $array;
+		$this->load();
 	}
 	
 	/**
@@ -31,8 +32,10 @@ class Artisan_Config_Array extends Artisan_Config {
 	 * library at runtime if necessary.
 	 */
 	public function load() {
-		parent::internalize($this->_array, $this);
-		
+		if ( true === is_array($this->_array) ) {
+			parent::internalize($this->_array, $this);
+		}
+	
 		$this->_array = NULL;
 	}
 }
