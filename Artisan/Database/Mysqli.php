@@ -60,8 +60,7 @@ class Artisan_Database_Mysqli extends Artisan_Database {
 			$this->_is_connected = false;
 			
 			throw new Artisan_Database_Exception(
-				ARTISAN_WARNING,
-				'Failed to connect to database',
+				ARTISAN_WARNING, mysqli_connect_error(),
 				__CLASS__, __FUNCTION__
 			);
 		}
