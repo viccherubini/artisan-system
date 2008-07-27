@@ -22,9 +22,7 @@ abstract class Artisan_Database {
 				$db = new $class();
 				
 				return $db;
-				//$this = $db;
 			}
-			
 		}
 	}
 

@@ -9,7 +9,7 @@ class Artisan_Sql_Monitor {
 	}
 
 	public static function get() {
-		// Example of the Lazy Initialization pattern, default to use Mysql
+		// Example of the Lazy Initialization pattern, default to use Select
 		if ( NULL === self::$instance ) {
 			$sql = Artisan_Library::load('Sql/Select', true);
 			if ( true === is_object($sql) && $sql instanceof Artisan_Sql ) {

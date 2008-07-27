@@ -35,12 +35,10 @@ class Artisan_Log_Database extends Artisan_Log {
 				__FUNCTION__
 			);
 		}
-	
 	}
 	
 	public function flush() {
-		pprint_r(parent::$_log);
-	
+		//pprint_r(parent::$_log);
 	}
 
 }

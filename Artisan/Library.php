@@ -2,6 +2,9 @@
 
 define('ARTISAN_NAME', 'Artisan');
 
+// Load up the exception so it's always included.
+Artisan_Library::load('Exception');
+
 class Artisan_Library {
 
 	private static $object_list = array();
@@ -19,7 +22,7 @@ class Artisan_Library {
 		}
 
 		// Now, load up the child class
-		self::_load($lib_name, $build, $system_class);
+		return self::_load($lib_name, $build, $system_class);
 	}
 
 	private static function _load($lib_name, $build = false, $system_class = true ) {

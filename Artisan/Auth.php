@@ -1,10 +1,7 @@
 <?php
 
-
-// This is a comment from vic
-
-
 Artisan_Library::load('Auth/Monitor');
+Artisan_Library::load('Auth/Exception');
 
 abstract class Artisan_Auth {
 
@@ -12,5 +9,7 @@ abstract class Artisan_Auth {
 
 	}
 }
+
+
 
 ?>

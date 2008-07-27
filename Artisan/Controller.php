@@ -12,7 +12,7 @@ class Artisan_Controller {
 		}
 
 		// See if the view exists in the directory
-		$view_file = 'View/' . ucwords( str_replace('_', ' ', $view_name) ) . '.php';
+		//$view_file = 'View/' . ucwords( str_replace('_', ' ', $view_name) ) . '.php';
 
 		$view = NULL;
 		if ( true === file_exists($view_file) ) {

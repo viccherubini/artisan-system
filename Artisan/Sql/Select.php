@@ -23,6 +23,13 @@ class Artisan_Sql_Select extends Artisan_Sql {
 	
 	
 	public function from($table, $fields = '*', $alias = NULL) {
+		if ( true === empty($table) ) {
+			throw new Artisan_Sql_Exception(
+				ARTISAN_WARNING, 'Table name is empty.',
+				__CLASS__, __FUNCTION__
+			);
+		}
+		
 		$this->_table = $table;
 		
 		if ( true === empty($alias) ) {
@@ -169,10 +176,17 @@ class Artisan_Sql_Select extends Artisan_Sql {
 			$db = Artisan_Database_Monitor::get();
 			
 			if ( true === is_object($db) ) {
-				$db->query($this);
+				try {
+					$db->query($this);
 				
-				while ( $r = $db->fetch() ) {
-					$data[] = $r;
+					while ( $r = $db->fetch() ) {
+						$data[] = $r;
+					}
+				} catch ( Artisan_Database_Exception $e ) {
+					throw new Artisan_Sql_Exception(
+						ARTISAN_WARNING, $e->getMessage(),
+						__CLASS__, __FUNCTION__
+					);
 				}
 			}
 		}

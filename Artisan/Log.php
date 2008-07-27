@@ -33,9 +33,14 @@ abstract class Artisan_Log {
 	}
 	
 	public function addEx(Artisan_Exception $e) {
-		$this->add(LOG_EXCEPTION, $e->toString(), $e->getClassName(), $e->getFunctionName());
+		$this->add(
+			LOG_EXCEPTION,
+			$e->toString(),
+			$e->getClassName(),
+			$e->getFunctionName()
+		);
 		
-		return true;	
+		return true;
 	}
 	
 	abstract public function flush();

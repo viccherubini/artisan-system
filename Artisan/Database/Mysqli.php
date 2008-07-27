@@ -102,19 +102,33 @@ class Artisan_Database_Mysqli extends Artisan_Database {
 	 * parameterized SQL.
 	 */
 	public function query(Artisan_Sql $sql) {
-		$result = $this->_db_conn->query($sql->retrieve());//$sql->execute();
+		$result = $this->_db_conn->query($sql->retrieve());
 		
 		if ( true === is_object($result) ) {
 			$this->_db_result = $result;
+		} else {
+			throw new Artisan_Database_Exception(
+				ARTISAN_WARNING, $this->_db_conn->error,
+				__CLASS__, __FUNCTION__
+			);
 		}
 		
 		return $result;
 	}
 	
+	/**
+	 * Query the database directly with a sql statement
+	 */
 	public function querydb($sql) {
 		$result = $this->_db_conn->query($sql);
+		
 		if ( true === is_object($result) ) {
 			$this->_db_result = $result;
+		} else {
+			throw new Artisan_Database_Exception(
+				ARTISAN_WARNING, $this->_db_conn->error,
+				__CLASS__, __FUNCTION__
+			);
 		}
 		
 		return $result;

@@ -52,7 +52,7 @@ class Artisan_Exception extends Exception {
 	public function toString() {
 		$error_class = NULL;
 		if ( false === empty($this->_class_name) ) {
-			$error_class = $this->name() . '::';
+			$error_class = $this->_class_name . '::';
 		}
 		
 		if ( false === empty($this->_function_name) ) {

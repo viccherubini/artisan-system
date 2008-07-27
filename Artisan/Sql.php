@@ -7,8 +7,8 @@ class Artisan_Sql {
 	public function __construct() {
 		
 	}
-		
-	public static function createFieldList($table, $fields, $alias = NULL) {
+	
+	protected static function createFieldList($table, $fields, $alias = NULL) {
 		$field_list = array();
 		
 		if ( true === is_array($fields) ) {
@@ -18,7 +18,7 @@ class Artisan_Sql {
 		return $field_list;
 	}
 	
-	public static function createAlias($table) {
+	protected static function createAlias($table) {
 		$alias = NULL;
 		$a = array_map("fl", explode('_', $table));
 		$alias = strtolower( implode('', $a) );
@@ -26,7 +26,7 @@ class Artisan_Sql {
 		return $alias;
 	}
 	
-	public static function _where($table, $fields, $field_data, $type = 'AND', $alias = NULL) {
+	protected static function _where($table, $fields, $field_data, $type = 'AND', $alias = NULL) {
 		$type = strtoupper($type);
 		
 		if ( 'OR' != $type && 'AND' != $type ) {
@@ -69,6 +69,20 @@ class Artisan_Sql {
 		return $sql;
 	}
 	
+	protected static function _query($sql) {
+		if ( true === Artisan_Library::exists('Database') ) {
+			$db = Artisan_Database_Monitor::get();
+			
+			if ( true === is_object($db) ) {
+				$result = $db->querydb($sql);
+				return $result;
+			}
+		}
+		
+		return NULL;
+	}
+	
+	
 	/**
 	 * If there is no database connection, use this function to
 	 * make a value safe for the database!
@@ -78,12 +92,18 @@ class Artisan_Sql {
 	}
 }
 
+/**
+ * Turn a database field from `field_name`
+ * to `table_name`.`field_name`.
+ */
 function aliasize($field, $alias) {
 	return ( false === empty($alias) ? $alias . '.' : NULL ) . $field;
 }
 
-// fl stands for First Letter, to return 
-// the first letter of a word
+/**
+ * fl stands for First Letter, to return 
+ * the first letter of a word.
+*/
 function fl($word) {
 	$w = NULL;
 	if ( strlen($word) > 0 ) {
