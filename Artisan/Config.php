@@ -7,7 +7,7 @@ abstract class Artisan_Config {
 	/**
 	 * Load the configuration.
 	 */
-	abstract public function load($source);
+	abstract protected function _load($source);
 
 	/**
 	 * Take an array and turn it into into an object like:
