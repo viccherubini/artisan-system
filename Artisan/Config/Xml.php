@@ -5,7 +5,7 @@ class Artisan_Config_Xml extends Artisan_Config {
 	 * Default constructor, sets the internal configuration XML.
 	 */
 	public function __construct($source) {
-		
+		$this->_load($source);
 	}
 	
 	/**
@@ -17,7 +17,7 @@ class Artisan_Config_Xml extends Artisan_Config {
 	 * Loads the specified XML configuration file. Loads in the XML
 	 * library at runtime if necessary.
 	 */
-	public function load($source) {
+	protected function _load($source) {
 		if ( false === Artisan_Library::exists('Xml') ) {
 			Artisan_Library::load('Xml');
 		}
