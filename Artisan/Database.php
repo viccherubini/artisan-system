@@ -7,7 +7,11 @@ Artisan_Library::load('Database/Exception');
 abstract class Artisan_Database {
 	protected $CONFIG = NULL;
 	
-	public function __construct(Artisan_Config &$C) {
+	public function __construct(Artisan_Config &$C = NULL) {
+		if ( true === is_object($C) ) {
+			$this->setConfig($C);
+		}
+		
 		/*
 		if ( false === is_null($config) ) {
 			self::$config = $config;
