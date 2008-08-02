@@ -5,9 +5,10 @@ Artisan_Library::load('Database/Monitor');
 Artisan_Library::load('Database/Exception');
 
 abstract class Artisan_Database {
-	protected static $config = NULL;
+	protected $CONFIG = NULL;
 	
-	public function __construct(Artisan_Config $config) {
+	public function __construct(Artisan_Config &$C) {
+		/*
 		if ( false === is_null($config) ) {
 			self::$config = $config;
 			
@@ -24,10 +25,15 @@ abstract class Artisan_Database {
 				return $db;
 			}
 		}
+		*/
 	}
 
-	public function setConfig(Artisan_Config $config) {
-		self::$config = $config;
+	public function setConfig(Artisan_Config &$C) {
+		$this->CONFIG = $C;
+	}
+	
+	public function &getConfig() {
+		return $this->CONFIG;
 	}
 	
 	abstract public function connect();
