@@ -87,7 +87,7 @@ class Artisan_Xml {
 				 * array, and thus, set the $usetag value.
 				 */
 				$key_sum = 0;
-				$key_sum = array_sum( array_keys($value) );
+				$key_sum = array_sum(array_keys($value));
 				
 				$usetag = NULL;
 				if ( $key_sum > 0 ) {
