@@ -1,5 +1,7 @@
 <?php
 
+
+
 class Artisan_Email_Monitor {
 
 	private static $instance = NULL;
