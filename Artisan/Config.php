@@ -4,16 +4,10 @@ Artisan_Library::load('Config/Monitor');
 Artisan_Library::load('Config/Exception');
 
 abstract class Artisan_Config {
-
-	/**
-	 * Set the configuration.
-	 */
-	abstract public function set($cfg);
-	
 	/**
 	 * Load the configuration.
 	 */
-	abstract public function load();
+	abstract public function load($source);
 
 	/**
 	 * Take an array and turn it into into an object like:
@@ -28,13 +22,13 @@ abstract class Artisan_Config {
 	 * This way, one can easily internalize a config
 	 * array to access each element easily.
 	 */
-	public static function internalize($root, &$t) {
+	public function _init($root) {
 		foreach ( $root as $k => $v ) {
 			if ( true === is_array($v) ) {
-				$t->$k = $t;
-				self::internalize($v, $t);
+				$this->$k = $t;
+				$this->_init($v);
 			} else {
-				$t->$k = $v;
+				$this->$k = $v;
 			}
 		}
 	}
