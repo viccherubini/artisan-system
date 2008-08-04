@@ -1,12 +1,17 @@
 <?php
 
-
+/**
+ * Handles all XML data, including parsing XML into a hash array and taking
+ * a hash array and turning it back into XML.
+ * @author vmc <vic@leftnode.com>
+ */
 class Artisan_Xml {
-	private static $_xml;
-	
+	private static $_xml; ///< The XML to be loaded from the SimpleXMLElement PHP class.
+
 	/**
 	 * Loads an XML file from source into a string.
-	 *
+	 * @return Always returns true.
+	 * @author vmc
 	 */
 	public static function load($src) {
 		// See if source is a file or not. If it is, SimpleXMLElement
@@ -19,54 +24,66 @@ class Artisan_Xml {
 				self::$_xml = simplexml_load_string($src, NULL, LIBXML_NOERROR);
 			}
 		}
+
+		return true;
 	}
-	
+
 	/**
 	 * Convert the loaded XML to an array.
+	 * @return A hash array of XML key/value pairs.
+	 * @author vmc
 	 */
 	public static function toArray() {
 		$xml_a = self::_parseXml(self::$_xml);
-		
+
 		// Free up some memory.
 		self::$_xml = NULL;
-		
+
 		return $xml_a;
 	}
-	
+
 	/**
 	 * Convert the loaded array to XML.
+	 * @return A string of XML.
+	 * @author vmc
 	 */
 	public static function toXml($data, $root) {
 		$x = NULL;
 		$xml = self::_unparseXml($data, $x);
-		
+
 		$xml_x  = "<" . $root . ">\n";
 		$xml_x .= "\t" . $xml . "\n";
 		$xml_x .= "</" . $root . ">";
-		
+
 		return $xml_x;
 	}
-	
+
 	/**
 	 * Take a multidimensional array and convert it to an XML document.
 	 * $usetag is used if a specific tag should be used for opening and
 	 * closing each element rather than the tag that comes from the loop.
+	 * @return A string of XML.
+	 * @author vmc
 	 */
 	private static function _unparseXml($root, $usetag = NULL) {
 		static $x = NULL;
-		
+
 		foreach ( $root as $tag => $value ) {
 			if ( true === is_array($value) ) {
-			
+
 				/**
-				 * This is to test if an array is returned as a normal array
-				 * or a hash array. For example, the following XML:
+				 * The array_sum(array_keys()) is to test if an array is
+				 * returned as a normal array or a hash array.
+				 * For example, the following XML:
+				 * <pre>
 				 * <class_list>
 				 *     <class>PHP_Class1</class>
 				 *     <class>PHP_Class2</classs>
 				 *     <class>PHP_Class3</class>
 				 * </class_list>
+				 * </pre>
 				 * would be stored as so in PHP:
+				 * <pre>
 				 * $xml = array(
 				 *     'class_list' => array(
 				 *         'class' => array(
@@ -76,19 +93,20 @@ class Artisan_Xml {
 				 *         )
 				 *     )
 				 * );
+				 * </pre>
 				 * Clearly, we just don't want the XML to be returned
 				 * with the integer keys, so $usetag is used. In this case,
 				 * $usetag would be set to 'class' and then passed recursively.
 				 * In the resulting else of this function, the code would use
 				 * $usetag to create <class>PHP_Class1</class> rather than
-				 * <0>PHP_Class1</0>. To accomplish this, the keys of the 
+				 * <0>PHP_Class1</0>. To accomplish this, the keys of the
 				 * array are summed. If they are greater than 0, its a pretty
 				 * good chance the array is a normal array and not a hash
 				 * array, and thus, set the $usetag value.
 				 */
 				$key_sum = 0;
 				$key_sum = array_sum(array_keys($value));
-				
+
 				$usetag = NULL;
 				if ( $key_sum > 0 ) {
 					$usetag = $tag;
@@ -102,11 +120,11 @@ class Artisan_Xml {
 					$tag = $usetag;
 					$end_tag = "</" . $tag . ">\n";
 				}
-				
+
 				$x .= "<" . $tag . ">" . $value;
 				$x .= $end_tag;
 			}
-			
+
 			if ( true === empty($usetag) ) {
 				$x .= "</" . $tag . ">\n";
 			}
@@ -114,13 +132,15 @@ class Artisan_Xml {
 
 		return $x;
 	}
-	
+
 	/**
 	 * Parses the XML object into a key/value array.
+	 * @return The hash array of XML values.
+	 * @author vmc
 	 */
 	private static function _parseXml($root) {
 		$x = array();
-		
+
 		if ( true === is_array($root) ) {
 			foreach ( $root as $key => $value ) {
 				$x[$key] = self::_parseXml($value);
@@ -128,7 +148,7 @@ class Artisan_Xml {
 		} else {
 			if ( true === is_object($root) ) {
 				$objvars = get_object_vars($root);
-				
+
 				if ( false === empty($objvars) ) {
 					foreach ( $objvars as $key => $value ) {
 						$x[$key] = self::_parseXml($value);
@@ -138,7 +158,7 @@ class Artisan_Xml {
 				$x = strval($root);
 			}
 		}
-		
+
 		return $x;
 	}
 }

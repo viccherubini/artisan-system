@@ -2,71 +2,57 @@
 
 
 class Artisan_Database_Mysqli extends Artisan_Database {
-	private $_config = array();
-	
-	private $_db_conn = NULL;
-	
-	private $_db_result = NULL;
-	
+	//private $CONFIG = array();
+
+	private $CONN = NULL;
+
+	private $RESULT = NULL;
+
 	private $_query_list = NULL;
-	
+
 	private $_sql_type = NULL;
-	
+
 	private $_is_connected = false;
-	
+
 	private $_transaction_started = false;
-	
-	/**
-	 * Default constructor.
-	 */
-	public function __construct(Artisan_Config $config = NULL) {
-		if ( true === empty($config) ) {
-			$this->_config = parent::$config;
-		} else {
-			if ( $config instanceof Artisan_Config ) {
-				$this->_config = $config;
-			}
-		}
-	}
 
 	public function __destruct() {
-		if ( true === $this->_is_connected && true === is_object($this->_db_conn) ) {
+		if ( true === $this->_is_connected && true === is_object($this->CONN) ) {
 			$this->disconnect();
 		}
 	}
-	
+
+
 	/**
 	 * Connect to the database.
+	 * @access public
+	 * @returns New database connection
 	 */
 	public function connect() {
-		$server = $this->_config->server;
-		$username = $this->_config->username;
-		$password = $this->_config->password;
-		$dbname = $this->_config->dbname;
-		
+		$server = $this->CONFIG->server;
+		$username = $this->CONFIG->username;
+		$password = $this->CONFIG->password;
+		$dbname = $this->CONFIG->dbname;
+
 		$port = 3306;
-		if ( true === @isset($this->_config->port) ) {
-			if ( intval($this->_config->port) > 0 ) {
-				$port = intval($this->_config->port);
+		if ( true === @isset($this->CONFIG->port) ) {
+			if ( intval($this->CONFIG->port) > 0 ) {
+				$port = intval($this->CONFIG->port);
 			}
 		}
-		
-		// Although generally against supressing errors, the @ is 
+
+		// Although generally against supressing errors, the @ is
 		// to supress a misconnection error
 		// to allow the framework to handle it gracefully
-		$this->_db_conn = @new mysqli($server, $username, $password, $dbname, $port);
+		$this->CONN = @new mysqli($server, $username, $password, $dbname, $port);
 
-		if ( 0 != mysqli_connect_errno() || false === $this->_db_conn ) {
+		if ( 0 != mysqli_connect_errno() || false === $this->CONN ) {
 			$this->_is_connected = false;
-			
-			throw new Artisan_Database_Exception(
-				ARTISAN_WARNING, mysqli_connect_error(),
-				__CLASS__, __FUNCTION__
-			);
+			throw new Artisan_Database_Exception(ARTISAN_WARNING, mysqli_connect_error(), __CLASS__, __FUNCTION__);
 		}
-		
+
 		$this->_is_connected = true;
-		return $this->_db_conn;
+		return $this->CONN;
 	}
 
 	/**
@@ -74,146 +60,182 @@ class Artisan_Database_Mysqli extends Artisan_Database {
 	 */
 	public function disconnect() {
 		if ( true === $this->_is_connected ) {
-			$this->_db_conn->close();
-			$this->_db_conn = NULL;
+			$this->CONN->close();
+			$this->CONN = NULL;
 			$this->_is_connected = false;
 		}
 	}
-	
+
 	/**
 	 * Return the number of rows after a SELECT query.
 	 */
-	public function rowCount() {
-		return $this->_db_result->num_rows;	
+	public function getNumRows() {
+		return $this->RESULT->num_rows;
 	}
-	
+
 	/**
 	 * Return the number of rows affected after a query
-	 * that alters rows, such as an INSERT, UPDATE, or 
+	 * that alters rows, such as an INSERT, UPDATE, or
 	 * DELETE.
 	 */
-	public function rowsAffected() {
-		return $this->_db_conn->affected_rows;
+	public function getRowsAffected() {
+		return $this->CONN->affected_rows;
 	}
-	
+
 	/**
-	 * Performs a query against the dadtabase. The query must be
-	 * of type Artisan_Sql, enforcing programmers to use
-	 * parameterized SQL.
+	 * Performs a query against the dadtabase.
 	 */
-	public function query(Artisan_Sql $sql) {
-		$result = $this->_db_conn->query($sql->retrieve());
-		
+	public function query($sql) {
+		if ( Artisan_Sql instanceof $sql ) {
+
+		} else {
+
+		}
+
+		$result = $this->CONN->query($sql->retrieve());
+
 		if ( true === is_object($result) ) {
-			$this->_db_result = $result;
+			$this->RESULT = $result;
 		} else {
 			throw new Artisan_Database_Exception(
-				ARTISAN_WARNING, $this->_db_conn->error,
+				ARTISAN_WARNING, $this->CONN->error,
 				__CLASS__, __FUNCTION__
 			);
 		}
-		
+
 		return $result;
 	}
-	
+
 	/**
 	 * Query the database directly with a sql statement
 	 */
-	public function querydb($sql) {
-		$result = $this->_db_conn->query($sql);
-		
+	/*
+	public function query($sql) {
+		$result = $this->CONN->query($sql);
+
 		if ( true === is_object($result) ) {
-			$this->_db_result = $result;
+			$this->RESULT = $result;
 		} else {
 			throw new Artisan_Database_Exception(
-				ARTISAN_WARNING, $this->_db_conn->error,
+				ARTISAN_WARNING, $this->CONN->error,
 				__CLASS__, __FUNCTION__
 			);
 		}
-		
+
 		return $result;
 	}
-	
+	*/
+
 	/**
-	 * Fetch an array from the database. If this is used in a loop,
+	 * Fetch an array row from the database. If this is used in a loop,
 	 * such as a while ( $data = $db->fetch() ), the last call will
 	 * return a null value, and thus trigger the free() method below
 	 * to be called, ensuring the memory is always freed.
 	 */
-	public function fetch() {
-		$data = $this->_db_result->fetch_assoc();
+	public function fetchRow() {
+		$data = $this->RESULT->fetch_assoc();
 		if ( true === is_null($data) ) {
 			$this->free();
 		}
-		
+
 		return $data;
 	}
-	
+
 	/**
 	 * Use this method if you're expecting only one row back from the database.
 	 * This method queries the database and returns that row as an array
 	 * if the query was successful.
 	 */
-	public function queryFetch(Artisan_Sql $sql) {
+	public function queryFetch(Artisan_Sql $sql, $field = NULL) {
 		$row = array();
-	
+
 		$this->query($sql);
 		$row = $this->fetch();
-		
+
+		// See if they passed an option field to returnhttp://musclemayhem.com/forums/showthread.php?t=55517
+		if ( false === empty($field) && exists($field, $row) ) {
+			return $row[$field];
+		}
+
 		return $row;
 	}
-	
+
 	/**
 	 * Free the memory from the last SQL statement (generally only
 	 * from SELECT or EXPLAIN queries).
 	 */
 	public function free() {
-		if ( true === is_object($this->_db_result) ) {
-			$this->_db_result->free();
+		if ( true === is_object($this->RESULT) ) {
+			$this->RESULT->free();
 		}
 	}
-	
+
 	/**
 	 * Whether or not the class is currently connected to the database.
 	 */
 	public function isConnected() {
 		return $this->_is_connected;
 	}
-	
+
 	/**
 	 * Escape a string with the correct character set.
 	 */
 	public function escape($string) {
-		return $this->_db_conn->real_escape_string($string);
+		return $this->CONN->real_escape_string($string);
 	}
-	
+
+
+
+	public function start() {
+		if ( false === $this->_transaction_started ) {
+			$this->CONN->autocommit(false);
+			$this->_transaction_started = true;
+		}
+	}
+
+
+	public function commit() {
+		if ( true === $this->_transaction_started ) {
+			$this->CONN->commit();
+		}
+	}
+
+	public function rollback() {
+		if ( true === $this->_transaction_started ) {
+			$this->CONN->rollback();
+		}
+	}
+
+
+
+
 	/**
 	 * Start transtional queries.
 	 */
 	protected function _start() {
 		// Turn autocommit off
-		$this->_db_conn->autocommit(false);
-		$this->_transaction_started = true;		
+		$this->CONN->autocommit(false);
+		$this->_transaction_started = true;
 	}
-	
+
 	/**
 	 * Rolls back any failed transitional queries.
 	 */
 	protected function _cancel() {
 		if ( true === $this->_transaction_started ) {
-			$this->_db_conn->rollback();
+			$this->CONN->rollback();
 		}
 	}
-	
+
 	/**
 	 * Commit a series of SQL transactions.
 	 */
 	protected function _commit() {
 		if ( true === $this->_transaction_started ) {
-			$this->_db_conn->commit();
+			$this->CONN->commit();
 		}
 	}
-	
+
 	/**
 	 * Support for transactional queries. $query_list should be an array
 	 * of Artisan_Sql objects. If any of the queries fail, all of them fail,
@@ -221,31 +243,31 @@ class Artisan_Database_Mysqli extends Artisan_Database {
 	 */
 	public function queue($query_list) {
 		$this->_start();
-	
+
 		if ( false === is_array($query_list) || count($query_list) < 1 ) {
 			$this->_transaction_started = false;
 			return false;
 		}
-		
+
 		$error = false;
 		$len = count($query_list);
 		for ( $i=0; $i<$len; $i++ ) {
 			if ( true === $query_list[$i] instanceof Artisan_Sql ) {
 				$success = $this->query($query_list[$i]);
-				
+
 				if ( false === $success ) {
 					$error = true;
 					break;
 				}
 			}
 		}
-		
+
 		if ( true === $error ) {
 			$this->_cancel();
 		} else {
 			$this->_commit();
 		}
-		
+
 		return $error;
 	}
 }
