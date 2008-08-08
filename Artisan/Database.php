@@ -9,6 +9,7 @@ Artisan_Library::load('Database/Exception');
  * Because this class is abstract and contains many abstract members, it is necessary
  * to extend it to use it. For example, if you want to connect to a MySQL database
  * using mysqli, you would use new Artisan_Database_Mysqli($config) and go from there.
+ * @author vmc <vmc@leftnode.com>
  */
 abstract class Artisan_Database {
 	protected $CONFIG = NULL; ///< Holds the database configuration information, must be of type Artisan_Config.
@@ -29,7 +30,7 @@ abstract class Artisan_Database {
 	 * @return Nothing, database and configuration destroyed.
 	 */
 	public function __destruct() {
-		unset($this->_C);
+		unset($this->CONFIG);
 	}
 
 
@@ -46,12 +47,12 @@ abstract class Artisan_Database {
 	abstract public function disconnect();
 
 	abstract public function getNumRows();
-	abstract public function getRowsAffected();
+	abstract public function getAffectedRows();
 
-	abstract public function query(Artisan_Sql $sql);
-	abstract public function queryFetch(Artisan_Sql $sql);
+	abstract public function query($sql);
+	//abstract public function queryFetch(Artisan_Sql $sql);
 
-	abstract public function fetch();
+	abstract public function fetchRow();
 	abstract public function free();
 
 	abstract public function isConnected();

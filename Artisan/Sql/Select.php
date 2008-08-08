@@ -2,16 +2,16 @@
 
 class Artisan_Sql_Select extends Artisan_Sql {
 	private $_sql = NULL;
-	
 	private $_table = NULL;
-	
 	private $_alias = NULL;
-
 	private $_row_count = 50;
-	
 	private $_field_list = array();
-	
 	private $_where_type = 'AND';
+	private $_has_join = false;
+	
+	const SQL_JOIN_INNER = 'INNER JOIN';
+	const SQL_JOIN_LEFT = 'LEFT JOIN';
+	const SQL_JOIN = 'JOIN';
 	
 	public function __construct() {
 	
@@ -24,10 +24,7 @@ class Artisan_Sql_Select extends Artisan_Sql {
 	
 	public function from($table, $fields = '*', $alias = NULL) {
 		if ( true === empty($table) ) {
-			throw new Artisan_Sql_Exception(
-				ARTISAN_WARNING, 'Table name is empty.',
-				__CLASS__, __FUNCTION__
-			);
+			throw new Artisan_Sql_Exception(ARTISAN_WARNING, 'Table name is empty.', __CLASS__, __FUNCTION__);
 		}
 		
 		$this->_table = $table;
@@ -57,31 +54,41 @@ class Artisan_Sql_Select extends Artisan_Sql {
 		$this->_field_list = $fields;
 		$this->_where_type = $type;
 		
-		//$sql = parent::_where($this->_table, $fields, $type, $this->_alias);
-		//$this->_sql .= $sql;
-		
 		return $this;
 	}
 	
-	public function innerJoin($table, $conditions) {
+	public function innerJoin($table) {
 		$this->_sql .= $this->_join('INNER', $table, $conditions);
 		
 		return $this;
 	}
 	
-	public function leftJoin($table, $conditions) {
+	public function leftJoin($table) {
 		$this->_sql .= $this->_join('LEFT', $table, $conditions);
 		
 		return $this;
 	}
 	
+	public function join($table) {
+		
+	}
+	
+	/*
 	private function _join($type, $table, $alias, $conditions) {
 		$type = strtoupper($type);
 		$alias = parent::createAlias($table);
 		
-		$sql_join = ' ' . $type . ' JOIN `' . $table . '` ' . $alias . ' ON ' . $conditions;
+		//$sql_join = ' ' . $type . ' JOIN `' . $table . '` ' . $alias . ' ON ' . $conditions;
 		
+		$this->_has_join = true;
 		return $sql_join;
+	}
+	*/
+	
+	public function on($field_a, $field_b) {
+		if ( true === $this->_has_join ) {
+			
+		}
 	}
 	
 	public function between($column, $value1, $value2) {
@@ -95,7 +102,7 @@ class Artisan_Sql_Select extends Artisan_Sql {
 		return $this;
 	}
 	
-	public function orderBy(BETWEEN$fields, $type = 'ASC') {
+	public function orderBy($fields, $type = 'ASC') {
 		if ( false === is_array($fields) ) {
 			$fields = array($fields);
 		}
@@ -157,6 +164,7 @@ class Artisan_Sql_Select extends Artisan_Sql {
 		return $this;
 	}
 	
+	/*
 	public function query() {
 		if ( true === Artisan_Library::exists('Database') ) {
 			$db = Artisan_Database_Monitor::get();
@@ -209,12 +217,13 @@ class Artisan_Sql_Select extends Artisan_Sql {
 		
 		return $data;
 	}
+	*/
 	
 	public function __toString() {
 		return $this->_sql;
 	}
 	
-	public function retrieve() {
+	public function sql() {
 		return $this->_sql;
 	}
 }

@@ -6,7 +6,7 @@ Artisan_Library::load('Cache/Exception');
 
 abstract class Artisan_Cache {
 
-	public function __construct($config = array()) {
+	public function __construct(Artisan_Config $config) {
 	}
 }
 

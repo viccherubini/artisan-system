@@ -1,32 +1,29 @@
 <?php
 
-
+/**
+ * The Mysqli class for connecting to a mysql database.
+ * @author vmc <vmc@leftnode.com>
+ */
 class Artisan_Database_Mysqli extends Artisan_Database {
-	//private $CONFIG = array();
-
 	private $CONN = NULL;
-
 	private $RESULT = NULL;
-
 	private $_query_list = NULL;
-
 	private $_sql_type = NULL;
-
 	private $_is_connected = false;
-
 	private $_transaction_started = false;
 
 	public function __destruct() {
 		if ( true === $this->_is_connected && true === is_object($this->CONN) ) {
 			$this->disconnect();
 		}
+		unset($this->CONFIG);
 	}
 
 
 	/**
 	 * Connect to the database.
-	 * @access public
-	 * @returns New database connection
+	 * @throw Artisan_Database_Exception Throws a new exception if the database connection can not be made.
+	 * @retval Object New database connection
 	 */
 	public function connect() {
 		$server = $this->CONFIG->server;
@@ -57,6 +54,7 @@ class Artisan_Database_Mysqli extends Artisan_Database {
 
 	/**
 	 * Disconnect from the database if already connected.
+	 * @retval boolean Always returns true.
 	 */
 	public function disconnect() {
 		if ( true === $this->_is_connected ) {
@@ -64,73 +62,65 @@ class Artisan_Database_Mysqli extends Artisan_Database {
 			$this->CONN = NULL;
 			$this->_is_connected = false;
 		}
+
+		return true;
 	}
 
 	/**
 	 * Return the number of rows after a SELECT query.
+	 * @retval integer The number of rows from the last query.
 	 */
 	public function getNumRows() {
-		return $this->RESULT->num_rows;
+		if ( true === is_object($this->RESULT) ) {
+			return $this->RESULT->num_rows;
+		}
+
+		return 0;
 	}
 
 	/**
-	 * Return the number of rows affected after a query
-	 * that alters rows, such as an INSERT, UPDATE, or
-	 * DELETE.
+	 * Return the number of rows affected after a query that alters rows.
+	 * @retval integer The number of rows affected from the last INSERT, UPDATE or DELETE clause.
 	 */
-	public function getRowsAffected() {
-		return $this->CONN->affected_rows;
+	public function getAffectedRows() {
+		if ( true === is_object($this->CONN) ) {
+			return $this->CONN->affected_rows;
+		}
+
+		return 0;
 	}
 
 	/**
-	 * Performs a query against the dadtabase.
+	 * Performs a query against the database.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $sql The SQL query to execute, either a SQL string or type Artisan_Sql
+	 * @throws Artisan_Database_Exception Throws an exception if an error occurs in the SQL.
+	 * @return Returns the result object if a valid result.
+	 * @todo Implement a query history to create metrics from.
 	 */
 	public function query($sql) {
+		$query = $sql;
 		if ( Artisan_Sql instanceof $sql ) {
-
-		} else {
-
+			$query = $sql->get();
 		}
 
-		$result = $this->CONN->query($sql->retrieve());
+		$result = $this->CONN->query($query);
 
 		if ( true === is_object($result) ) {
 			$this->RESULT = $result;
 		} else {
-			throw new Artisan_Database_Exception(
-				ARTISAN_WARNING, $this->CONN->error,
-				__CLASS__, __FUNCTION__
-			);
+			throw new Artisan_Database_Exception(ARTISAN_WARNING, $this->CONN->error, __CLASS__, __FUNCTION__);
 		}
 
 		return $result;
 	}
-
-	/**
-	 * Query the database directly with a sql statement
-	 */
-	/*
-	public function query($sql) {
-		$result = $this->CONN->query($sql);
-
-		if ( true === is_object($result) ) {
-			$this->RESULT = $result;
-		} else {
-			throw new Artisan_Database_Exception(
-				ARTISAN_WARNING, $this->CONN->error,
-				__CLASS__, __FUNCTION__
-			);
-		}
-
-		return $result;
-	}
-	*/
 
 	/**
 	 * Fetch an array row from the database. If this is used in a loop,
 	 * such as a while ( $data = $db->fetch() ), the last call will
 	 * return a null value, and thus trigger the free() method below
 	 * to be called, ensuring the memory is always freed.
+	 * @author vmc <vmc@leftnode.com>
 	 */
 	public function fetchRow() {
 		$data = $this->RESULT->fetch_assoc();
@@ -142,36 +132,20 @@ class Artisan_Database_Mysqli extends Artisan_Database {
 	}
 
 	/**
-	 * Use this method if you're expecting only one row back from the database.
-	 * This method queries the database and returns that row as an array
-	 * if the query was successful.
-	 */
-	public function queryFetch(Artisan_Sql $sql, $field = NULL) {
-		$row = array();
-
-		$this->query($sql);
-		$row = $this->fetch();
-
-		// See if they passed an option field to returnhttp://musclemayhem.com/forums/showthread.php?t=55517
-		if ( false === empty($field) && exists($field, $row) ) {
-			return $row[$field];
-		}
-
-		return $row;
-	}
-
-	/**
 	 * Free the memory from the last SQL statement (generally only
 	 * from SELECT or EXPLAIN queries).
+	 * @author vmc <vmc@leftnode.com>
 	 */
 	public function free() {
 		if ( true === is_object($this->RESULT) ) {
 			$this->RESULT->free();
 		}
+
+		return true;
 	}
 
 	/**
-	 * Whether or not the class is currently connected to the database.
+	 * Whether or not a connection to the database exists.
 	 */
 	public function isConnected() {
 		return $this->_is_connected;

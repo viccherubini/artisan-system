@@ -2,16 +2,17 @@
 
 /**
  * Handles all XML data, including parsing XML into a hash array and taking
- * a hash array and turning it back into XML.
- * @author vmc <vic@leftnode.com>
+ * a hash array and turning it back into XML. This requires the SimpleXML
+ * class of PHP to be installed to work properly.
+ * @author vmc <vmc@leftnode.com>
  */
 class Artisan_Xml {
-	private static $_xml; ///< The XML to be loaded from the SimpleXMLElement PHP class.
+	private static $XML; ///< The XML to be loaded from the SimpleXMLElement PHP class.
 
 	/**
 	 * Loads an XML file from source into a string.
 	 * @return Always returns true.
-	 * @author vmc
+	 * @author vmc <vmc@leftnode.com>
 	 */
 	public static function load($src) {
 		// See if source is a file or not. If it is, SimpleXMLElement
@@ -19,9 +20,9 @@ class Artisan_Xml {
 		// URL wrappers aren't supported.
 		if ( true === class_exists('SimpleXMLElement') ) {
 			if ( true === is_file($src) && true === is_readable($src) ) {
-				self::$_xml = simplexml_load_file($src, NULL, LIBXML_NOERROR);
+				self::$XML = simplexml_load_file($src, NULL, LIBXML_NOERROR);
 			} else {
-				self::$_xml = simplexml_load_string($src, NULL, LIBXML_NOERROR);
+				self::$XML = simplexml_load_string($src, NULL, LIBXML_NOERROR);
 			}
 		}
 
@@ -31,7 +32,7 @@ class Artisan_Xml {
 	/**
 	 * Convert the loaded XML to an array.
 	 * @return A hash array of XML key/value pairs.
-	 * @author vmc
+	 * @author vmc <vmc@leftnode.com>
 	 */
 	public static function toArray() {
 		$xml_a = self::_parseXml(self::$_xml);
@@ -45,7 +46,7 @@ class Artisan_Xml {
 	/**
 	 * Convert the loaded array to XML.
 	 * @return A string of XML.
-	 * @author vmc
+	 * @author vmc <vmc@leftnode.com>
 	 */
 	public static function toXml($data, $root) {
 		$x = NULL;
@@ -63,7 +64,7 @@ class Artisan_Xml {
 	 * $usetag is used if a specific tag should be used for opening and
 	 * closing each element rather than the tag that comes from the loop.
 	 * @return A string of XML.
-	 * @author vmc
+	 * @author vmc <vmc@leftnode.com>
 	 */
 	private static function _unparseXml($root, $usetag = NULL) {
 		static $x = NULL;
@@ -75,15 +76,15 @@ class Artisan_Xml {
 				 * The array_sum(array_keys()) is to test if an array is
 				 * returned as a normal array or a hash array.
 				 * For example, the following XML:
-				 * <pre>
+				 * @code
 				 * <class_list>
 				 *     <class>PHP_Class1</class>
-				 *     <class>PHP_Class2</classs>
+				 *     <class>PHP_Class2</class>
 				 *     <class>PHP_Class3</class>
 				 * </class_list>
-				 * </pre>
+				 * @endcode
 				 * would be stored as so in PHP:
-				 * <pre>
+				 * @code
 				 * $xml = array(
 				 *     'class_list' => array(
 				 *         'class' => array(
@@ -93,13 +94,13 @@ class Artisan_Xml {
 				 *         )
 				 *     )
 				 * );
-				 * </pre>
+				 * @endcode
 				 * Clearly, we just don't want the XML to be returned
 				 * with the integer keys, so $usetag is used. In this case,
 				 * $usetag would be set to 'class' and then passed recursively.
 				 * In the resulting else of this function, the code would use
-				 * $usetag to create <class>PHP_Class1</class> rather than
-				 * <0>PHP_Class1</0>. To accomplish this, the keys of the
+				 * $usetag to create &lt;class&gt;PHP_Class1&lt;/class&gt; rather than
+				 * &lt;0&gt;PHP_Class1&lt;/0&gt;. To accomplish this, the keys of the
 				 * array are summed. If they are greater than 0, its a pretty
 				 * good chance the array is a normal array and not a hash
 				 * array, and thus, set the $usetag value.
@@ -136,7 +137,7 @@ class Artisan_Xml {
 	/**
 	 * Parses the XML object into a key/value array.
 	 * @return The hash array of XML values.
-	 * @author vmc
+	 * @author vmc <vmc@leftnode.com>
 	 */
 	private static function _parseXml($root) {
 		$x = array();
