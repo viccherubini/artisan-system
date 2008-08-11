@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * This class handles encoding and decoding of JSON. It requires PHP 5.2 or greater
+ * to operate.
+ */
 
 class Artisan_Json {
 	/**
