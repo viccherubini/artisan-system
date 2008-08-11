@@ -1,133 +1,145 @@
 <?php
 
-class Artisan_Sql_Select extends Artisan_Sql {
-	private $_sql = NULL;
-	private $_table = NULL;
-	private $_alias = NULL;
-	private $_row_count = 50;
-	private $_field_list = array();
-	private $_where_type = 'AND';
-	private $_has_join = false;
+/**
+ * The Sql_Select class for creating a Select statement to run against a database.
+ * @author vmc <vmc@leftnode.com>
+ */
+abstract class Artisan_Sql_Select extends Artisan_Sql {
+	///< The actual SQL query in string form.
+	protected $_sql = NULL;
+	
+	///< The main table the query is selecting FROM.
+	protected $_from_table = NULL;
+	
+	///< The alias of the table the query is selecting FROM.
+	protected $_from_table_alias = NULL;
+	
+	///< Contains a list of tables to join with. No aliases are stored, they are calculated at runtime.
+	protected $_join_table_list = array();
+	
+	///< Whether or not this query contains a join statement, used in the on() method.
+	protected $_has_join;
+	
+	///< The number of rows to return in a paginated query.
+	protected $_return_row_count = 50;
+	
+	///< The list of fields to return from the query.
+	protected $_field_list = array();
+	
+	///< The list of fields to use in the WHERE clause.
+	protected $_where_field_list = array();
+	
+	///< The concatenation in the WHERE clause, either AND or OR.
+	protected $_where_concat;
+	
+	///< The amount to use in a LIMIT clause. If 0, no LIMIT clause will be used.
+	protected $_limit = 0;
+	
+	///< The page to return, if -1, all data will be returned without any pagination.
+	protected $_page = -1;
 	
 	const SQL_JOIN_INNER = 'INNER JOIN';
 	const SQL_JOIN_LEFT = 'LEFT JOIN';
+	const SQL_JOIN_RIGHT = 'RIGHT JOIN';
 	const SQL_JOIN = 'JOIN';
 	
 	public function __construct() {
-	
+		$this->_sql = NULL;
 	}
 	
 	public function __destruct() {
-		unset($this->_sql);
+		unset($this->_sql, $this->_from_table, $this->_from_table_list, $this->_field_list);
 	}
 	
-	
-	public function from($table, $fields = '*', $alias = NULL) {
+	public function from($table, $fields = '*', $alias = NULL, $auto_alias = true) {
 		if ( true === empty($table) ) {
-			throw new Artisan_Sql_Exception(ARTISAN_WARNING, 'Table name is empty.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Sql_Exception(ARTISAN_WARNING, 'Failed to create valid SQL class, the table name is empty.', __CLASS__, __FUNCTION__);
 		}
 		
-		$this->_table = $table;
+		$table = trim($table);
+		$this->_from_table = $table;
 		
-		if ( true === empty($alias) ) {
-			$alias = parent::createAlias($table);
+		if ( true === empty($alias) && true === $auto_alias ) {
+			$alias = artisan_create_table_alias($table);
 		}
 		
-		$this->_alias = $alias;
+		$this->_from_table_alias = $alias;
 		
-		$field_list = $fields;
 		if ( '*' !== $fields ) {
 			if ( false === is_array($fields) ) {
 				$fields = array($fields);
 			}
 			
-			$field_list = parent::createFieldList($table, $fields, $alias);
-			$field_list = implode(', ', $field_list);
+			$field_list = artisan_create_field_list($this->_from_table, $fields, $this->_from_table_alias);
+			$this->_field_list = $field_list;
+		} else {
+			$this->_field_list = array('*');
 		}
 		
-		$this->_sql = 'SELECT ' . $field_list . ' FROM `' . $table . '` ' . $alias;
-		
 		return $this;
 	}
 	
-	public function where($fields, $type = 'AND') {
-		$this->_field_list = $fields;
-		$this->_where_type = $type;
-		
+	public function innerJoin($table, $field_a, $field_b) {
+		$this->join(self::SQL_JOIN_INNER, $table, $field_a, $field_b);
 		return $this;
 	}
 	
-	public function innerJoin($table) {
-		$this->_sql .= $this->_join('INNER', $table, $conditions);
-		
+	public function leftJoin($table, $field_a, $field_b) {
+		$this->join(self::SQL_JOIN_LEFT, $table, $field_a, $field_b);
 		return $this;
 	}
 	
-	public function leftJoin($table) {
-		$this->_sql .= $this->_join('LEFT', $table, $conditions);
+	public function join($join_type, $table, $field_a, $field_b) {
+		$this->_has_join = true;
+		
+		$join = NULL;
+		$table = trim($table);
+		if ( false === artisan_exists($table, $this->_join_table_list) && $table != $this->_from_table ) {
+			$this->_join_table_list[$table] = array(
+				'table' => $table,
+				'type' => $join_type,
+				'field_a' => $field_a,
+				'field_b' => $field_b
+			);
+		}
 		
 		return $this;
-	}
-	
-	public function join($table) {
-		
 	}
 	
 	/*
-	private function _join($type, $table, $alias, $conditions) {
-		$type = strtoupper($type);
-		$alias = parent::createAlias($table);
-		
-		//$sql_join = ' ' . $type . ' JOIN `' . $table . '` ' . $alias . ' ON ' . $conditions;
-		
-		$this->_has_join = true;
-		return $sql_join;
-	}
-	*/
-	
 	public function on($field_a, $field_b) {
 		if ( true === $this->_has_join ) {
 			
 		}
 	}
+	*/
+	
+	public function where($where_fields) {
+		if ( true === artisan_is_assoc($where_fields) ) {
+			$this->_where_field_list = $where_fields;
+		}
+		
+		return $this;
+	}
+	
+	public function in($value_list) {
+	
+	}
 	
 	public function between($column, $value1, $value2) {
-		//$this->_sql .= parent::_where($this->_table, array($column), 
+		return $this;
 	}
 	
 	public function groupBy($fields) {
-		$fields = parent::createFieldList($this->_table, $fields);
-		$this->_sql .= ' GROUP BY ' . implode(', ', $fields);
-		
 		return $this;
 	}
 	
 	public function orderBy($fields, $type = 'ASC') {
-		if ( false === is_array($fields) ) {
-			$fields = array($fields);
-		}
-		
-		$fields = parent::createFieldList($this->_table, $fields, $this->_alias);
-		
-		$type = strtoupper($type);
-		if ( $type !== 'DESC' || $type !== 'ASC' ) {
-			$type = 'ASC';
-		}
-		
-		$this->_sql .= ' ORDER BY ' . implode(', ', $fields) . ' ' . $type;
-		
 		return $this;
 	}
 	
 	public function limit($amount) {
-		$amount = intval($amount);
-		
-		if ( $amount < 0 ) {
-			$amount = 0;
-		}
-		
-		$this->_sql .= ' LIMIT ' . $amount;
-		
+		$this->_limit = intval(intval($amount));
 		return $this;
 	}
 	
@@ -152,72 +164,29 @@ class Artisan_Sql_Select extends Artisan_Sql {
 		
 		$page--;
 		
-		$this->_sql .= ' LIMIT ' . ($page * $this->_row_count) . ', ' . $this->_row_count;
+		$this->_page = $page;
+		//$this->_sql .= ' LIMIT ' . ($page * $this->_row_count) . ', ' . $this->_row_count;
 		
 		return $this;
 	}
 	
-	public function bind($field_data) {
-		$sql = parent::_where($this->_table, $this->_field_list, $field_data, $this->_where_type, $this->_alias);
-		$this->_sql .= $sql;
+	//public function bind($field_data) {
+		//$sql = parent::_where($this->_table, $this->_field_list, $field_data, $this->_where_type, $this->_alias);
+		//$this->_sql .= $sql;
 		
-		return $this;
-	}
+		//return $this;
+	//}
 	
-	/*
-	public function query() {
-		if ( true === Artisan_Library::exists('Database') ) {
-			$db = Artisan_Database_Monitor::get();
-			
-			if ( true === is_object($db) ) {
-				$result = $db->query($this);
-				return $result;
-			}
-		}
-		
-		return NULL;
-	}
+	abstract public function query();
 	
-	public function fetchAll() {
-		$data = array();
-		if ( true === Artisan_Library::exists('Database') ) {
-			$db = Artisan_Database_Monitor::get();
-			
-			if ( true === is_object($db) ) {
-				try {
-					$db->query($this);
-				
-					while ( $r = $db->fetch() ) {
-						$data[] = $r;
-					}
-				} catch ( Artisan_Database_Exception $e ) {
-					throw new Artisan_Sql_Exception(
-						ARTISAN_WARNING, $e->getMessage(),
-						__CLASS__, __FUNCTION__
-					);
-				}
-			}
-		}
-		
-		return $data;
-	}
+	abstract public function fetch($field = NULL);
 	
-	public function fetchOne() {
-		$data = array();
-		if ( true === Artisan_Library::exists('Database') ) {
-			$db = Artisan_Database_Monitor::get();
-			if ( true === is_object($db) ) {
-				$this->query();
-			
-				if ( $db->rowCount() > 0 ) {
-					$data = $db->fetch();
-				}
-			}
-		}
-		
-		return $data;
-	}
-	*/
+	abstract public function fetchAll();
+	
+	abstract public function free();
+	
+	abstract public function escape($value);
+	
 	
 	public function __toString() {
 		return $this->_sql;
