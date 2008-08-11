@@ -35,8 +35,8 @@ class Artisan_Exception extends Exception {
 	public function __construct($error_code, $error_message, $class_name = NULL, $function_name = NULL) {
 		parent::__construct($error_message, $error_code);
 		
-		$this->_line_number = intval( parent::getLine() );
-		$this->_file_name = basename( parent::getFile() );
+		$this->_line_number = parent::getLine();
+		$this->_file_name = parent::getFile();
 		$this->_class_name = $class_name;
 		$this->_function_name = $function_name;
 	}
