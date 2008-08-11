@@ -5,10 +5,32 @@ define('ARTISAN_NAME', 'Artisan');
 // Load up the exception so it's always included.
 Artisan_Library::load('Exception');
 
+// Load in the function libraries
+Artisan_Library::load('Functions/Array');
+Artisan_Library::load('Functions/Database');
+Artisan_Library::load('Functions/Encryption');
+Artisan_Library::load('Functions/Html');
+Artisan_Library::load('Functions/Input');
+Artisan_Library::load('Functions/String');
+
+/**
+ * This class allows you to easily load and manage other classes in Artisan.
+ * @author vmc <vmc@leftnode.com>
+ */
 class Artisan_Library {
 
+	///< The list of Artisan objects currently loaded.
 	private static $object_list = array();
 
+	/**
+	 * Loads in an Artisan library.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $lib_name The name or path of the library to load, examples are Database, or Database/Mysqli.
+	 * @param $build If a single class is included, and $build is true, the class will be created.
+	 * @param $system_class If true, loads only Artisan classes, otherwise, allows one to load external classes.
+	 * @retval boolean Returns true if the class was loaded, false otherwise.
+	 * @todo Allow more than one level of loading.
+	 */
 	public static function load($lib_name, $build = false, $system_class = true) {
 		// First, see if this is a concrete class, and if so,
 		// attempt to include it's parent class.
