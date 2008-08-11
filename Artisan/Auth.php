@@ -5,12 +5,13 @@
  * To remain true to the mantra of do one thing and do it well, Authentication does not initialize
  * a Session after successful authentication. Rather, the class returns true or false, and it is up
  * to the calling script to initialize/destroy a session.
- * Authentication uses a pattern called an Adapter. Because there are many different authentication
+ * Authentication uses a pattern called a Factory. Because there are many different authentication
  * schemes (htpasswd, ldap, database, xml file, etc.), it doesn't make sense to include a method for
- * authenticating against each because a lot of code would be reused. Instead, children classes
+ * authenticating against each because a lot of code would be rewritten. Instead, children classes
  * extend this class. Those children classes contain specific implementations of how to authorize
  * against a scheme, which returns the result to this class. This class then returns the result back
  * to the programmer, who determines what to do with it.
+ * @author vmc <vmc@leftnode.cOM
 */
 
 abstract class Artisan_Auth {
@@ -34,8 +35,10 @@ abstract class Artisan_Auth {
 	);
 	*/
 	
-	public function __construct(Artisan_Config &$C) {
-		$this->CONFIG = $C;
+	public function __construct(Artisan_Config &$C = NULL) {
+		if ( true === is_object($C) ) {
+			$this->setConfig($C);
+		}
 	}
 	
 	public function __destruct() {
