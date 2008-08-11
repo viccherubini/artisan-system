@@ -11,11 +11,13 @@ abstract class Artisan_Config {
 
 	/**
 	 * Take an array and turn it into into an object like:
+	 * @code
 	 * $arr = array(
 	 *     'a' => 'value',
 	 *     'b' => 'value2',
 	 *     'c' => array( 'd' => 'value3' )
 	 * );
+	 * @endcode
 	 * To:
 	 * $object->a has the value 'value', and
 	 * $object->c->d has the value 'value3' in it.
@@ -31,6 +33,10 @@ abstract class Artisan_Config {
 				$this->$k = $v;
 			}
 		}
+	}
+	
+	public function __toString() {
+		return artisan_print_r($this, true);		
 	}
 }
 
