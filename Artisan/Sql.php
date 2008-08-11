@@ -4,10 +4,22 @@ Artisan_Library::load('Sql/Monitor');
 Artisan_Library::load('Sql/Exception');
 
 class Artisan_Sql {
+	
+	const SQL_AND = 'AND';
+	const SQL_OR = 'OR';
+	
+
 	public function __construct() {
 		
 	}
 	
+	
+	
+	
+	
+	
+	
+	/*
 	protected static function createFieldList($table, $fields, $alias = NULL) {
 		$field_list = array();
 		
@@ -16,14 +28,6 @@ class Artisan_Sql {
 		}
 		
 		return $field_list;
-	}
-	
-	protected static function createAlias($table) {
-		$alias = NULL;
-		$a = array_map("fl", explode('_', $table));
-		$alias = strtolower( implode('', $a) );
-		
-		return $alias;
 	}
 	
 	protected static function _where($table, $fields, $field_data, $type = 'AND', $alias = NULL) {
@@ -81,35 +85,17 @@ class Artisan_Sql {
 		
 		return NULL;
 	}
-	
+	*/
 	
 	/**
 	 * If there is no database connection, use this function to
 	 * make a value safe for the database!
 	 */
+	/*
 	private function safeData($str) {
 		return addslashes($str);
 	}
-}
-
-/**
- * Turn a database field from `field_name`
- * to `table_name`.`field_name`.
- */
-function aliasize($field, $alias) {
-	return ( false === empty($alias) ? $alias . '.' : NULL ) . $field;
-}
-
-/**
- * fl stands for First Letter, to return 
- * the first letter of a word.
-*/
-function fl($word) {
-	$w = NULL;
-	if ( strlen($word) > 0 ) {
-		$w = $word[0];
-	}
-	return $w;
+	*/
 }
 
 ?>
