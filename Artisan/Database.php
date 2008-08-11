@@ -4,6 +4,8 @@
 Artisan_Library::load('Database/Monitor');
 Artisan_Library::load('Database/Exception');
 
+Artisan_Library::load('Sql/Select');
+
 /**
  * The abstract Database class from which other database classes are extended.
  * Because this class is abstract and contains many abstract members, it is necessary
@@ -12,12 +14,15 @@ Artisan_Library::load('Database/Exception');
  * @author vmc <vmc@leftnode.com>
  */
 abstract class Artisan_Database {
-	protected $CONFIG = NULL; ///< Holds the database configuration information, must be of type Artisan_Config.
+
+	///< Holds the database configuration information, must be of type Artisan_Config.
+	protected $CONFIG = NULL;
 
 	/**
 	 * Default constructor.
+	 * @author vmc <vmc@leftnode.com>
 	 * @param $C is an Artisan_Config configuration instance, optional.
-	 * @return New database instance, ready for connecting to.
+	 * @retval object New database instance, ready for connection.
 	 */
 	public function __construct(Artisan_Config &$C = NULL) {
 		if ( true === is_object($C) ) {
@@ -27,7 +32,8 @@ abstract class Artisan_Database {
 
 	/**
 	 * Default destructor.
-	 * @return Nothing, database and configuration destroyed.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval boolean Destroys configuration and returns true.
 	 */
 	public function __destruct() {
 		unset($this->CONFIG);
@@ -46,14 +52,14 @@ abstract class Artisan_Database {
 
 	abstract public function disconnect();
 
-	abstract public function getNumRows();
-	abstract public function getAffectedRows();
+	//abstract public function getNumRows();
+	//abstract public function getAffectedRows();
 
-	abstract public function query($sql);
+	//abstract public function query($sql);
 	//abstract public function queryFetch(Artisan_Sql $sql);
 
-	abstract public function fetchRow();
-	abstract public function free();
+	//abstract public function fetchRow();
+	//abstract public function free();
 
 	abstract public function isConnected();
 
