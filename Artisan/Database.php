@@ -48,18 +48,18 @@ abstract class Artisan_Database {
 		return $this->CONFIG;
 	}
 
+	/**
+	 * Connects to the specified database.
+	 * @author vmc <vmc@leftnode.com>
+	 * @throws Artisan_Database_Exception If the connection fails.
+	 * @retval object New connection to the database
+	 */
 	abstract public function connect();
 
+	/**
+	 * Disconnects from the specified database.
+	 */
 	abstract public function disconnect();
-
-	//abstract public function getNumRows();
-	//abstract public function getAffectedRows();
-
-	//abstract public function query($sql);
-	//abstract public function queryFetch(Artisan_Sql $sql);
-
-	//abstract public function fetchRow();
-	//abstract public function free();
 
 	abstract public function isConnected();
 
