@@ -26,6 +26,15 @@ function artisan_create_field_list($table, $fields, $table_alias = NULL) {
 	return $field_list;
 }
 
+
+function artisan_sanitize_fields($field_list) {
+	foreach ( $field_list as $i => $value ) {
+		$field_list[$i] = str_replace("`", NULL, $value);
+	}
+	return $field_list;
+}
+
+
 /**
  * Returns an alias for a database table, for example, `my_customer_list` would
  * return as `mcl`. Takes first letter of each word separated by a space or underscore.
