@@ -15,7 +15,39 @@ class Artisan_Sql_Select_Mysqli extends Artisan_Sql_Select {
 	
 	}
 
+	
 	public function build() {
+		$distinct_sql = NULL;
+		if ( true === $this->_distinct ) {
+			$distinct_sql = " DISTINCT ";
+		}
+		
+		$select_field_list = implode(", ", $this->_field_list);
+		$select_sql  = "SELECT " . $distinct_sql . " " . $select_field_list . " FROM `" . $this->_from_table . "` ";
+		$select_sql .= $this->_from_table_alias . " ";
+		
+		
+		
+		
+		
+		$where_sql = NULL;
+		if ( count($this->_where_field_list) > 0 ) {
+			$where_list = array();
+			foreach ( $this->_where_field_list as $field => $value ) {
+				$where_list[] = $field . " = '" . $this->escape($value) . "'";
+			}
+			$where_sql = " WHERE " . implode(" AND ", $where_list);
+		}
+		
+		$group_sql = NULL;
+		if ( count($this->_group_field_list) > 0 ) {
+			$group_sql = " GROUP BY " . implode(", ", $this->_group_field_list);
+		}
+		
+		
+		
+		$this->_sql = $select_sql . $where_sql . $group_sql;
+		/*
 		// First, begin to build the field list and initial select data.
 		$field_list = $this->_field_list;
 		$field_list = implode(', ', $field_list);
@@ -46,6 +78,7 @@ class Artisan_Sql_Select_Mysqli extends Artisan_Sql_Select {
 		}
 		
 		$this->_sql = $sql;
+		*/
 	}
 	
 	
@@ -63,7 +96,7 @@ class Artisan_Sql_Select_Mysqli extends Artisan_Sql_Select {
 				throw new Artisan_Sql_Exception(ARTISAN_WARNING, $this->CONN->error, __CLASS__, __FUNCTION__);
 			}
 
-			return $result;
+			return $this;
 		} else {
 			throw new Artisan_Sql_Exception(ARTISAN_WARNING, 'Query is empty', __CLASS__, __FUNCTION__);
 		}
@@ -75,9 +108,16 @@ class Artisan_Sql_Select_Mysqli extends Artisan_Sql_Select {
 			if ( true === is_null($data) ) {
 				$this->free();
 			} else {
-				if ( false === empty($field) && true === artisan_exists($field, $data) ) {
-					$data = $data[$field];				
-				}
+				reset($data);
+				
+				// Check if only one field was returned, if so, return that
+				if ( 1 === count($data) ) {
+					$data = current($data);
+				} else {
+					if ( false === empty($field) && true === artisan_exists($field, $data) ) {
+						$data = $data[$field];				
+					}
+				}			
 			}
 
 			return $data;
@@ -87,7 +127,7 @@ class Artisan_Sql_Select_Mysqli extends Artisan_Sql_Select {
 	}
 	
 	public function fetchAll() {
-		//echo 'in fetchall()';	
+
 	}
 	
 	public function free() {
