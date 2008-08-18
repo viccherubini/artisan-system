@@ -5,6 +5,7 @@ Artisan_Library::load('Database/Monitor');
 Artisan_Library::load('Database/Exception');
 
 Artisan_Library::load('Sql/Select');
+Artisan_Library::load('Sql/Insert');
 
 /**
  * The abstract Database class from which other database classes are extended.
