@@ -1,63 +1,48 @@
 <?php
 
-// insert into `table_name` ( fields ) values ( )
-class Artisan_Sql_Insert extends Artisan_Sql {
-	private $_sql = NULL;
+abstract class Artisan_Sql_Insert extends Artisan_Sql {
+	///< The actual SQL query in string form.
+	protected $_sql = NULL;
 	
-	private $_table = NULL;
+	///< The main table the query is inserting INTO.
+	protected $_into_table = NULL;
+	
+	///< The fields to insert data into, must be an associative array.
+	protected $_insert_field_list = array();
 	
 	public function __construct() {
 		
 	}
 	
-	
 	public function __destruct() {
 		unset($this->_sql);
 	}
 	
-	public function into($table, $field_list) {
+	public function into($table, $insert_fields) {
 		if ( true === empty($table) ) {
-			throw new Artisan_Sql_Exception(
-				ARTISAN_WARNING, 'Table name is empty.',
-				__CLASS__, __FUNCTION__
-			);
+			throw new Artisan_Sql_Exception(ARTISAN_WARNING, 'Failed to create valid SQL class, the table name is empty.', __CLASS__, __FUNCTION__);
 		}
 		
-		$this->_table = $table;
+		$table = trim($table);
+		$this->_into_table = $table;
 		
-		if ( false === is_array($field_list) ) {
-			$field_list = array($field_list);
+		if ( false === artisan_is_assoc($insert_fields) ) {
+			throw new Artisan_Sql_Exception(ARTISAN_WARNING, 'The insert list is not an associative array.', __CLASS__, __FUNCTION__);
 		}
 		
-		$field_list = parent::createFieldList($table, $field_list);
-		$field_list = implode(', ', $field_list);
-		
-		$this->_sql = "INSERT INTO `" . $table . "` ( " . $field_list . " )";
-		
-		$this->_table = $table;
-		
+		$this->_insert_field_list = artisan_sanitize_fields($insert_fields);
+
 		return $this;
 	}
 
-	public function bind($field_data) {
-		// Need to make field data safe!
-		$sql = " VALUES ( '" . implode("', '", $field_data) . "' )";
-		$this->_sql .= $sql;
-		
-		return $this;
-	}
-	
-	public function query() {
-		return parent::_query($this->_sql);
-	}
-	
 	public function __toString() {
 		return $this->_sql;
 	}
 	
-	public function retrieve() {
-		return $this->_sql;
-	}
+	abstract public function build();
+	abstract public function query();
+	abstract public function affectedRowCount();
+	abstract public function escape($value);
 }
 
 ?>
