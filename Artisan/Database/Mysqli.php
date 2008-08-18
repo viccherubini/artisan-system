@@ -1,6 +1,7 @@
 <?php
 
 Artisan_Library::load('Sql/Mysqli/Select');
+Artisan_Library::load('Sql/Mysqli/Insert');
 
 /**
  * The Mysqli class for connecting to a mysql database.
@@ -61,6 +62,7 @@ class Artisan_Database_Mysqli extends Artisan_Database {
 		
 		// Set the connection for the parameterized SQL
 		$this->select = new Artisan_Sql_Select_Mysqli($this->CONN);
+		$this->insert = new Artisan_Sql_Insert_Mysqli($this->CONN);
 		
 		return $this->CONN;
 	}
