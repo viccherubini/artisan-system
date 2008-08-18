@@ -12,9 +12,9 @@ class Artisan_Sql_Select_Mysqli extends Artisan_Sql_Select {
 		if ( true === $CONN instanceof mysqli ) {
 			$this->CONN = $CONN;
 		}
-	
 	}
-
+	
+	public function __destruct() { }
 	
 	public function build() {
 		$distinct_sql = NULL;
