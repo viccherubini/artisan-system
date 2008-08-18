@@ -13,7 +13,7 @@
  * @param $table_alias The alias of the table the field is a member of.
  */
 function artisan_create_field_alias($field, $table_alias) {
-	return ( false === empty($table_alias) ? $table_alias . '.' : NULL ) . $field;
+	return ( false === empty($table_alias) ? $table_alias . '.' : NULL ) . str_replace('`', NULL, $field);
 }
 
 function artisan_create_field_list($table, $fields, $table_alias = NULL) {
