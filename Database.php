@@ -59,17 +59,53 @@ abstract class Artisan_Database {
 
 	/**
 	 * Disconnects from the specified database.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval boolean Returns true upon successful disconnection, false otherwise.
 	 */
 	abstract public function disconnect();
 
+	/**
+	 * Whether or not the database currently has a connection.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval boolean Returns true if the database has a connection, false otherwise.
+	 */
 	abstract public function isConnected();
 
+	/**
+	 * Escapes a string with the database specific function and charset
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval string The properly escaped string.
+	 */
 	abstract public function escape($string);
 
+	/**
+	 * Starts a transaction.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval boolean Returns true if the transaction was started and no transaction is currently started, false otherwise.
+	 */
 	abstract protected function _start();
-	abstract protected function _cancel();
+	
+	/**
+	 * Rolls back a started transaction.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval boolean Returns true if the transaction began and failed, false otherwise.
+	 */
+	abstract protected function _rollback();
+	
+	/**
+	 * Commits a transaction, saving the data to the database.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval boolean Returns true if the transaction was successfully commited, false otherwise.
+	 */
 	abstract protected function _commit();
 
+	/**
+	 * Queues a list of Artisan_Sql objects to query against the database. If any of the array elements
+	 * are not of type Artisan_Sql, or a query that will not return a value greater than 0 for an 
+	 * affected_rows() call is run, _rollback() will automatically be called.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval boolean Returns true if the list of transactions were successful, false otherwise.
+	 */
 	abstract public function queue($query_list);
 }
 
