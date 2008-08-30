@@ -7,8 +7,8 @@ Artisan_Library::load('Template/Exception');
 abstract class Artisan_Template {
 	protected static $_config = NULL;
 	
-	public function __construct(Artisan_Config $config = NULL) {
-		$this->_config = $config;
+	public function __construct() {
+		
 	}
 
 	
