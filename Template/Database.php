@@ -1,36 +1,27 @@
 <?php
 
 class Artisan_Template_Database extends Artisan_Template {
-	private $_db = NULL;
-
+	private $DB = NULL;
 
 	private $config = array();
 
-	public function __construct(Artisan_Config $config = NULL) {
-		$this->_config = $config;
-		if ( true === is_null($config) ) {
-			$this->_config = parent::$_config;
+	/**
+	 * Constructor for the Artisan_Template class to get the templates from the database.
+	 * @author vmc <vmc@leftnode.com>
+	 * @throws Artisan_Database_Exception If the database object passed into the class can not be connected to.
+	 * @retval Object The new Artisan_Template_Database object.
+	 */
+	public function __construct(Artisan_Database &$db) {
+		if ( false === $db->isConnected() ) {
+			// Try to connect to the database
+			try {
+				$db->connect();
+			} catch ( Artisan_Database_Exception $e ) {
+				throw new Artisan_Template_Exception(ARTISAN_ERROR_CORE, $e->getMessage(), __CLASS__, __FUNCTION__);
+			}
 		}
 		
-		if ( false === Artisan_Library::exists('Database') ) {
-			Artisan_Library::load('Database');
-		}
-		
-		// Configuration should specify the database connection
-		// information, if not, use the default database already created.
-		if ( true === is_null($this->_config) || false === is_object($this->_config) ) {
-			// Use the default database connection and configuration created elsewhere
-			// This can be unsafe as at this point, you may not be aware of what the 
-			// last database created was. It is generally suggested you explicitly 
-			// specify the configuration information.
-			echo 'in here a<br />';
-			$this->_db = Artisan_Database_Monitor::get();
-		} else {
-			// This is the preferred method of creating the Template/Database class
-			$this->_db = Artisan_Database_Monitor::get($this->_config);
-			$this->_db->setConfig($this->_config);
-			echo 'in here b<br />';
-		}
+		$this->DB = &$db;
 	}
 
 	public function __destruct() {
@@ -38,12 +29,8 @@ class Artisan_Template_Database extends Artisan_Template {
 	}
 
 	public function load($tname) {
-		
-		Artisan_Sql_Monitor::set( new Artisan_Sql_Select() );
-		$select = Artisan_Sql_Monitor::get();
-		
-		
-		//$select->from(
+		$this->DB->select->from('my_table')->build();
+		echo $this->DB->select;
 		
 	}
 	
