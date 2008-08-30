@@ -114,7 +114,7 @@ class Artisan_Sql_Select_Mysqli extends Artisan_Sql_Select {
 				if ( 1 === count($data) ) {
 					$data = current($data);
 				} else {
-					if ( false === empty($field) && true === artisan_exists($field, $data) ) {
+					if ( false === empty($field) && true === asfw_exists($field, $data) ) {
 						$data = $data[$field];				
 					}
 				}			

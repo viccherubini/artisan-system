@@ -15,7 +15,7 @@ class Artisan_Sql_Insert_Mysqli extends Artisan_Sql_Insert {
 	
 	public function build() {
 		$field_list = array_keys($this->_insert_field_list);
-		$field_list = artisan_sanitize_fields($field_list);
+		$field_list = asfw_sanitize_fields($field_list);
 		
 		$insert_sql  = "INSERT INTO `" . $this->_into_table . "`";
 		$insert_sql .= " (" . implode(', ', $field_list) . ")";
