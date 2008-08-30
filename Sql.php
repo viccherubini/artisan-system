@@ -13,7 +13,11 @@ class Artisan_Sql {
 		
 	}
 	
-	
+
+	public function __destruct() {
+
+	}
+
 	
 	
 	
