@@ -12,22 +12,22 @@
  * @param $field The field to create a proper name for.
  * @param $table_alias The alias of the table the field is a member of.
  */
-function artisan_create_field_alias($field, $table_alias) {
+function asfw_create_field_alias($field, $table_alias) {
 	return ( false === empty($table_alias) ? $table_alias . '.' : NULL ) . str_replace('`', NULL, $field);
 }
 
-function artisan_create_field_list($table, $fields, $table_alias = NULL) {
+function asfw_create_field_list($table, $fields, $table_alias = NULL) {
 	$field_list = array();
 	
 	if ( true === is_array($fields) ) {
-		$field_list = array_map("artisan_create_field_alias", $fields, array_fill(0, count($fields), $table_alias));
+		$field_list = array_map("asfw_create_field_alias", $fields, array_fill(0, count($fields), $table_alias));
 	}
 	
 	return $field_list;
 }
 
 
-function artisan_sanitize_fields($field_list) {
+function asfw_sanitize_fields($field_list) {
 	foreach ( $field_list as $i => $value ) {
 		$field_list[$i] = str_replace("`", NULL, $value);
 	}
@@ -42,7 +42,7 @@ function artisan_sanitize_fields($field_list) {
  * @param $table The name of the table to create an alias for.
  * @retval string The table alias name.
  */
-function artisan_create_table_alias($table) {
+function asfw_create_table_alias($table) {
 	$alias = NULL;
 	$table = trim($table);
 	$table = str_replace('_', ' ', $table);

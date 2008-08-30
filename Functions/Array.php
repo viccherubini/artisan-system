@@ -9,7 +9,7 @@
  * @param $return Optional parameter to return the value in a string or echo it directly. Default is to echo.
  * @retval string If $return is true, returns a string of formatted text, otherwise, returns true.
  */
-function artisan_print_r($array, $return = false) {
+function asfw_print_r($array, $return = false) {
 	$str = '<pre>' . print_r($array, true) . '</pre>';
 	if ( true === $return ) {
 		return $str;
@@ -28,7 +28,7 @@ function artisan_print_r($array, $return = false) {
  * @param $array The array or object to display.
  * @retval boolean True if the key or variable exists and isn't empty, false otherwise.
  */
-function artisan_exists($key, $array) {
+function asfw_exists($key, $array) {
 	if ( true === is_object($array) ) {
 		if ( true === isset($array->$key) ) {
 			if ( false === empty($array->$key) ) {
@@ -52,7 +52,7 @@ function artisan_exists($key, $array) {
  * @param $array The array to test its associativity.
  * @retval boolean True if $array is associative, false otherwise.
  */
-function artisan_is_assoc($array) {
+function asfw_is_assoc($array) {
 	if ( false === is_array($array) ) {
 		return false;
 	}
