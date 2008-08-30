@@ -12,6 +12,7 @@ Artisan_Library::load('Functions/Encryption');
 Artisan_Library::load('Functions/Html');
 Artisan_Library::load('Functions/Input');
 Artisan_Library::load('Functions/String');
+Artisan_Library::load('Functions/System');
 
 /**
  * This class allows you to easily load and manage other classes in Artisan.
