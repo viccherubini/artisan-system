@@ -1,5 +1,6 @@
 <?php
 
+// Load in its own Parameterized Sql classes
 Artisan_Library::load('Sql/Mysqli/Select');
 Artisan_Library::load('Sql/Mysqli/Insert');
 
@@ -218,7 +219,7 @@ class Artisan_Database_Mysqli extends Artisan_Database {
 	/**
 	 * Rolls back any failed transitional queries.
 	 */
-	protected function _cancel() {
+	protected function _rollback() {
 		if ( true === $this->_transaction_started ) {
 			$this->CONN->rollback();
 		}
@@ -260,7 +261,7 @@ class Artisan_Database_Mysqli extends Artisan_Database {
 		}
 
 		if ( true === $error ) {
-			$this->_cancel();
+			$this->_rollback();
 		} else {
 			$this->_commit();
 		}
