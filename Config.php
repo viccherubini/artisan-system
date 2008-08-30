@@ -36,7 +36,7 @@ abstract class Artisan_Config {
 	}
 	
 	public function __toString() {
-		return artisan_print_r($this, true);		
+		return asfw_print_r($this, true);		
 	}
 }
 
