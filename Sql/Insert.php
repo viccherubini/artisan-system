@@ -26,11 +26,11 @@ abstract class Artisan_Sql_Insert extends Artisan_Sql {
 		$table = trim($table);
 		$this->_into_table = $table;
 		
-		if ( false === artisan_is_assoc($insert_fields) ) {
+		if ( false === asfw_is_assoc($insert_fields) ) {
 			throw new Artisan_Sql_Exception(ARTISAN_WARNING, 'The insert list is not an associative array.', __CLASS__, __FUNCTION__);
 		}
 		
-		$this->_insert_field_list = artisan_sanitize_fields($insert_fields);
+		$this->_insert_field_list = asfw_sanitize_fields($insert_fields);
 
 		return $this;
 	}
