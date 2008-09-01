@@ -36,9 +36,9 @@ function asfw_create_field_list($table, $fields, $table_alias = NULL) {
 /**
  * @author vmc <vmc@leftnode.com>
  * @param $field_list An array of fields to strip the backticks (`) out of
- * @retval
+ * @retval array An array of sanitized fields
  */
-function asfw_sanitize_fields($field_list) {
+function asfw_sanitize_field_list($field_list) {
 	foreach ( $field_list as $i => $value ) {
 		$field_list[$i] = str_replace("`", NULL, $value);
 	}
