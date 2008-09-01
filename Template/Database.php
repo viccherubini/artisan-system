@@ -3,8 +3,6 @@
 class Artisan_Template_Database extends Artisan_Template {
 	private $DB = NULL;
 
-	private $config = array();
-
 	/**
 	 * Constructor for the Artisan_Template class to get the templates from the database.
 	 * @author vmc <vmc@leftnode.com>
