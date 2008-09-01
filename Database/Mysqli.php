@@ -9,11 +9,22 @@ Artisan_Library::load('Sql/Mysqli/Insert');
  * @author vmc <vmc@leftnode.com>
  */
 class Artisan_Database_Mysqli extends Artisan_Database {
+	///< The connection to the database (Mysqli Object)
 	private $CONN = NULL;
+
+	///< The connection to the database (Mysqli Object)
 	private $RESULT = NULL;
+
+	///< The connection to the database (Mysqli Object)
 	private $_query_list = NULL;
+
+	///< The connection to the database (Mysqli Object)
 	private $_sql_type = NULL;
+
+	///< The connection to the database (Mysqli Object)
 	private $_is_connected = false;
+
+	///< The connection to the database (Mysqli Object)
 	private $_transaction_started = false;
 
 
