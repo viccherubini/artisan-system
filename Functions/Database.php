@@ -11,11 +11,18 @@
  * @author vmc <vmc@leftnode.com>
  * @param $field The field to create a proper name for.
  * @param $table_alias The alias of the table the field is a member of.
+ * @retval Returns the aliasized database field name.
  */
 function asfw_create_field_alias($field, $table_alias) {
 	return ( false === empty($table_alias) ? $table_alias . '.' : NULL ) . str_replace('`', NULL, $field);
 }
 
+/**
+ * @author vmc <vmc@leftnode.com>
+ * @param $table The table to map to each field.
+ * @param $fields An array of fields to map the table alias to.
+ * @param $table_alias Optional parameter to manually define a table alias.
+ */
 function asfw_create_field_list($table, $fields, $table_alias = NULL) {
 	$field_list = array();
 	
@@ -26,7 +33,11 @@ function asfw_create_field_list($table, $fields, $table_alias = NULL) {
 	return $field_list;
 }
 
-
+/**
+ * @author vmc <vmc@leftnode.com>
+ * @param $field_list An array of fields to strip the backticks (`) out of
+ * @retval
+ */
 function asfw_sanitize_fields($field_list) {
 	foreach ( $field_list as $i => $value ) {
 		$field_list[$i] = str_replace("`", NULL, $value);
@@ -56,6 +67,16 @@ function asfw_create_table_alias($table) {
 	}
 	
 	return $alias;
+}
+
+/**
+ * Returns the equivalent of the database NOW() function for date/datetime
+ * field types.
+ * @author vmc <vmc@leftnode.com>
+ * @retval string The datetime value in format YYYY-MM-DD HH:MM:SS
+ */
+function asfw_now() {
+	return date('Y-m-d H:i:s');
 }
 
 ?>
