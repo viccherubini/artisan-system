@@ -27,12 +27,13 @@ class Artisan_Template_Database extends Artisan_Template {
 	}
 
 	public function load($tname) {
-		$this->DB->select->from('my_table')->build();
-		echo $this->DB->select;
-		
+		//$this->DB->select->from('my_table')->build();
+		//echo $this->DB->select;
 	}
 	
-	public function setTheme($theme) { }
+	public function setTheme($theme) {
+
+	}
 }
 
 ?>
