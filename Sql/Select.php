@@ -85,7 +85,7 @@ abstract class Artisan_Sql_Select extends Artisan_Sql {
 	
 	public function where($where_fields) {
 		if ( true === asfw_is_assoc($where_fields) ) {
-			$this->_where_field_list = asfw_sanitize_fields($where_fields);
+			$this->_where_field_list = asfw_sanitize_field_list($where_fields);
 		}
 		
 		return $this;
@@ -105,7 +105,7 @@ abstract class Artisan_Sql_Select extends Artisan_Sql {
 		}
 		
 		if ( true === is_array($group_fields) && count($group_fields) > 0 ) {
-			$this->_group_field_list = asfw_sanitize_fields($group_fields);
+			$this->_group_field_list = asfw_sanitize_field_list($group_fields);
 		}
 		
 		return $this;
