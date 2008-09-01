@@ -11,25 +11,15 @@ define('ARTISAN_ERROR_CORE', 100, false);
 define('ARTISAN_WARNING', 200, false);
 define('ARTISAN_NOTICE', 300, false);
 
-class Artisan_Exception extends Exception {
-	/**
-	 * The line number the error occured on.
-	 */
+class Artisan_Exception extends Exception {	///< The line number the error occured on.
 	private $_line_number;
-	
-	/**
-	 * The file name the error occured in.
-	 */
+		///< The file name the error occured in.
 	private $_file_name;
 	
-	/**
-	 * The class name the error occured in.
-	 */
+	///< The class name the error occured in.
 	private $_class_name;
 	
-	/**
-	 * The function name the error occured in.
-	 */
+	///< The function name the error occured in.
 	private $_function_name;
 	
 	public function __construct($error_code, $error_message, $class_name = NULL, $function_name = NULL) {
@@ -42,12 +32,9 @@ class Artisan_Exception extends Exception {
 	}
 	
 	/**
-	 * Return the name of this class.
-	 */
-	public function name() { return __CLASS__; }
-
-	/**
 	 * Overloaded Exception::toString() method. Stylizes how the error string looks.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval string Returns the string with exception data.
 	 */
 	public function toString() {
 		$error_class = NULL;
@@ -65,7 +52,11 @@ class Artisan_Exception extends Exception {
 		return $error_class . $error_code;
 	}
 	
-	
+	/**
+	 * Overloaded Exception::__toString() to echo out the correct string
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval string Returns the string with exception data.
+	 */
 	public function __toString() {
 		return $this->toString();
 	}
