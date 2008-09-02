@@ -1,5 +1,6 @@
 <?php
 
+// comme here
 abstract class Artisan_Sql_Insert extends Artisan_Sql {
 	///< The actual SQL query in string form.
 	protected $_sql = NULL;
@@ -18,17 +19,18 @@ abstract class Artisan_Sql_Insert extends Artisan_Sql {
 		unset($this->_sql);
 	}
 	
+	public function here() { }
+
+
+
 	public function into($table, $insert_fields) {
 		if ( true === empty($table) ) {
 			throw new Artisan_Sql_Exception(ARTISAN_WARNING, 'Failed to create valid SQL class, the table name is empty.', __CLASS__, __FUNCTION__);
 		}
 		
 		$table = trim($table);
+
 		$this->_into_table = $table;
-		
-		//if ( false === asfw_is_assoc($insert_fields) ) {
-		//	throw new Artisan_Sql_Exception(ARTISAN_WARNING, 'The insert list is not an associative array.', __CLASS__, __FUNCTION__);
-		//}
 		
 		$this->_insert_field_list = asfw_sanitize_field_list($insert_fields);
 
