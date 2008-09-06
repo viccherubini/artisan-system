@@ -63,6 +63,8 @@ class Artisan_Exception extends Exception {	///< The line number the error occu
 	
 	/**
 	 * Returns the file name the error occurred in.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval string The name of the file the error occurred in.
 	 */
 	public function getFileName() {
 		return $this->_file_name;
@@ -70,6 +72,8 @@ class Artisan_Exception extends Exception {	///< The line number the error occu
 	
 	/**
 	 * Returns the line number the error occurred on.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval integer The line number the error occured on.
 	 */
 	public function getLineNumber() {
 		return $this->_line_number;
@@ -77,6 +81,8 @@ class Artisan_Exception extends Exception {	///< The line number the error occu
 	
 	/**
 	 * Returns the class name the error occurred in.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval string The name of the class the error occurred in.
 	 */
 	public function getClassName() {
 		return $this->_class_name;
@@ -84,6 +90,8 @@ class Artisan_Exception extends Exception {	///< The line number the error occu
 	
 	/**
 	 * Returns the function name the error occurred in.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval string The name of the function the error occurred in.
 	 */
 	public function getFunctionName() {
 		return $this->_function_name;

@@ -5,6 +5,9 @@ define('ARTISAN_NAME', 'Artisan');
 // Load up the exception so it's always included.
 Artisan_Library::load('Exception');
 
+// Load up the log so that its always included
+Artisan_Library::load('Log');
+
 // Load in the function libraries
 Artisan_Library::load('Functions/Array');
 Artisan_Library::load('Functions/Database');
@@ -31,6 +34,7 @@ class Artisan_Library {
 	 * @param $system_class If true, loads only Artisan classes, otherwise, allows one to load external classes.
 	 * @retval boolean Returns true if the class was loaded, false otherwise.
 	 * @todo Allow more than one level of loading.
+	 * @todo Allow all files to be loaded, or to match a regular expression, or an expression matching glob(), like 'Functions/*'.
 	 */
 	public static function load($lib_name, $build = false, $system_class = true) {
 		// First, see if this is a concrete class, and if so,
@@ -48,6 +52,14 @@ class Artisan_Library {
 		return self::_load($lib_name, $build, $system_class);
 	}
 
+	/**
+	 * This function does the actual loading of the library.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $lib_name The name or path of the library to load, examples are Database, or Database/Mysqli.
+	 * @param $build If a single class is included, and $build is true, the class will be created.
+	 * @param $system_class If true, loads only Artisan classes, otherwise, allows one to load external classes.
+	 * @retval boolean True if the classes was loaded, false otherwise.
+	 */
 	private static function _load($lib_name, $build = false, $system_class = true ) {
 		$class_prefix = NULL;
 		if ( true === $system_class ) {
@@ -92,10 +104,21 @@ class Artisan_Library {
 		return false;
 	}
 
+	/**
+	 * Checks to see if a library currently exists in the list of loaded libraries.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $lib_name The name of the library to check.
+	 * @retval boolean Returns true if the library has been loaded, false otherwise.
+	 */
 	public static function exists($lib_name) {
 		return in_array($lib_name, self::$object_list);
 	}
 	
+	/**
+	 * Returns an array of libraries currently loaded.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval array The list of loaded libraries.
+	 */
 	public static function getObjectList() {
 		return self::$object_list;
 	}
