@@ -13,17 +13,11 @@ abstract class Artisan_Log {
 	
 	protected $_log = array();
 	protected $_flush_level_list = array('G', 'E', 'S', 'X');
-	
-	protected $_db_table = 'artisan_log';
-	
+
 	public function __construct(Artisan_Config &$C = NULL) {
 		if ( false === empty($C) ) {
 			if ( true === asfw_exists('flush_level_list', $C) ) {
 				$this->_flush_level_list = explode(',', str_replace(' ', NULL, $C->flush_level_list));
-			}
-
-			if ( true === asfw_exists('db_table', $C) ) {
-				$this->_db_table = $C->db_table;
 			}
 		}
 	}
