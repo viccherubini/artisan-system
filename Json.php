@@ -4,10 +4,10 @@
  * This class handles encoding and decoding of JSON. It requires PHP 5.2 or greater
  * to operate.
  */
-
 class Artisan_Json {
 	/**
 	 * Convert an associative array to a JSON "string"
+	 * @author vmc <vmc@leftnode.com>
 	 */
 	public static function arrayToJson($data) {
 		if ( true === function_exists('json_encode') ) {
