@@ -1,10 +1,20 @@
 <?php
 
+/**
+ * Loads up a template from the database.
+ * @author vmc <vmc@leftnode.com>
+ */
 class Artisan_Template_Database extends Artisan_Template {
+	///< Database instance passed into the class. Assumes the database already has a connection.
 	private $DB = NULL;
+	
+	///< The ID of the theme loaded to use in _load().
 	private $_theme_id = 0;
 	
+	///< The name of the table that holds the main themes
 	const TABLE_THEME = 'artisan_theme';
+	
+	///< The name of the table that holds the theme's code.
 	const TABLE_THEME_CODE = 'artisan_theme_code';
 	
 	/**
@@ -14,26 +24,19 @@ class Artisan_Template_Database extends Artisan_Template {
 	 * @retval Object The new Artisan_Template_Database object.
 	 */
 	public function __construct(Artisan_Database &$db) {
-		/*
-		if ( false === $db->isConnected() ) {
-			// Try to connect to the database
-			try {
-				$db->connect();
-			} catch ( Artisan_Database_Exception $e ) {
-				throw new Artisan_Template_Exception(ARTISAN_ERROR_CORE, $e->getMessage(), __CLASS__, __FUNCTION__);
-			}
-		}
-		*/
-		
 		// We can only assume the database has a current connection
-		// as we don't want to attempt to connect
+		// as we don't want to attempt to connect.
 		$this->DB = &$db;
 	}
 
-	public function __destruct() {
-		
-	}
-
+	/**
+	 * Sets the current theme.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $theme The name of the theme to load from the filesystem or database.
+	 * @throws Artisan_Template_Exception If the $theme string is empty.
+	 * @throws Artisan_Template_Exception If the $theme can not be found in the database.
+	 * @retval boolean Returns true.
+	 */
 	public function setTheme($theme) {
 		$theme = trim($theme);
 		
@@ -53,7 +56,7 @@ class Artisan_Template_Database extends Artisan_Template {
 			->fetch('theme_id');
 	
 		if ( $theme_id < 1 ) {
-			throw new Artisan_Template_Exception(ARTISAN_ERROR_CORE, 'Theme ' . $theme . ' specified was not found', __CLASS__, __FUNCTION__);
+			throw new Artisan_Template_Exception(ARTISAN_ERROR_CORE, 'Theme ' . $theme . ' specified was not found in the table `' . self::TABLE_THEME . '`.', __CLASS__, __FUNCTION__);
 		}
 		
 		$this->_theme_id = $theme_id;
