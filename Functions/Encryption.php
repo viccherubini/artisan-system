@@ -9,7 +9,13 @@
  * @retval string Returns the encrypted string.
  */
 function asfw_encrypt_string($key, $string) {
+	$key = sha1($key);
+	$iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB);
+	$iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
+	$encrypted_string = mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $key, $string, MCRYPT_MODE_ECB, $iv);
+	$encrypted_string = base64_encode($encrypted_string);
 
+	return $encrypted_string;
 }
 
 /**
@@ -21,8 +27,15 @@ function asfw_encrypt_string($key, $string) {
  * @retval string Returns the decrypted string.
 */
 function asfw_descrypt_string($key, $string) {
+	$encrypted_string = base64_decode($string);
+	$key = sha1($key);
 
+	$iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB);
+	$iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
+	$decrypted_string = mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $key, $encrypted_string, MCRYPT_MODE_ECB, $iv);
+	$decrypted_string = trim($decrypted_string);
+
+	return $decrypted_string;
 }
-
 
 ?>
