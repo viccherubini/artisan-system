@@ -26,7 +26,7 @@ abstract class Artisan_User {
 	}
 
 	public function setUserEmailAddress($email_address) {
-		// First, validate the email address
+		// Validate the email address
 		$email_address = trim($email_address);
 		if ( true === Artisan_Validate::validateEmailAddress($email_address) ) {
 			$this->_user_email_address = $email_address;
