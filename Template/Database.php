@@ -62,6 +62,13 @@ class Artisan_Template_Database extends Artisan_Template {
 		$this->_theme_id = $theme_id;
 	}
 	
+	/**
+	 * Parses a selected templated with the variables in $replace_list.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $template The name of the template from the current theme to load.
+	 * @param $replace_list A key/value array of values to replace.
+	 * @retval string The parsed template code.
+	 */
 	public function parse($template, $replace_list = array()) {
 		$loaded = $this->_load($template);
 		
@@ -76,10 +83,22 @@ class Artisan_Template_Database extends Artisan_Template {
 		return $this->_template_code_parsed;
 	}
 	
+	/**
+	 * Returns the current theme_id from the database. Note: This function is only
+	 * available in this class.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval integer The ID of the currently selected theme.
+	 */
 	public function getThemeId() {
 		return $this->_theme_id;
 	}
 	
+	/**
+	 * Loads a template from the database.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $template The name of the template to load from the currently selected theme.
+	 * @retval The unparsed code from the database.
+	 */
 	protected function _load($template) {
 		if ( true === empty($this->_theme) ) {
 			return false;
