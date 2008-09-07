@@ -10,7 +10,7 @@ abstract class Artisan_User {
 	protected $_user_middlename;
 	protected $_user_lastname;
 
-
+	protected $_user_status;
 
 	public function setUserId($user_id) {
 		$user_id = intval($user_id);
