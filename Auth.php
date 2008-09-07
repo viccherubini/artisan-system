@@ -11,7 +11,7 @@
  * extend this class. Those children classes contain specific implementations of how to authorize
  * against a scheme, which returns the result to this class. This class then returns the result back
  * to the programmer, who determines what to do with it.
- * @author vmc <vmc@leftnode.cOM
+ * @author vmc <vmc@leftnode.com>
 */
 
 abstract class Artisan_Auth {
@@ -35,10 +35,8 @@ abstract class Artisan_Auth {
 	);
 	*/
 	
-	public function __construct(Artisan_Config &$C = NULL) {
-		if ( true === is_object($C) ) {
-			$this->setConfig($C);
-		}
+	public function __construct() {
+	
 	}
 	
 	public function __destruct() {
@@ -54,7 +52,6 @@ abstract class Artisan_Auth {
 		$this->USER = $U;
 	}
 	
-	
 	public function &getConfig() {
 		return $this->CONFIG;
 	}
@@ -62,6 +59,12 @@ abstract class Artisan_Auth {
 	public function &getUser() {
 		return $this->USER;
 	}
+	
+	/**
+	 * Performs the authentication against the specified source.
+	 * 
+	 */
+	abstract public function authenticate();
 	
 }
 
