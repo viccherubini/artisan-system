@@ -143,6 +143,10 @@ class Artisan_Sql_Select_Mysqli extends Artisan_Sql_Select {
 		return $this->CONN->real_escape_string($value);
 	}
 	
+	public function numRows() {
+		return $this->RESULT->num_rows;
+	}
+	
 }
 
 ?>
