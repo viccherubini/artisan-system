@@ -1,6 +1,6 @@
 <?php
 
-class VO {
+class Artisan_VO {
 
 	public function __construct($array) {
 		if ( true === is_array($array) && count($array) > 0 ) {
