@@ -38,4 +38,20 @@ function asfw_descrypt_string($key, $string) {
 	return $decrypted_string;
 }
 
+
+function asfw_compute_hash($word, $salt) {
+	// Do the initial sha1
+	$initial_salt = sha1($word);
+
+	$hash = sha1($initial_salt . $word . $salt);
+
+	return $hash;
+}
+
+function asfw_create_salt() {
+	$salt = sha1(uniqid('', true));
+	return $salt;
+}
+
+
 ?>
