@@ -17,6 +17,9 @@ Artisan_Library::load('Functions/Input');
 Artisan_Library::load('Functions/String');
 Artisan_Library::load('Functions/System');
 
+// Finally load up the value objects so they can be created
+Artisan_Library::load('VO');
+
 /**
  * This class allows you to easily load and manage other classes in Artisan.
  * @author vmc <vmc@leftnode.com>
