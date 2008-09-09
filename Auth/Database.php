@@ -29,7 +29,7 @@ class Artisan_Auth_Database extends Artisan_Auth {
 		$user_password = $this->USER->getUserPassword();
 		
 		$this->DB->select
-			->from(self::TABLE_USER, 'au')
+			->from(self::TABLE_USER, asfw_create_table_alias(self::TABLE_USER))
 			->where(array('user_name' => $user_name, 'user_password' => $user_password))
 			->query();
 			
