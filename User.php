@@ -4,6 +4,7 @@ abstract class Artisan_User {
 	protected $_user_id;
 	protected $_user_name;
 	protected $_user_password;
+	protected $_user_password_salt;
 	protected $_user_email_address;
 
 	protected $_user_firstname;
@@ -21,16 +22,12 @@ abstract class Artisan_User {
 		$this->_user_name = trim($user_name);
 	}
 
-	public function setUserPassword($user_password) {
-		$this->_user_password = trim($user_password);
-	}
-
 	public function setUserEmailAddress($email_address) {
 		// Validate the email address
 		$email_address = trim($email_address);
-		if ( true === Artisan_Validate::validateEmailAddress($email_address) ) {
+		//if ( true === Artisan_Validate::validateEmailAddress($email_address) ) {
 			$this->_user_email_address = $email_address;
-		}
+		//}
 	}
 
 	public function setUserFirstname($firstname) {
@@ -45,6 +42,18 @@ abstract class Artisan_User {
 		$this->_user_lastname = trim($lastname);
 	}
 
+	public function setUserPassword($password) {
+		$this->_user_password = trim($password);
+	}
+	
+	public function setUserPasswordSalt($salt) {
+		$this->_user_password_salt = trim($salt);
+	}
+	
+	public function setUserStatus($status) {
+		$status = intval($status);
+		$this->_user_status = $status;
+	}
 
 	public function getUserId() {
 		return $this->_user_id;
