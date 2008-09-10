@@ -139,7 +139,6 @@ class Artisan_Sql_Select_Mysqli extends Artisan_Sql_Select {
 	}
 	
 	public function escape($value) {
-		$value = trim($value);
 		return $this->CONN->real_escape_string($value);
 	}
 	
