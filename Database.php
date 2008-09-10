@@ -76,7 +76,7 @@ abstract class Artisan_Database {
 	 * @author vmc <vmc@leftnode.com>
 	 * @retval string The properly escaped string.
 	 */
-	abstract public function escape($string);
+	//abstract public function escape($string);
 
 	/**
 	 * Starts a transaction.
