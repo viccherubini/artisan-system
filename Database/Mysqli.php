@@ -12,33 +12,27 @@ class Artisan_Database_Mysqli extends Artisan_Database {
 	///< The connection to the database (Mysqli Object)
 	private $CONN = NULL;
 
-	///< The connection to the database (Mysqli Object)
-	private $RESULT = NULL;
-
-	///< The connection to the database (Mysqli Object)
-	private $_query_list = NULL;
-
-	///< The connection to the database (Mysqli Object)
-	private $_sql_type = NULL;
-
-	///< The connection to the database (Mysqli Object)
+	///< Whether or not the instance of this class is currently connected to the database.
 	private $_is_connected = false;
 
-	///< The connection to the database (Mysqli Object)
+	///< Whether or not a transaction has been started.
 	private $_transaction_started = false;
 
-
+	///< The instance of the Artisan_Sql_Select_Mysqli class for executing queries.
 	public $select = NULL;
+	
+	///< The instance of the Artisan_Sql_Insert_Mysqli class for executing queries.
 	public $insert = NULL;
+	
+	///< The instance of the Artisan_Sql_Update_Mysqli class for executing queries.
 	public $update = NULL;
+
 
 	public function __destruct() {
 		if ( true === $this->_is_connected && true === is_object($this->CONN) ) {
 			$this->disconnect();
 		}
 		unset($this->CONFIG);
-		
-		//$this->select = new Artisan_Sql_Select_Mysqli();
 	}
 
 
@@ -81,6 +75,7 @@ class Artisan_Database_Mysqli extends Artisan_Database {
 
 	/**
 	 * Disconnect from the database if already connected.
+	 * @author vmc <vmc@leftnode.com>
 	 * @retval boolean Always returns true.
 	 */
 	public function disconnect() {
@@ -94,108 +89,16 @@ class Artisan_Database_Mysqli extends Artisan_Database {
 	}
 
 	/**
-	 * Return the number of rows after a SELECT query.
-	 * @retval integer The number of rows from the last query.
-	 */
-	/*
-	public function getNumRows() {
-		if ( true === is_object($this->RESULT) ) {
-			return $this->RESULT->num_rows;
-		}
-
-		return 0;
-	}
-	*/
-	
-	/**
-	 * Return the number of rows affected after a query that alters rows.
-	 * @retval integer The number of rows affected from the last INSERT, UPDATE or DELETE clause.
-	 */
-	/*
-	public function getAffectedRows() {
-		if ( true === is_object($this->CONN) ) {
-			return $this->CONN->affected_rows;
-		}
-
-		return 0;
-	}
-	*/
-	/**
-	 * Performs a query against the database.
-	 * @author vmc <vmc@leftnode.com>
-	 * @param $sql The SQL query to execute, either a SQL string or type Artisan_Sql
-	 * @throws Artisan_Database_Exception Throws an exception if an error occurs in the SQL.
-	 * @return Returns the result object if a valid result.
-	 * @todo Implement a query history to create metrics from.
-	 */
-	/*
-	public function query($sql) {
-		$query = $sql;
-		if ( Artisan_Sql instanceof $sql ) {
-			$query = $sql->get();
-		}
-
-		$result = $this->CONN->query($query);
-
-		if ( true === is_object($result) ) {
-			$this->RESULT = $result;
-		} else {
-			throw new Artisan_Database_Exception(ARTISAN_WARNING, $this->CONN->error, __CLASS__, __FUNCTION__);
-		}
-
-		return $result;
-	}
-	*/
-
-	/**
-	 * Fetch an array row from the database. If this is used in a loop,
-	 * such as a while ( $data = $db->fetch() ), the last call will
-	 * return a null value, and thus trigger the free() method below
-	 * to be called, ensuring the memory is always freed.
-	 * @author vmc <vmc@leftnode.com>
-	 */
-	/*
-	public function fetchRow() {
-		$data = $this->RESULT->fetch_assoc();
-		if ( true === is_null($data) ) {
-			$this->free();
-		}
-
-		return $data;
-	}
-	*/
-	
-	/**
-	 * Free the memory from the last SQL statement (generally only
-	 * from SELECT or EXPLAIN queries).
-	 * @author vmc <vmc@leftnode.com>
-	 */
-	/*
-	public function free() {
-		if ( true === is_object($this->RESULT) ) {
-			$this->RESULT->free();
-		}
-
-		return true;
-	}
-	*/
-	/**
 	 * Whether or not a connection to the database exists.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval boolean True if connected, false otherwise.
 	 */
 	public function isConnected() {
 		return $this->_is_connected;
 	}
 
-	/**
-	 * Escape a string with the correct character set.
-	 */
-	public function escape($string) {
-		return $this->CONN->real_escape_string($string);
-	}
 
-
-
-	public function start() {
+	public function startTransaction() {
 		if ( false === $this->_transaction_started ) {
 			$this->CONN->autocommit(false);
 			$this->_transaction_started = true;
@@ -203,17 +106,25 @@ class Artisan_Database_Mysqli extends Artisan_Database {
 	}
 
 
-	public function commit() {
+	public function commitTransaction() {
 		if ( true === $this->_transaction_started ) {
 			$this->CONN->commit();
 		}
 	}
 
-	public function rollback() {
+	public function rollbackTransaction() {
 		if ( true === $this->_transaction_started ) {
 			$this->CONN->rollback();
 		}
 	}
+
+
+
+
+
+
+
+
 
 
 
