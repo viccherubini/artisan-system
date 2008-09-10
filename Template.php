@@ -102,10 +102,10 @@ abstract class Artisan_Template {
 		$result_length = count($result_list);
 		$parse_list = array();
 		for ( $i=0; $i<$result_length; $i++ ) {
-			// this is the string {variable}
+			// This is the string {variable}
 			$var = $result_list[$i][0];
 			
-			// this is the string variable (the key)
+			// This is the string variable (the key)
 			$trim_var = $result_list[$i][1];
 			
 			// The $parse_list is created in order to avoid having to call
