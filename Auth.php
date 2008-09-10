@@ -13,7 +13,6 @@
  * to the programmer, who determines what to do with it.
  * @author vmc <vmc@leftnode.com>
 */
-
 abstract class Artisan_Auth {
 	const STATUS_ANONYMOUS = 2;
 	const STATUS_INVALID = 4;
@@ -62,7 +61,8 @@ abstract class Artisan_Auth {
 	
 	/**
 	 * Performs the authentication against the specified source.
-	 * 
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval boolean True if able to be authenticated, false otherwise.
 	 */
 	abstract public function authenticate();
 	
