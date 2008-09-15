@@ -17,6 +17,9 @@ abstract class Artisan_Sql_Select extends Artisan_Sql {
 	///< Whether or not to include a DISTINCT clause.
 	protected $_distinct = false;
 	
+	///< The list of fields to return in the query.
+	protected $_field_list = array();
+	
 	///< The list of fields to use in the WHERE clause.
 	protected $_where_field_list = array();
 	
@@ -37,7 +40,7 @@ abstract class Artisan_Sql_Select extends Artisan_Sql {
 	}
 	
 	public function __destruct() {
-		unset($this->_sql, $this->_from_table, $this->_from_table_list, $this->_field_list);
+		unset($this->_sql, $this->_from_table, $this->_from_table_list);
 	}
 	
 	public function from($table, $alias = NULL) {
@@ -45,9 +48,8 @@ abstract class Artisan_Sql_Select extends Artisan_Sql {
 			throw new Artisan_Sql_Exception(ARTISAN_WARNING, 'Failed to create valid SQL class, the table name is empty.', __CLASS__, __FUNCTION__);
 		}
 		
-		$table = trim($table);
-		$this->_from_table = $table;
-		$this->_from_table_alias = $alias;
+		$this->setFromTable($table);
+		$this->setFromTableAlias($alias);
 		
 		// Rather than having the customer supply an array, allow them
 		// to supply as many parameters as they want for all of the fields.
@@ -64,9 +66,9 @@ abstract class Artisan_Sql_Select extends Artisan_Sql {
 				$fields = array($fields);
 			}
 			
-			$this->_field_list = asfw_create_field_list($this->_from_table, $fields, NULL);
+			$this->setFieldList(asfw_create_field_list($this->_from_table, $fields, NULL));
 		} else {
-			$this->_field_list = array('*');
+			$this->setFieldList(array('*'));
 		}
 		
 		return $this;
@@ -85,7 +87,7 @@ abstract class Artisan_Sql_Select extends Artisan_Sql {
 	
 	public function where($where_fields) {
 		if ( true === asfw_is_assoc($where_fields) ) {
-			$this->_where_field_list = asfw_sanitize_field_list($where_fields);
+			$this->setWhereFieldList(asfw_sanitize_field_list($where_fields));
 		}
 		
 		return $this;
@@ -105,7 +107,7 @@ abstract class Artisan_Sql_Select extends Artisan_Sql {
 		}
 		
 		if ( true === is_array($group_fields) && count($group_fields) > 0 ) {
-			$this->_group_field_list = asfw_sanitize_field_list($group_fields);
+			$this->setGroupFieldList(asfw_sanitize_field_list($group_fields));
 		}
 		
 		return $this;
@@ -135,6 +137,68 @@ abstract class Artisan_Sql_Select extends Artisan_Sql {
 	
 	public function __toString() {
 		return $this->_sql;
+	}
+	
+	/**
+	 * Resets all of the internal variables that make up a SQL query.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval boolean Returns true.
+	 */
+	public function reset() {
+		$this->setFromTable(NULL);
+		$this->setFromTableAlias(NULL);
+		$this->setDistinct(false);
+		$this->setFieldList(array());
+		$this->setWhereFieldList(array());
+		$this->setJoinTableList(array());
+		$this->setGroupFieldList(array());
+		return true;
+	}
+	
+	public function setFromTable($table_name) {
+		$this->_from_table = trim($table_name);
+		return true;
+	}
+	
+	public function setFromTableAlias($from_table_alias) {
+		$this->_from_table_alias = trim($from_table_alias);
+		return true;
+	}
+	
+	public function setDistinct($distinct) {
+		if ( true === is_bool($distinct) ) {
+			$this->_distinct = $distinct;
+		}
+		return true;
+	}
+	
+	public function setFieldList($field_list) {
+		if ( true === is_array($field_list) ) {
+			$this->_field_list = $field_list;
+		}
+		return true;
+	}
+	
+	public function setWhereFieldList($where_field_list) {
+		if ( true === is_array($where_field_list) ) {
+			$this->_where_field_list = $where_field_list;
+		}
+		return true;
+	}
+	
+	public function setJoinTableList($join_table_list) {
+		if ( true === is_array($join_table_list) ) {
+			$this->_join_table_list = $join_table_list;
+		}
+		return true;
+	}
+	
+	
+	public function setGroupFieldList($group_field_list) {
+		if ( true === is_array($group_field_list) ) {
+			$this->_group_field_list = $group_field_list;
+		}
+		return true;
 	}
 	
 	abstract public function build();
