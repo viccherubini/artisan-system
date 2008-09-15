@@ -1,5 +1,8 @@
 <?php
 
+Artisan_Library::load('Auth/Monitor');
+Artisan_Library::load('Auth/Exception');
+
 /**
  * Authentication takes a username and password and authenticates it against a specified system. 
  * To remain true to the mantra of do one thing and do it well, Authentication does not initialize
@@ -62,9 +65,10 @@ abstract class Artisan_Auth {
 	/**
 	 * Performs the authentication against the specified source.
 	 * @author vmc <vmc@leftnode.com>
+	 * @param $validation_hook Optional hook to call after validation to further validate the data.
 	 * @retval boolean True if able to be authenticated, false otherwise.
 	 */
-	abstract public function authenticate();
+	abstract public function authenticate($validation_hook = NULL);
 	
 }
 
