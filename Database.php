@@ -22,7 +22,7 @@ abstract class Artisan_Database {
 	/**
 	 * Default constructor.
 	 * @author vmc <vmc@leftnode.com>
-	 * @param $C is an Artisan_Config configuration instance, optional.
+	 * @param $C An Artisan_Config configuration instance, optional.
 	 * @retval object New database instance, ready for connection.
 	 */
 	public function __construct(Artisan_Config &$C = NULL) {
@@ -70,13 +70,6 @@ abstract class Artisan_Database {
 	 * @retval boolean Returns true if the database has a connection, false otherwise.
 	 */
 	abstract public function isConnected();
-
-	/**
-	 * Escapes a string with the database specific function and charset
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval string The properly escaped string.
-	 */
-	//abstract public function escape($string);
 
 	/**
 	 * Starts a transaction.
