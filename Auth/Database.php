@@ -12,12 +12,18 @@ class Artisan_Auth_Database extends Artisan_Auth {
 		$this->DB = &$db;
 	}
 	
-
+	/**
+	 * Authenticate a use against a database. Assumes the User has been set in 
+	 * the method $this->setUser().
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $validation_hook Optional hook/callback to call after validation to further validate the data.
+	 * @retval boolean True if fully authenticated, false otherwise.
+	 */
 	public function authenticate($validation_hook = NULL) {
 		$authenticated = false;
 		
 		// See if a user has been set, if not, throw an exception
-		if ( false === is_object($this->USER) ) {
+		if ( false === $this->USER instanceof Artisan_User ) {
 			throw new Artisan_Auth_Exception(ARTISAN_ERROR_CORE, 'Failed to authenticate, the user object has not been set.', __CLASS__, __FUNCTION__);
 		}
 		
@@ -25,8 +31,8 @@ class Artisan_Auth_Database extends Artisan_Auth {
 		
 		// Always assume the password is hashed already as it shouldn't be stored
 		// unhashed in the Artisan_User class.
-		$user_name = $this->USER->getUserName();
-		$user_password = $this->USER->getUserPassword();
+		$user_name = $this->USER->getName();
+		$user_password = $this->USER->getPassword();
 		
 		$this->DB->select
 			->from(self::TABLE_USER, asfw_create_table_alias(self::TABLE_USER))
