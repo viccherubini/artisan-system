@@ -47,6 +47,8 @@ class Artisan_Sql_Select_Mysqli extends Artisan_Sql_Select {
 		
 		
 		$this->_sql = $select_sql . $where_sql . $group_sql;
+		
+		$this->reset();
 		/*
 		// First, begin to build the field list and initial select data.
 		$field_list = $this->_field_list;
@@ -86,7 +88,7 @@ class Artisan_Sql_Select_Mysqli extends Artisan_Sql_Select {
 		// Assume $this->_sql has not been built, so build it. If it
 		// has been built, it'll simply be overwritten.
 		$this->build();
-		
+
 		if ( false === empty($this->_sql) ) {
 			$result = $this->CONN->query($this->_sql);
 
