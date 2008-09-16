@@ -1,6 +1,7 @@
 <?php
 
 define('ARTISAN_NAME', 'Artisan');
+define('EXT', '.php');
 
 // Load up the exception so it's always included.
 Artisan_Library::load('Exception');
@@ -74,12 +75,10 @@ class Artisan_Library {
 		$class_exists = class_exists($class, false);
 		$interface_exists = interface_exists($class, false);
 
-		$ext = '.php';
-
 		if ( false === in_array($lib_name, self::$object_list) && false === $class_exists && false === $interface_exists ) {
 			$abs_path = dirname(__FILE__);
 
-			$file = $abs_path . '/' . $lib_name . $ext;
+			$file = $abs_path . '/' . $lib_name . EXT;
 
 			if ( true === file_exists($file) && true === is_file($file) ) {
 				/**
