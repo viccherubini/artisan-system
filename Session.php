@@ -5,7 +5,7 @@ Artisan_Library::load('Session/Exception');
 
 abstract class Artisan_Session {
 
-	public function __construct(Artisan_Config $config) {
+	public function __construct(Artisan_Config &$config) {
 	
 	}
 }
