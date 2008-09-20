@@ -68,6 +68,7 @@ class Artisan_Template_Database extends Artisan_Template {
 	 * @param $replace_list A key/value array of values to replace.
 	 * @retval string The parsed template code.
 	 */
+	/*
 	public function parse($template, $replace_list = array()) {
 		$loaded = $this->_load($template);
 		
@@ -81,6 +82,7 @@ class Artisan_Template_Database extends Artisan_Template {
 		
 		return $this->_template_code_parsed;
 	}
+	*/
 	
 	/**
 	 * Returns the current theme_id from the database. Note: This function is only
@@ -104,6 +106,11 @@ class Artisan_Template_Database extends Artisan_Template {
 		}
 		
 		if ( $this->_theme_id < 1 ) {
+			return false;
+		}
+		
+		$template = trim($template);
+		if ( true === empty($template) ) {
 			return false;
 		}
 		
