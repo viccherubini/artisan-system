@@ -41,25 +41,24 @@ class Artisan_Template_Database extends Artisan_Template {
 		$theme = trim($theme);
 		
 		if ( true === empty($theme) ) {
-			throw new Artisan_Template_Exception(ARTISAN_ERROR_CORE, 'The theme name is empty', __CLASS__, __FUNCTION__);
+			throw new Artisan_Template_Exception(ARTISAN_ERROR_CORE, 'The theme name is empty.', __CLASS__, __FUNCTION__);
 		}
 		
-		$theme = trim($theme);
-		if ( false === empty($theme) ) {
-			$this->_theme = $theme;
-		}
-		
+		$tt = self::TABLE_THEME;		
 		$theme_id = $this->DB->select
-			->from(self::TABLE_THEME, 'at', 'theme_id')
+			->from($tt, asfw_create_table_alias($tt), 'theme_id')
 			->where(array('theme_name' => $theme, 'theme_status' => 1))
 			->query()
 			->fetch('theme_id');
 	
 		if ( $theme_id < 1 ) {
-			throw new Artisan_Template_Exception(ARTISAN_ERROR_CORE, 'Theme ' . $theme . ' specified was not found in the table `' . self::TABLE_THEME . '`.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Template_Exception(ARTISAN_ERROR_CORE, 'Theme ' . $theme . ' specified was not found in the table `' . $ttc . '`.', __CLASS__, __FUNCTION__);
 		}
 		
+		$this->_theme = $theme;
 		$this->_theme_id = $theme_id;
+		
+		return true;
 	}
 	
 	/**
@@ -108,8 +107,9 @@ class Artisan_Template_Database extends Artisan_Template {
 			return false;
 		}
 		
+		$ttc = self::TABLE_THEME_CODE;
 		$code = $this->DB->select
-			->from(self::TABLE_THEME_CODE, 'atc', 'code')
+			->from($ttc, asfw_create_table_alias($ttc), 'code')
 			->where(array('code_name' => $template))
 			->query()
 			->fetch('code');
