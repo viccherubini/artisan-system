@@ -80,7 +80,18 @@ abstract class Artisan_Template {
 	 * @param $replace_list A hash array of variables to replace. Key is the variable name, value is the replacement value.
 	 * @retval string Returns the parsed template.
 	 */	
-	abstract public function parse($template, $replace_list = array());
+	public function parse($template, $replace_list = array()) {
+		$loaded = $this->_load($template);
+		
+		if ( false === $loaded ) {
+			return false;
+		}
+		
+		$this->_replace_list = $replace_list;
+		$this->_parse();
+		
+		return $this->_template_code_parsed;
+	}
 	
 	/**
 	 * Loads a template from the currently set theme.
