@@ -75,8 +75,12 @@ function asfw_create_table_alias($table) {
  * @author vmc <vmc@leftnode.com>
  * @retval string The datetime value in format YYYY-MM-DD HH:MM:SS
  */
-function asfw_now() {
-	return date('Y-m-d H:i:s');
+function asfw_now($time = NULL) {
+	if ( true === empty($time) ) {
+		$time = time();
+	}
+	
+	return date('Y-m-d H:i:s', $time);
 }
 
 ?>
