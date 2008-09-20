@@ -1,6 +1,7 @@
 <?php
 
 
+Artisan_Library::load('Controller/Exception');
 
 /**
  * Handles the Model-View Controller design pattern. The Plugin architecture allows
@@ -10,18 +11,22 @@
  */
 class Artisan_Controller {
 	protected $P = NULL;
+	
+	private $CONTROLLER = NULL;
 	//private $CONFIG = NULL;
 	
 	private $_directory = NULL;
 	private $_default_method = NULL;
 	private $_default_controller = NULL;
 	
-	public function __construct(Artisan_Config &$C) {
+	public function __construct(Artisan_Config &$C = NULL) {
 		$this->P = &Artisan_Controller_Plugin::get();
 		
-		$this->_directory = $C->directory;
-		$this->_default_method = $C->default_method;
-		$this->_default_controller = $C->default_controller;
+		if ( true === is_object($C) ) {
+			$this->_directory = $C->directory;
+			$this->_default_method = $C->default_method;
+			$this->_default_controller = $C->default_controller;
+		}
 	}
 
 	public function __destruct() {
@@ -65,7 +70,25 @@ class Artisan_Controller {
 		}
 		
 		// Create a new instance of the controller to work with
-		$C = new $controller();
+		//$C = new $controller();
+		try {
+			$this->CONTROLLER = new $controller();
+		} catch ( Artisan_Exception $e ) {
+			throw $e;
+		}
+	}
+	
+	public function execute($view = NULL) {
+		if ( false === is_object($this->CONTROLLER) ) {
+			throw new Artisan_Controller_Exception(ARTISAN_ERROR_CORE, 'The controller has not been set yet.', __CLASS__, __FUNCTION__);
+		}
+		
+		if ( false === $this->CONTROLLER instanceof Artisan_Controller ) {
+			throw new Artisan_Controller_Exception(ARTISAN_ERROR_CORE, 'The controller is not of inherited type ' . __CLASS__, __CLASS__, __FUNCTION__);
+		}
+		
+		// Make sure whatever is being executed can be called with is_callable or method_exists
+		$this->CONTROLLER->index();
 	}
 }
 
