@@ -1,7 +1,9 @@
 <?php
 
 /**
- * Singleton plugin class 
+ * This singleton plugin class allows a programmer to easily register class instances
+ * with the main Controller class, giving immediate access to them.
+ * @autor vmc <vmc@leftnode.com>
  */
 class Artisan_Controller_Plugin {
 	private static $INST = NULL;
