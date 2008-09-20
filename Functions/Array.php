@@ -25,7 +25,7 @@ function asfw_print_r($array, $return = false) {
  * member variable and isn't empty.
  * @author vmc <vmc@leftnode.com>
  * @param $key The key or variable to check for existence.
- * @param $array The array or object to display.
+ * @param $array The array or object to search.
  * @retval boolean True if the key or variable exists and isn't empty, false otherwise.
  */
 function asfw_exists($key, $array) {
@@ -44,6 +44,26 @@ function asfw_exists($key, $array) {
 	}
 	
 	return false;
+}
+
+/**
+ * If an element exists in an array or object, it returns it's value
+ * otherwise, this method returns NULL.
+ * @author vmc <vmc@leftnode.com>
+ * @param $key The key or variable to check for existence.
+ * @param $array The array or object to search.
+ * @retval mixed Returns value if found, NULL otherwise.
+ */
+function asfw_exists_return($key, $array) {
+	if ( true === asfw_exists($key, $array) ) {
+		if ( true === is_object($array) ) {
+			return $array->$key;
+		} else {
+			return $array[$key];
+		}
+	}
+	
+	return NULL;
 }
 
 /**
