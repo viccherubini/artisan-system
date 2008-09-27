@@ -16,8 +16,10 @@ class Artisan_Controller {
 	//private $CONFIG = NULL;
 	
 	private $_directory = NULL;
-	private $_default_method = NULL;
+	private $_default_method = 'index';
 	private $_default_controller = NULL;
+	
+	private $_controller_name = NULL;
 	
 	public function __construct(Artisan_Config &$C = NULL) {
 		$this->P = &Artisan_Controller_Plugin::get();
@@ -54,6 +56,7 @@ class Artisan_Controller {
 		
 		// Correctly name the controller according to the naming conventions
 		$controller = asfw_rename_controller($controller);
+		$this->_controller_name = $controller;
 		
 		// See if that file exists in the directory
 		$controller_file = $this->_directory . $controller . EXT;
@@ -78,7 +81,16 @@ class Artisan_Controller {
 		}
 	}
 	
-	public function execute($view = NULL) {
+	public function setTranslationList($translation_list) {
+		if ( false === asfw_is_assoc($translaction_list) ) {
+			return false;
+		}
+		
+		
+	}
+	
+	
+	public function execute($method = NULL, $data = array()) {
 		if ( false === is_object($this->CONTROLLER) ) {
 			throw new Artisan_Controller_Exception(ARTISAN_ERROR_CORE, 'The controller has not been set yet.', __CLASS__, __FUNCTION__);
 		}
@@ -88,7 +100,26 @@ class Artisan_Controller {
 		}
 		
 		// Make sure whatever is being executed can be called with is_callable or method_exists
-		$this->CONTROLLER->index();
+		if ( false === empty($method) && empty($this->_default_method) ) {
+			throw new Artisan_Controller_Exception(ARTISAN_ERROR_CORE, 'No controller method was specified and no default method is specified.', __CLASS__, __FUNCTION__);
+		}
+		
+		if ( true === empty($method) ) {
+			$method = $this->_default_method;
+		}
+		
+		if ( false === method_exists($this->CONTROLLER, $method) ) {
+			throw new Artisan_Controller_Exception(ARTISAN_ERROR_CORE, 'The method ' . $method . ' does not exist in the controller ' . $this->_controller_name . '.', __CLASS__, __FUNCTION__);
+		}
+		
+		// See if a translation exists for this method and if so,
+		// get the data from the $data variable.
+		
+		//$reflect = new ReflectionFunction($this->CONTROLLER->$method);
+		$method = new ReflectionMethod($this->, 'increment');
+		
+		
+		//$this->CONTROLLER->index();
 	}
 }
 
