@@ -11,9 +11,8 @@ class Artisan_Unittest {
 		$this->_test_failed = 0;
 	}
 
-
 	public function __destruct() {
-
+	
 	}
 
 
@@ -25,6 +24,7 @@ class Artisan_Unittest {
 		} else {
 			$this->_test_failed++;
 		}
+		return true;
 	}
 
 
@@ -36,7 +36,29 @@ class Artisan_Unittest {
 		} else {
 			$this->_test_failed++;
 		}
-
+		return true;
+	}
+	
+	public function assertEquals($expr, $value) {
+		$this->_test_count++;
+		
+		if ( $expr == $value ) {
+			$this->_test_passed++;
+		} else {
+			$this->_test_failed++;
+		}
+		return true;
+	}
+	
+	public function assertNotEquals($expr, $value) {
+		$this->_test_count++;
+		
+		if ( $expr != $value ) {
+			$this->_test_passed++;
+		} else {
+			$this->_test_failed++;
+		}
+		return true;
 	}
 }
 
