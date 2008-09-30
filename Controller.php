@@ -13,13 +13,14 @@ class Artisan_Controller {
 	protected $P = NULL;
 	
 	private $CONTROLLER = NULL;
-	//private $CONFIG = NULL;
 	
 	private $_directory = NULL;
 	private $_default_method = 'index';
 	private $_default_controller = NULL;
 	
 	private $_controller_name = NULL;
+
+	private $_translation_list = array();
 	
 	public function __construct(Artisan_Config &$C = NULL) {
 		$this->P = &Artisan_Controller_Plugin::get();
@@ -86,11 +87,11 @@ class Artisan_Controller {
 			return false;
 		}
 		
-		
+		$this->_translation_list = $translation_list;
 	}
 	
 	
-	public function execute($method = NULL, $data = array()) {
+	public function execute($method = NULL, $args = array()) {
 		if ( false === is_object($this->CONTROLLER) ) {
 			throw new Artisan_Controller_Exception(ARTISAN_ERROR_CORE, 'The controller has not been set yet.', __CLASS__, __FUNCTION__);
 		}
@@ -115,11 +116,15 @@ class Artisan_Controller {
 		// See if a translation exists for this method and if so,
 		// get the data from the $data variable.
 		
-		//$reflect = new ReflectionFunction($this->CONTROLLER->$method);
-		$method = new ReflectionMethod($this->, 'increment');
-		
-		
-		//$this->CONTROLLER->index();
+		$method = new ReflectionMethod($this->CONTROLLER, $method);
+
+		if ( true === $method->isPublic() ) {
+			if ( true === $method->isStatic() ) {
+				$method->invokeArgs(NULL, $args);
+			} else {
+				$method->invokeArgs($this->CONTROLLER, $args);
+			}
+		}
 	}
 }
 
