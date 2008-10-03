@@ -21,7 +21,7 @@ function asfw_print_r($array, $return = false) {
 }
 
 /**
- * Determines if a key exists in an array and isn't empty or a class has a public
+ * Determines if a key exists in an array and isn't empty or a class has a
  * member variable and isn't empty.
  * @author vmc <vmc@leftnode.com>
  * @param $key The key or variable to check for existence.
@@ -30,7 +30,7 @@ function asfw_print_r($array, $return = false) {
  */
 function asfw_exists($key, $array) {
 	if ( true === is_object($array) ) {
-		if ( true === isset($array->$key) ) {
+		if ( true === property_exists($array, $key) ) {
 			if ( false === empty($array->$key) ) {
 				return true;
 			}
