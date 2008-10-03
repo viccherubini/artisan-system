@@ -2,6 +2,8 @@
 
 
 Artisan_Library::load('Controller/Exception');
+Artisan_Library::load('Controller/Plugin');
+Artisan_Library::load('Controller/Builder');
 
 /**
  * Handles the Model-View Controller design pattern. The Plugin architecture allows
@@ -10,31 +12,56 @@ Artisan_Library::load('Controller/Exception');
  * @author vmc <vmc@leftnode.com>
  */
 class Artisan_Controller {
+	///< Instance of the Artisan_Controller_Plugin class.
 	protected $P = NULL;
 	
+	///< Instance of the controller specified to use.
 	private $CONTROLLER = NULL;
 	
+	///< The directory to load controllers from.
 	private $_directory = NULL;
+	
+	///< If no method is specified, this one is used.
 	private $_default_method = 'index';
+	
+	///< If no controller is specified, this one is used.
 	private $_default_controller = NULL;
 	
+	///< The name of the controller currently being done.
 	private $_controller_name = NULL;
 
-	private $_translation_list = array();
-	
+	/**
+	 * Builds a new Artisan_Controller instance.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $C Optional configuration parameter of type Artisan_Config.
+	 * @retval Object Returns new Artisan_Controller instance.
+	 */
 	public function __construct(Artisan_Config &$C = NULL) {
 		$this->P = &Artisan_Controller_Plugin::get();
 		
 		if ( true === is_object($C) ) {
-			$this->_directory = $C->directory;
-			$this->_default_method = $C->default_method;
-			$this->_default_controller = $C->default_controller;
+			$this->setConfig($C);
 		}
 	}
 
 	public function __destruct() {
 	
 	}
+	
+	public function setConfig(Artisan_Config &$C) {
+		$this->setDirectory($C->directory);
+		$this->_default_method = $C->default_method;
+		$this->_default_controller = $C->default_controller;
+	}
+	
+	
+	public function setDirectory($directory) {
+		$directory = trim($directory);
+		if ( true === is_dir($directory) ) {
+			$this->_directory = $directory;
+		}
+	}
+	
 	
 	public function load($controller = NULL) {
 		if ( true === empty($this->_directory) ) {
@@ -74,22 +101,12 @@ class Artisan_Controller {
 		}
 		
 		// Create a new instance of the controller to work with
-		//$C = new $controller();
 		try {
 			$this->CONTROLLER = new $controller();
 		} catch ( Artisan_Exception $e ) {
 			throw $e;
 		}
 	}
-	
-	public function setTranslationList($translation_list) {
-		if ( false === asfw_is_assoc($translaction_list) ) {
-			return false;
-		}
-		
-		$this->_translation_list = $translation_list;
-	}
-	
 	
 	public function execute($method = NULL, $args = array()) {
 		if ( false === is_object($this->CONTROLLER) ) {
@@ -115,15 +132,18 @@ class Artisan_Controller {
 		
 		// See if a translation exists for this method and if so,
 		// get the data from the $data variable.
-		
 		$method = new ReflectionMethod($this->CONTROLLER, $method);
 
-		if ( true === $method->isPublic() ) {
-			if ( true === $method->isStatic() ) {
-				$method->invokeArgs(NULL, $args);
-			} else {
-				$method->invokeArgs($this->CONTROLLER, $args);
+		try {
+			if ( true === $method->isPublic() ) {
+				if ( true === $method->isStatic() ) {
+					$method->invokeArgs(NULL, $args);
+				} else {
+					$method->invokeArgs($this->CONTROLLER, $args);
+				}
 			}
+		} catch ( Artisan_Exception $e ) {
+			throw $e;
 		}
 	}
 }
