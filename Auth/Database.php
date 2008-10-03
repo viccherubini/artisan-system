@@ -1,11 +1,17 @@
 <?php
 
 class Artisan_Auth_Database extends Artisan_Auth {
+	///< The database connection instance.
 	private $DB = NULL;
 	
 	///< The name of the table that holds user data, this is also defined in Artisan/User/Database.php!
 	const TABLE_USER = 'artisan_user';
 	
+	/**
+	 * Default constructor to authenticate someone against a database.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval Object New Artisan_Auth_Database instance.
+	 */
 	public function __construct(Artisan_Database &$db) {
 		// We can only assume the database has a current connection
 		// as we don't want to attempt to connect.
@@ -28,7 +34,6 @@ class Artisan_Auth_Database extends Artisan_Auth {
 		}
 		
 		// Get the username and password from the user object
-		
 		// Always assume the password is hashed already as it shouldn't be stored
 		// unhashed in the Artisan_User class.
 		$user_name = $this->USER->getName();
