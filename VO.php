@@ -28,6 +28,11 @@ class Artisan_VO {
 			return NULL;
 		}
 	}
+	
+	public function __toString() {
+		return asfw_print_r($this, true);
+	}
 }
+
 
 ?>
