@@ -21,7 +21,7 @@ abstract class Artisan_Sql_Select extends Artisan_Sql {
 	protected $_field_list = array();
 	
 	///< The list of fields to use in the WHERE clause.
-	protected $_where_field_list = array();
+	//protected $_where_field_list = array();
 	
 	///< Contains a list of tables to join with. No aliases are stored, they are calculated at runtime.
 	protected $_join_table_list = array();
@@ -85,13 +85,7 @@ abstract class Artisan_Sql_Select extends Artisan_Sql {
 	
 	
 	
-	public function where($where_fields) {
-		if ( true === asfw_is_assoc($where_fields) ) {
-			$this->setWhereFieldList(asfw_sanitize_field_list($where_fields));
-		}
-		
-		return $this;
-	}
+	
 	
 	
 	
@@ -179,12 +173,14 @@ abstract class Artisan_Sql_Select extends Artisan_Sql {
 		return true;
 	}
 	
+	/*
 	public function setWhereFieldList($where_field_list) {
 		if ( true === is_array($where_field_list) ) {
 			$this->_where_field_list = $where_field_list;
 		}
 		return true;
 	}
+	*/
 	
 	public function setJoinTableList($join_table_list) {
 		if ( true === is_array($join_table_list) ) {
