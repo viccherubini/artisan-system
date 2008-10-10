@@ -3,7 +3,9 @@
 // Load in its own Parameterized Sql classes
 Artisan_Library::load('Sql/Mysqli/Select');
 Artisan_Library::load('Sql/Mysqli/Insert');
+Artisan_Library::load('Sql/Mysqli/Delete');
 
+exit;
 /**
  * The Mysqli class for connecting to a mysql database.
  * @author vmc <vmc@leftnode.com>
@@ -27,6 +29,8 @@ class Artisan_Database_Mysqli extends Artisan_Database {
 	///< The instance of the Artisan_Sql_Update_Mysqli class for executing queries.
 	public $update = NULL;
 
+	///< The instance of the Artisan_Sql_Delete_Mysqli class for executing queries.
+	public $delete = NULL;
 
 	public function __destruct() {
 		if ( true === $this->_is_connected && true === is_object($this->CONN) ) {
@@ -69,6 +73,7 @@ class Artisan_Database_Mysqli extends Artisan_Database {
 		// Set the connection for the parameterized SQL
 		$this->select = new Artisan_Sql_Select_Mysqli($this->CONN);
 		$this->insert = new Artisan_Sql_Insert_Mysqli($this->CONN);
+		$this->delete = new Artisan_Sql_Delete_Mysqli($this->CONN);
 		
 		return $this->CONN;
 	}
