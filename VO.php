@@ -4,7 +4,7 @@ class Artisan_VO {
 
 	public function __construct($array) {
 		if ( true === is_array($array) && count($array) > 0 ) {
-			$this->_init($array, $this);
+			$this->_init($array);
 		}
 	}
 	
@@ -12,13 +12,12 @@ class Artisan_VO {
 		
 	}
 
-	private function _init($root, &$t) {
+	protected function _init($root) {
 		foreach ( $root as $k => $v ) {
 			if ( true === is_array($v) ) {
-				$t->$k = $t;
-				$this->_init($v, $t);
+				$this->$k = new Artisan_VO($v);
 			} else {
-				$t->$k = $v;
+				$this->$k = $v;
 			}
 		}
 	}

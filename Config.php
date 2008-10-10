@@ -7,7 +7,7 @@ Artisan_Library::load('Config/Exception');
  * This class holds all configuration data that can come from different sources.
  * @author vmc <vmc@leftnode.com>
  */
-abstract class Artisan_Config {
+abstract class Artisan_Config extends Artisan_VO {
 	/**
 	 * Load the configuration.
 	 */
@@ -30,7 +30,8 @@ abstract class Artisan_Config {
 	 * array to access each element easily.
 	 * @retval NULL Returns nothing.
 	 */
-	public function _init($root) {
+	//protected function _init($root) {
+		/*
 		foreach ( $root as $k => $v ) {
 			if ( true === is_array($v) ) {
 				$this->$k = $t;
@@ -39,7 +40,10 @@ abstract class Artisan_Config {
 				$this->$k = $v;
 			}
 		}
-	}
+		*/
+		
+		//$this->CONFIG = new Artisan_VO($root);
+	//}
 	
 	/**
 	 * Echos out the configuration as a print_r() with a pre wrapped around it.
