@@ -10,6 +10,9 @@ abstract class Artisan_Sql_Insert extends Artisan_Sql {
 	///< The fields to insert data into, must be an associative array.
 	protected $_insert_field_list = array();
 	
+	protected $_insert_field_value_list = array();
+	
+	
 	public function __construct() {
 		
 	}
@@ -18,9 +21,9 @@ abstract class Artisan_Sql_Insert extends Artisan_Sql {
 		unset($this->_sql);
 	}
 	
-	public function into($table, $insert_fields) {
+	public function into($table, $insert_fields = array()) {
 		if ( true === empty($table) ) {
-			throw new Artisan_Sql_Exception(ARTISAN_WARNING, 'Failed to create valid SQL class, the table name is empty.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Sql_Exception(ARTISAN_WARNING, 'Failed to create valid SQL INSERT class, the table name is empty.', __CLASS__, __FUNCTION__);
 		}
 		
 		$table = trim($table);
@@ -31,8 +34,21 @@ abstract class Artisan_Sql_Insert extends Artisan_Sql {
 		return $this;
 	}
 
-	public function values($insert_values) {
+	public function values($insert_value_list) {
+		$argc = func_num_args();
+		if ( 0 === $argc ) {
+			throw new Artisan_Sql_Exception(ARTISAN_WARNING, 'The no values were passed into the method to insert.', __CLASS__, __FUNCTION__);
+		}
 
+		$ifl_len = count($this->_insert_field_list);
+		if ( $argc != $ifl_len && $ifl_len > 0 ) {
+			throw new Artisan_Sql_Exception(ARTISAN_WARNING, 
+				'The number of values to insert does not match the column count: ' . $argc . ' values and ' . $ifl_len . ' columns.',
+				__CLASS__, __FUNCTION__
+			);
+		}
+
+		$this->_insert_field_value_list = func_get_args();
 	}
 
 	public function __toString() {
@@ -41,7 +57,7 @@ abstract class Artisan_Sql_Insert extends Artisan_Sql {
 	
 	abstract public function build();
 	abstract public function query();
-	abstract public function affectedRowCount();
+	abstract public function affectedRows();
 	abstract public function escape($value);
 }
 
