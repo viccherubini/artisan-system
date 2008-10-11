@@ -173,15 +173,6 @@ abstract class Artisan_Sql_Select extends Artisan_Sql {
 		return true;
 	}
 	
-	/*
-	public function setWhereFieldList($where_field_list) {
-		if ( true === is_array($where_field_list) ) {
-			$this->_where_field_list = $where_field_list;
-		}
-		return true;
-	}
-	*/
-	
 	public function setJoinTableList($join_table_list) {
 		if ( true === is_array($join_table_list) ) {
 			$this->_join_table_list = $join_table_list;
