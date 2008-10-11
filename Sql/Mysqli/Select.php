@@ -17,6 +17,11 @@ class Artisan_Sql_Select_Mysqli extends Artisan_Sql_Select {
 	public function __destruct() { }
 	
 	public function build() {
+		// Ensure that the connection actually exists before building the query.
+		if ( false === $this->CONN instanceof mysqli ) {
+			throw new Artisan_Sql_Exception(ARTISAN_WARNING, 'The current connection to the database does not exist, no query can be built.', __CLASS__, __METHOD__);
+		}
+		
 		$distinct_sql = NULL;
 		if ( true === $this->_distinct ) {
 			$distinct_sql = " DISTINCT ";
@@ -95,11 +100,11 @@ class Artisan_Sql_Select_Mysqli extends Artisan_Sql_Select {
 
 		$result = $this->CONN->query($this->_sql);
 
-		if ( true === $result instanceof mysqli_result ) {
-			$this->RESULT = $result;
-		} else {
+		if ( false === $result instanceof mysqli_result ) {
 			throw new Artisan_Sql_Exception(ARTISAN_WARNING, $this->CONN->error, __CLASS__, __FUNCTION__);
 		}
+
+		$this->RESULT = $result;
 
 		return $this;
 	}
@@ -145,7 +150,11 @@ class Artisan_Sql_Select_Mysqli extends Artisan_Sql_Select {
 	}
 	
 	public function numRows() {
-		return $this->RESULT->num_rows;
+		if ( true === $this->RESULT instanceof mysqli_result ) {
+			return $this->RESULT->num_rows;
+		}
+		
+		return 0;
 	}
 	
 }
