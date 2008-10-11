@@ -69,6 +69,7 @@ abstract class Artisan_Sql_Delete extends Artisan_Sql {
 	
 	abstract public function build();
 	abstract public function query();
+	abstract public function affectedRows();
 	abstract public function escape($value);
 }
 
