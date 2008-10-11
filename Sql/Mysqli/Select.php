@@ -89,19 +89,19 @@ class Artisan_Sql_Select_Mysqli extends Artisan_Sql_Select {
 		// has been built, it'll simply be overwritten.
 		$this->build();
 
-		if ( false === empty($this->_sql) ) {
-			$result = $this->CONN->query($this->_sql);
-
-			if ( true === $result instanceof mysqli_result ) {
-				$this->RESULT = $result;
-			} else {
-				throw new Artisan_Sql_Exception(ARTISAN_WARNING, $this->CONN->error, __CLASS__, __FUNCTION__);
-			}
-
-			return $this;
-		} else {
-			throw new Artisan_Sql_Exception(ARTISAN_WARNING, 'Query is empty', __CLASS__, __FUNCTION__);
+		if ( true === empty($this->_sql) ) {
+			throw new Artisan_Sql_Exception(ARTISAN_WARNING, 'The SELECT query is empty, it can not be executed.', __CLASS__, __FUNCTION__);
 		}
+
+		$result = $this->CONN->query($this->_sql);
+
+		if ( true === $result instanceof mysqli_result ) {
+			$this->RESULT = $result;
+		} else {
+			throw new Artisan_Sql_Exception(ARTISAN_WARNING, $this->CONN->error, __CLASS__, __FUNCTION__);
+		}
+
+		return $this;
 	}
 	
 	public function fetch($field = NULL) {
