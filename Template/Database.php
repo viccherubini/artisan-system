@@ -33,8 +33,8 @@ class Artisan_Template_Database extends Artisan_Template {
 	 * Sets the current theme.
 	 * @author vmc <vmc@leftnode.com>
 	 * @param $theme The name of the theme to load from the filesystem or database.
-	 * @throws Artisan_Template_Exception If the $theme string is empty.
-	 * @throws Artisan_Template_Exception If the $theme can not be found in the database.
+	 * @throw Artisan_Template_Exception If the $theme string is empty.
+	 * @throw Artisan_Template_Exception If the $theme can not be found in the database.
 	 * @retval boolean Returns true.
 	 */
 	public function setTheme($theme) {
