@@ -14,22 +14,44 @@ class Artisan_Sql_Insert_Mysqli extends Artisan_Sql_Insert {
 	}
 	
 	public function build() {
-		$field_list = array_keys($this->_insert_field_list);
-		$field_list = asfw_sanitize_field_list($field_list);
+		// Ensure that the connection actually exists before building the query.
+		if ( false === $this->CONN instanceof mysqli ) {
+			throw new Artisan_Sql_Exception(ARTISAN_WARNING, 'The current connection to the database does not exist, no query can be built.', __CLASS__, __METHOD__);
+		}
 		
 		$insert_sql  = "INSERT INTO `" . $this->_into_table . "`";
-		$insert_sql .= " (" . implode(', ', $field_list) . ")";
 		
-		$values_sql = NULL;
-		$values_list = array();
-		foreach ( $this->_insert_field_list as $value ) {
-			$values_list[] = $this->escape($value);
+		$insert_field_sql = NULL;
+		if ( count($this->_insert_field_list) > 0 ) {
+			$insert_field_sql = " (" . implode(', ', $this->_insert_field_list) . ") ";
 		}
-		$values_sql = implode("', '", $values_list);
 		
-		$insert_sql .= " VALUES('" . $values_sql . "')";
+		$value_list = array();
+		$insert_value_sql = " VALUES (";
+		foreach ( $this->_insert_field_value_list as $value ) {
+			$value = $this->escape($value);
+			switch ( strtoupper($value) ) {
+				case NULL: {
+					$value_list[] = 'NULL';
+					break;
+				}
+				
+				case 'NULL': 
+				case 'NOW()': {
+					$value_list[] = $value;
+					break;
+				}
+			
+				default: {
+					$value_list[] = "'" . $value . "'";
+					break;
+				}
+			}
+			
+		}
+		$insert_value_sql = " VALUES (" . implode(", ", $value_list) . ") ";
 
-		$this->_sql = $insert_sql;		
+		$this->_sql = $insert_sql . $insert_field_sql . $insert_value_sql;
 	}
 	
 	
@@ -38,25 +60,24 @@ class Artisan_Sql_Insert_Mysqli extends Artisan_Sql_Insert {
 		// has been built, it'll simply be overwritten.
 		$this->build();
 		
-		if ( false === empty($this->_sql) ) {
-			$result = $this->CONN->query($this->_sql);
-
-			if ( false === $result ) {
-				throw new Artisan_Sql_Exception(ARTISAN_WARNING, $this->CONN->error, __CLASS__, __FUNCTION__);
-			}
-
-			return $this;
-		} else {
-			throw new Artisan_Sql_Exception(ARTISAN_WARNING, 'Query is empty', __CLASS__, __FUNCTION__);
+		if ( true === empty($this->_sql) ) {
+			throw new Artisan_Sql_Exception(ARTISAN_WARNING, 'The INSERT query is empty, it can not be executed.', __CLASS__, __FUNCTION__);
 		}
+		
+		$result = $this->CONN->query($this->_sql);
+		
+		if ( false === $result ) {
+			throw new Artisan_Sql_Exception(ARTISAN_WARNING, $this->CONN->error, __CLASS__, __FUNCTION__);
+		}
+		
+		return $this;
 	}
 	
-	public function affectedRowCount() {
+	public function affectedRows() {
 		return $this->CONN->affected_rows;
 	}
 		
 	public function escape($value) {
-		$value = trim($value);
 		return $this->CONN->real_escape_string($value);
 	}
 }
