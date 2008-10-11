@@ -49,7 +49,7 @@ class Artisan_Sql_Delete_Mysqli extends Artisan_Sql_Delete {
 		$result = $this->CONN->query($this->_sql);
 		
 		if ( false === $result ) {
-			throw new Artisan_Sql_Exception(ARTISAN_WARNING, 'Failed to execute the DELETE query: ' . $this->_sql, __CLASS__, __FUNCTION__);
+			throw new Artisan_Sql_Exception(ARTISAN_WARNING, $this->CONN->error, __CLASS__, __FUNCTION__);
 		}
 		
 		if ( true === $this->_auto_optimize ) {
