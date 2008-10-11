@@ -28,7 +28,7 @@ abstract class Artisan_Sql_Delete extends Artisan_Sql {
 	public function from($table) {
 		$table = trim($table);
 		if ( true === empty($table) ) {
-			throw new Artisan_Sql_Exception(ARTISAN_WARNING, 'Failed to create valid SQL class, the table name is empty.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Sql_Exception(ARTISAN_WARNING, 'Failed to create valid SQL DELETE class, the table name is empty.', __CLASS__, __FUNCTION__);
 		}
 		
 		//$this->setFromTable($table);
