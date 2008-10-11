@@ -34,7 +34,7 @@ abstract class Artisan_Sql_Insert extends Artisan_Sql {
 		return $this;
 	}
 
-	public function values($insert_value_list) {
+	public function values() {
 		$argc = func_num_args();
 		if ( 0 === $argc ) {
 			throw new Artisan_Sql_Exception(ARTISAN_WARNING, 'The no values were passed into the method to insert.', __CLASS__, __FUNCTION__);
@@ -43,12 +43,14 @@ abstract class Artisan_Sql_Insert extends Artisan_Sql {
 		$ifl_len = count($this->_insert_field_list);
 		if ( $argc != $ifl_len && $ifl_len > 0 ) {
 			throw new Artisan_Sql_Exception(ARTISAN_WARNING, 
-				'The number of values to insert does not match the column count: ' . $argc . ' values and ' . $ifl_len . ' columns.',
+				'The number of values to insert does not match the column count: ' . $argc . ' value(s) and ' . $ifl_len . ' column(s).',
 				__CLASS__, __FUNCTION__
 			);
 		}
 
 		$this->_insert_field_value_list = func_get_args();
+		
+		return $this;
 	}
 
 	public function __toString() {
