@@ -5,7 +5,6 @@ Artisan_Library::load('Sql/Mysqli/Select');
 Artisan_Library::load('Sql/Mysqli/Insert');
 Artisan_Library::load('Sql/Mysqli/Delete');
 
-exit;
 /**
  * The Mysqli class for connecting to a mysql database.
  * @author vmc <vmc@leftnode.com>
