@@ -53,7 +53,7 @@ abstract class Artisan_Database {
 	/**
 	 * Connects to the specified database.
 	 * @author vmc <vmc@leftnode.com>
-	 * @throws Artisan_Database_Exception If the connection fails.
+	 * @throw Artisan_Database_Exception If the connection fails.
 	 * @retval object New connection to the database
 	 */
 	abstract public function connect();
