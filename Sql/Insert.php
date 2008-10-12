@@ -20,6 +20,7 @@ abstract class Artisan_Sql_Insert extends Artisan_Sql {
 	 * @retval Object New Artisan_Sql_Insert object.
 	 */
 	public function __construct() {
+		$this->_sql = NULL;
 	}
 	
 	/**
