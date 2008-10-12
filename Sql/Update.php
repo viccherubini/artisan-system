@@ -1,16 +1,13 @@
 <?php
 
 class Artisan_Sql_Update extends Artisan_Sql {
-	private $_sql = NULL;
+	protected $_table = NULL;
 	
-	private $_table = NULL;
-	
-	private $_field_list = array();
+	protected $_field_list = array();
 	
 	public function __construct() {
 		
 	}
-	
 	
 	public function __destruct() {
 		unset($this->_sql);
@@ -22,18 +19,9 @@ class Artisan_Sql_Update extends Artisan_Sql {
 		}
 		
 		$this->_table = $table;
-		//$this->_sql = "UPDATE `" . $table . "`";
 	}
 	
 	public function set($field_list) {
-		/*
-		if ( false === is_array($field_list) ) {
-			$field_list = array($field_list);
-		}
-		
-		$field_list = parent::createFieldList($table, $field_list);
-		$field_list = implode(', ', $field_list);
-		*/
 	}
 }
 

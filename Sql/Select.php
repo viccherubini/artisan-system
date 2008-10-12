@@ -5,9 +5,6 @@
  * @author vmc <vmc@leftnode.com>
  */
 abstract class Artisan_Sql_Select extends Artisan_Sql {
-	///< The actual SQL query in string form.
-	protected $_sql = NULL;
-	
 	///< The main table the query is selecting FROM.
 	protected $_from_table = NULL;
 	
@@ -127,10 +124,6 @@ abstract class Artisan_Sql_Select extends Artisan_Sql {
 		$this->_desc = "DESC";
 		$this->_asc = NULL;
 		return $this;
-	}
-	
-	public function __toString() {
-		return $this->_sql;
 	}
 	
 	/**

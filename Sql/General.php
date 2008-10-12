@@ -1,9 +1,6 @@
 <?php
 
 abstract class Artisan_Sql_General extends Artisan_Sql {
-	///< The actual SQL query in string form.
-	protected $_sql = NULL;
-
 	/**
 	 * Default constructor for building a new INSERT query.
 	 * @author vmc <vmc@leftnode.com>
@@ -24,7 +21,7 @@ abstract class Artisan_Sql_General extends Artisan_Sql {
 	/**
 	 * Sets the SQL to query against the database.
 	 * @author vmc <vmc@leftnode.com>
-	 * @retval NULL Destroys the object.
+	 * @retval Object Returns an instance of itself for chaining.
 	 */
 	public function sql($sql) {
 		$sql = trim($sql);

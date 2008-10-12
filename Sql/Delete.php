@@ -1,9 +1,6 @@
 <?php
 
 abstract class Artisan_Sql_Delete extends Artisan_Sql {
-	///< The actual SQL query in string form.
-	protected $_sql = NULL;
-	
 	///< The main table the query is selecting FROM.
 	protected $_from_table = NULL;
 	
@@ -31,7 +28,6 @@ abstract class Artisan_Sql_Delete extends Artisan_Sql {
 			throw new Artisan_Sql_Exception(ARTISAN_WARNING, 'Failed to create valid SQL DELETE class, the table name is empty.', __CLASS__, __FUNCTION__);
 		}
 		
-		//$this->setFromTable($table);
 		$this->_from_table = $table;
 		
 		return $this;
@@ -48,23 +44,6 @@ abstract class Artisan_Sql_Delete extends Artisan_Sql {
 		$this->_limit = $limit;
 		
 		return $this;
-	}
-	
-	/**
-	 * Resets all of the internal variables that make up a SQL query.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval boolean Returns true.
-	 */
-	public function reset() {
-		$this->setFromTable(NULL);
-		$this->setFromTableAlias(NULL);
-		$this->setWhereFieldList(array());
-		
-		return true;
-	}
-	
-	public function __toString() {
-		return $this->_sql;
 	}
 	
 	abstract public function build();

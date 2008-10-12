@@ -5,9 +5,6 @@
  * @author vmc <vmc@leftnode.com>
  */
 abstract class Artisan_Sql_Insert extends Artisan_Sql {
-	///< The actual SQL query in string form.
-	protected $_sql = NULL;
-	
 	///< The main table the query is inserting INTO.
 	protected $_into_table = NULL;
 	
@@ -86,16 +83,6 @@ abstract class Artisan_Sql_Insert extends Artisan_Sql {
 		}
 		
 		return $this;
-	}
-
-	/**
-	 * Converts the SQL to a string to echo out.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval string The built SQL.
-	 */
-	public function __toString() {
-		$this->build();
-		return $this->_sql;
 	}
 	
 	/**

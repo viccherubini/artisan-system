@@ -4,6 +4,8 @@ Artisan_Library::load('Sql/Monitor');
 Artisan_Library::load('Sql/Exception');
 
 class Artisan_Sql {
+	protected $_sql = NULL;
+	
 	///< The list of fields to use in the WHERE clause.
 	protected $_where_field_list = array();
 	
@@ -37,7 +39,15 @@ class Artisan_Sql {
 		return true;
 	}
 	
-	
+	/**
+	 * Converts the SQL to a string to echo out.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval string The built SQL.
+	 */
+	public function __toString() {
+		$this->build();
+		return $this->_sql;
+	}
 }
 
 ?>
