@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Executes a general query against a MySQL database after being built by chainable commands.
+ * @author vmc <vmc@leftnode.com>
+ */
 class Artisan_Sql_General_Mysqli extends Artisan_Sql_General {
 	///< The connection object to the database, assumes the database is already connected.
 	private $CONN = NULL;

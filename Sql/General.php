@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * The abstract General class for executing a general or very complex query against the database.
+ * @author vmc <vmc@leftnode.com>
+ */
 abstract class Artisan_Sql_General extends Artisan_Sql {
 	/**
 	 * Default constructor for building a new INSERT query.
