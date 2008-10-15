@@ -1,6 +1,5 @@
 <?php
 
-Artisan_Library::load('Server/Monitor');
 Artisan_Library::load('Server/Exception');
 
 abstract class Artisan_Server {

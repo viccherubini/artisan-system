@@ -1,6 +1,5 @@
 <?php
 
-//Artisan_Library::load('Config/Monitor');
 Artisan_Library::load('Config/Exception');
 
 /**

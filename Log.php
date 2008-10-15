@@ -1,6 +1,5 @@
 <?php
 
-Artisan_Library::load('Log/Monitor');
 Artisan_Library::load('Log/Exception');
 
 define('LOG_GENERAL', 'G', false);

@@ -1,7 +1,5 @@
 <?php
 
-
-Artisan_Library::load('Database/Monitor');
 Artisan_Library::load('Database/Exception');
 
 Artisan_Library::load('Sql/Select');

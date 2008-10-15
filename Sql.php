@@ -1,6 +1,5 @@
 <?php
 
-Artisan_Library::load('Sql/Monitor');
 Artisan_Library::load('Sql/Exception');
 
 class Artisan_Sql {

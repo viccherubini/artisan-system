@@ -1,7 +1,6 @@
 <?php
 
 
-Artisan_Library::load('Cache/Monitor');
 Artisan_Library::load('Cache/Exception');
 
 /**

@@ -1,6 +1,5 @@
 <?php
 
-Artisan_Library::load('Template/Monitor');
 Artisan_Library::load('Template/Exception');
 
 /**

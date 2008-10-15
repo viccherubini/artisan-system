@@ -1,6 +1,5 @@
 <?php
 
-Artisan_Library::load('Auth/Monitor');
 Artisan_Library::load('Auth/Exception');
 
 /**
