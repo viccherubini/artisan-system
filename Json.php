@@ -35,5 +35,3 @@ class Artisan_Json {
 		return NULL;
 	}
 }
-
-?>

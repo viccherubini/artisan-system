@@ -21,5 +21,3 @@ class Artisan_Session_Monitor {
 	}
 
 }
-
-?>

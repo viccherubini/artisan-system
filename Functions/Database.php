@@ -82,5 +82,3 @@ function asfw_now($time = NULL) {
 	
 	return date('Y-m-d H:i:s', $time);
 }
-
-?>

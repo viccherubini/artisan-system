@@ -13,5 +13,3 @@ class Artisan_Auth_Monitor {
 	}
 
 }
-
-?>

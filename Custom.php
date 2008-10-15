@@ -5,4 +5,3 @@ class Custom {
 		echo 'in custom::constructor<br />';
 	}
 }
-?>

@@ -34,5 +34,3 @@ class Artisan_Log_Database extends Artisan_Log {
 		}
 	}
 }
-
-?>

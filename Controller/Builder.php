@@ -224,5 +224,3 @@ class Artisan_Controller_Builder {
 		return true;
 	}
 }
-
-?>

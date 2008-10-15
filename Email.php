@@ -15,7 +15,3 @@ abstract class Artisan_Email {
 	
 	
 }
-
-
-
-?>

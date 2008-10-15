@@ -13,5 +13,3 @@ class Artisan_Email_Monitor {
 	}
 
 }
-
-?>

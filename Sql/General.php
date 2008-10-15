@@ -53,5 +53,3 @@ abstract class Artisan_Sql_General extends Artisan_Sql {
 	 */
 	abstract public function result();
 }
-
-?>

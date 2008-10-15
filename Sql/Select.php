@@ -188,5 +188,3 @@ abstract class Artisan_Sql_Select extends Artisan_Sql {
 	abstract public function free();
 	abstract public function escape($value);
 }
-
-?>

@@ -31,6 +31,14 @@ class Artisan_Controller_Plugin {
 		
 		return true;
 	}
+	
+	/*
+	public function __get($obj) {
+		if ( true === isset($this->$obj) ) {
+			return $this->$obj;
+		}
+		
+		return NULL;
+	}
+	*/
 }
-
-?>

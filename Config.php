@@ -54,5 +54,3 @@ abstract class Artisan_Config extends Artisan_VO {
 		return asfw_print_r($this, true);		
 	}
 }
-
-?>

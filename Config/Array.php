@@ -36,5 +36,3 @@ class Artisan_Config_Array extends Artisan_Config {
 		}
 	}
 }
-
-?>

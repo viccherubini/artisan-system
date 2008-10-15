@@ -4,5 +4,3 @@ class Artisan_Validate {
 
 
 }
-
-?>

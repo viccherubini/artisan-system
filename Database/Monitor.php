@@ -19,5 +19,3 @@ class Artisan_Database_Monitor {
 	}
 
 }
-
-?>

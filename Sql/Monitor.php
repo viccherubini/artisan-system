@@ -21,5 +21,3 @@ class Artisan_Sql_Monitor {
 	}
 
 }
-
-?>

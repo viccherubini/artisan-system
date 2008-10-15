@@ -16,5 +16,3 @@ class Artisan_Log_Monitor {
 		return self::$instance;
 	}
 }
-
-?>

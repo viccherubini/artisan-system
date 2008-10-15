@@ -137,5 +137,3 @@ abstract class Artisan_Template {
 		return true;
 	}
 }
-
-?>

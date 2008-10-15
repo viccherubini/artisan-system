@@ -19,5 +19,3 @@ abstract class Artisan_Cache {
 	
 	}
 }
-
-?>

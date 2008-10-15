@@ -13,5 +13,3 @@ class Artisan_User_Monitor {
 	}
 
 }
-
-?>

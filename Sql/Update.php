@@ -24,5 +24,3 @@ class Artisan_Sql_Update extends Artisan_Sql {
 	public function set($field_list) {
 	}
 }
-
-?>

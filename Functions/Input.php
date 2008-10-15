@@ -14,5 +14,3 @@ function asfw_get_ipv4() {
 	
 	return $ip;
 }
-
-?>

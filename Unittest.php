@@ -61,5 +61,3 @@ class Artisan_Unittest {
 		return true;
 	}
 }
-
-?>

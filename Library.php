@@ -125,5 +125,3 @@ class Artisan_Library {
 		return self::$object_list;
 	}
 }
-
-?>

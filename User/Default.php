@@ -58,5 +58,3 @@ class Artisan_User_Default extends Artisan_User {
 		
 	}
 }
-
-?>

@@ -49,5 +49,3 @@ class Artisan_Sql {
 		return $this->_sql;
 	}
 }
-
-?>

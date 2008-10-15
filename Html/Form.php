@@ -3,5 +3,3 @@
 class Artisan_Form {
 
 }
-
-?>

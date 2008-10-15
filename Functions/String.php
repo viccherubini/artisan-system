@@ -23,6 +23,3 @@ function asfw_rename_controller($controller) {
 	
 	return $controller;
 }
-
-
-?>

@@ -24,5 +24,3 @@ class Testclass extends Artisan_Unittest {
 	}
 
 }
-
-?>

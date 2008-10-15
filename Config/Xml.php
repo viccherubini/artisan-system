@@ -38,5 +38,3 @@ class Artisan_Config_Xml extends Artisan_Config {
 		$this->_init($xml);
 	}
 }
-
-?>

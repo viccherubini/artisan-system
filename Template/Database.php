@@ -130,5 +130,3 @@ class Artisan_Template_Database extends Artisan_Template {
 		return $code;
 	}
 }
-
-?>

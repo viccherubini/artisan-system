@@ -11,5 +11,3 @@ class Artisan_Template_Monitor {
 		return self::$instance;
 	}
 }
-
-?>

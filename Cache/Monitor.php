@@ -21,5 +21,3 @@ class Artisan_Cache_Monitor {
 	}
 
 }
-
-?>

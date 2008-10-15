@@ -32,6 +32,3 @@ class Artisan_VO {
 		return asfw_print_r($this, true);
 	}
 }
-
-
-?>

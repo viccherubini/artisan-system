@@ -121,5 +121,3 @@ class Artisan_Sql_Insert_Mysqli extends Artisan_Sql_Insert {
 		return $this->CONN->real_escape_string($value);
 	}
 }
-
-?>

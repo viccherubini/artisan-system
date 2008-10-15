@@ -9,5 +9,3 @@ abstract class Artisan_Session {
 	
 	}
 }
-
-?>

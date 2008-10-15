@@ -52,6 +52,3 @@ function asfw_create_salt() {
 	$salt = sha1(uniqid('', true));
 	return $salt;
 }
-
-
-?>

@@ -11,5 +11,3 @@ function asfw_peak_memory() {
 	$memory = round($memory, 4);
 	return $memory;
 }
-
-?>

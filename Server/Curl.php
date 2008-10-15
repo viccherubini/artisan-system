@@ -79,5 +79,3 @@ class Artisan_Server_Curl extends Artisan_Server {
 		return false;
 	}
 }
-
-?>

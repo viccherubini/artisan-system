@@ -103,5 +103,3 @@ abstract class Artisan_Database {
 	 */
 	abstract public function queue($query_list);
 }
-
-?>

@@ -147,5 +147,3 @@ class Artisan_Controller {
 		}
 	}
 }
-
-?>

@@ -192,5 +192,3 @@ class Artisan_Database_Mysqli extends Artisan_Database {
 		return $error;
 	}
 }
-
-?>

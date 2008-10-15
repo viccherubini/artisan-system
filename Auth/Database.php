@@ -72,5 +72,3 @@ class Artisan_Auth_Database extends Artisan_Auth {
 		return $authenticated;
 	}
 }
-
-?>

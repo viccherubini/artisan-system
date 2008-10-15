@@ -42,5 +42,3 @@ abstract class Artisan_Server {
 		$this->_is_connected = false;
 	}
 }
-
-?>

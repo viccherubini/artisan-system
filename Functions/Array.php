@@ -87,5 +87,3 @@ function asfw_is_assoc($array) {
 	
 	return $is_assoc;
 }
-
-?>

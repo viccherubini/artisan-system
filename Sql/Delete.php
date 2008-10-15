@@ -88,5 +88,3 @@ abstract class Artisan_Sql_Delete extends Artisan_Sql {
 	 */
 	abstract public function escape($value);
 }
-
-?>

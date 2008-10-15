@@ -97,5 +97,3 @@ class Artisan_Exception extends Exception {	///< The line number the error occu
 		return $this->_function_name;
 	}
 }
-
-?>

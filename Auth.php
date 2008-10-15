@@ -71,5 +71,3 @@ abstract class Artisan_Auth {
 	abstract public function authenticate($validation_hook = NULL);
 	
 }
-
-?>

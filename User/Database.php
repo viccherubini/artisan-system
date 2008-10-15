@@ -71,5 +71,3 @@ class Artisan_User_Database extends Artisan_User {
 	
 	}
 }
-
-?>

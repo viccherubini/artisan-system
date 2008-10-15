@@ -83,5 +83,3 @@ class Artisan_Template_Filesystem extends Artisan_Template {
 		return $code;
 	}
 }
-
-?>

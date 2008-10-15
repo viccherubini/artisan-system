@@ -104,5 +104,3 @@ abstract class Artisan_User {
 	abstract protected function _insert();
 	abstract protected function _update();
 }
-
-?>
