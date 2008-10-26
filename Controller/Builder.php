@@ -53,7 +53,7 @@ class Artisan_Controller_Builder {
 	 * @author vmc <vmc@leftnode.com>
 	 * @retval Object Returns an instance of the Artisan_Controller_Builder class.
 	 */
-	public static function get() {
+	public static function &get() {
 		if ( true === is_null(self::$INST) ) {
 			self::$INST = new self;
 			self::_build();
