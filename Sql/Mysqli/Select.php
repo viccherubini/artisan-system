@@ -37,9 +37,32 @@ class Artisan_Sql_Select_Mysqli extends Artisan_Sql_Select {
 		
 		$where_sql = NULL;
 		if ( count($this->_where_field_list) > 0 ) {
+			$logical_op_list = array('=', '<', '>', '<=', '>=', '<>', '!=', 'LIKE');
 			$where_list = array();
 			foreach ( $this->_where_field_list as $field => $value ) {
-				$where_list[] = $field . " = '" . $this->escape($value) . "'";
+				// See if field has an operator at the end of it, if so, use that
+				// rather than the equals operator, otherwise, use equals by default.
+				$field = trim($field);
+				
+				if ( false !== strpos($field, ' ') ) {
+					// There's a space, see if an operator exists
+					$op_list = explode(' ', $field);
+					if ( count($op_list) != 2 ) {
+						$field = $op_list[0];
+						$operator = $op_list[count($op_list)-1];
+					} else {
+						$field = $op_list[0];
+						$operator = $op_list[1];
+					}
+						
+					if ( false === in_array($operator, $logical_op_list) ) {
+						$operator = '=';
+					}
+				} else {
+					$operator = '=';
+				}
+				
+				$where_list[] = $field . ' ' . $operator . " '" . $this->escape($value) . "'";
 			}
 			$where_sql = " WHERE " . implode(" AND ", $where_list);
 		}
