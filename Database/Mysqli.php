@@ -38,6 +38,7 @@ class Artisan_Database_Mysqli extends Artisan_Database {
 	public function __destruct() {
 		if ( true === $this->_is_connected && true === is_object($this->CONN) ) {
 			$this->disconnect();
+			$this->_is_connected = false;
 		}
 		unset($this->CONFIG);
 	}
