@@ -5,7 +5,7 @@ Artisan_Library::load('Session/Interface');
 
 class Artisan_Session {
 	///< Since this is a singleton, the instance of this class.
-	//private static $INST = NULL;
+	private static $INST = NULL;
 
 	///< The save_handler instance for how this class should be built.
 	private $SH;
@@ -19,14 +19,14 @@ class Artisan_Session {
 	 * @author vmc <vmc@leftnode.com>
 	 * @retval NULL Returns nothing.
 	 */
-	public function __construct() { }
+	private function __construct() { }
 	
 	/**
 	 * Private clone method because this class is a singleton.
 	 * @author vmc <vmc@leftnode.com>
 	 * @retval NULL Returns nothing.
 	 */
-	//private function __clone() { }
+	private function __clone() { }
 	
 	/**
 	 * Public destructor.
@@ -43,13 +43,13 @@ class Artisan_Session {
 	 * @author vmc <vmc@leftnode.com>
 	 * @retval Object Returns an instance of the Artisan_Session class.
 	 */
-	//public static function &get() {
-	//	if ( true === is_null(self::$INST) ) {
-	//		self::$INST = new self;
-	//	}
-	//
-	//	return self::$INST;
-	//}
+	public static function &get() {
+		if ( true === is_null(self::$INST) ) {
+			self::$INST = new self;
+		}
+	
+		return self::$INST;
+	}
 	
 	/**
 	 * Sets the configuration to this class so the save_handler can be loaded.
@@ -129,12 +129,12 @@ class Artisan_Session {
 		// $this->SH is guaranteed to have these methods because it has
 		// to implement the interface Artisan_Session_Interface
 		session_set_save_handler(
-			array($this->SH, 'open'),
-			array($this->SH, 'close'),
-			array($this->SH, 'read'),
-			array($this->SH, 'write'),
-			array($this->SH, 'destroy'),
-			array($this->SH, 'gc')
+			array(&$this->SH, 'open'),
+			array(&$this->SH, 'close'),
+			array(&$this->SH, 'read'),
+			array(&$this->SH, 'write'),
+			array(&$this->SH, 'destroy'),
+			array(&$this->SH, 'gc')
 		);
 
 		$started = session_start();
