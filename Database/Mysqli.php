@@ -14,6 +14,9 @@ class Artisan_Database_Mysqli extends Artisan_Database {
 	///< The connection to the database (Mysqli Object)
 	private $CONN = NULL;
 
+	///< An instance of a mysqli_result class to build parameterized query.
+	private $STATEMENT = NULL;
+
 	///< Whether or not the instance of this class is currently connected to the database.
 	private $_is_connected = false;
 
@@ -130,6 +133,38 @@ class Artisan_Database_Mysqli extends Artisan_Database {
 
 
 
+	public function prepare($sql) {
+		if ( true === $this->STATEMENT instanceof mysqli_result ) {
+			throw new Artisan_Database_Exception(ARTISAN_WARNING, 
+				'A statement has not finished fetching all of its data. Please close the current statement.', __CLASS__, __FUNCTION__);
+		}
+
+		$sql = trim($sql);
+		if ( true === empty($sql) ) {
+			throw new Artisan_Database_Exception(ARTISAN_WARNING, 'The SQL statement is empty.', __CLASS__, __FUNCTION__);
+		}
+		
+		$this->CONN->prepare($sql);
+		
+		return $this;
+	}
+
+
+	public function bind_param() {
+	
+		return $this;	
+	}
+
+	public function execute() {
+	
+		return $this;
+	}
+
+
+	public function prepareExecute($sql, $type_list, $param_list) {
+	
+	}
+	
 
 	/**
 	 * Start transtional queries.
