@@ -31,41 +31,7 @@ class Artisan_Sql_Select_Mysqli extends Artisan_Sql_Select {
 		$select_sql  = "SELECT " . $distinct_sql . " " . $select_field_list . " FROM `" . $this->_from_table . "` ";
 		$select_sql .= $this->_from_table_alias . " ";
 		
-		
-		
-		
-		
-		$where_sql = NULL;
-		if ( count($this->_where_field_list) > 0 ) {
-			$logical_op_list = array('=', '<', '>', '<=', '>=', '<>', '!=', 'LIKE');
-			$where_list = array();
-			foreach ( $this->_where_field_list as $field => $value ) {
-				// See if field has an operator at the end of it, if so, use that
-				// rather than the equals operator, otherwise, use equals by default.
-				$field = trim($field);
-				
-				if ( false !== strpos($field, ' ') ) {
-					// There's a space, see if an operator exists
-					$op_list = explode(' ', $field);
-					if ( count($op_list) != 2 ) {
-						$field = $op_list[0];
-						$operator = $op_list[count($op_list)-1];
-					} else {
-						$field = $op_list[0];
-						$operator = $op_list[1];
-					}
-						
-					if ( false === in_array($operator, $logical_op_list) ) {
-						$operator = '=';
-					}
-				} else {
-					$operator = '=';
-				}
-				
-				$where_list[] = $field . ' ' . $operator . " '" . $this->escape($value) . "'";
-			}
-			$where_sql = " WHERE " . implode(" AND ", $where_list);
-		}
+		$where_sql = $this->buildWhereClause($this->_where_field_list);
 		
 		$group_sql = NULL;
 		if ( count($this->_group_field_list) > 0 ) {
@@ -76,39 +42,7 @@ class Artisan_Sql_Select_Mysqli extends Artisan_Sql_Select {
 		
 		$this->_sql = $select_sql . $where_sql . $group_sql;
 		
-		$this->reset();
-		/*
-		// First, begin to build the field list and initial select data.
-		$field_list = $this->_field_list;
-		$field_list = implode(', ', $field_list);
-		
-		$sql  = NULL;
-		$sql .= 'SELECT ' . $field_list . ' ';
-		$sql .= 'FROM `' . $this->_from_table . '` ' . $this->_from_table_alias . ' ';
-
-		$join_sql = NULL;
-		if ( true === $this->_has_join && count($this->_join_table_list) > 0 ) {
-			foreach ( $this->_join_table_list as $table => $join ) {
-				$join_sql .= ' ' . $join['type'] . ' `' . $table . '`';
-				$join_sql .= ' ON ' . $join['field_a'] . ' = ' . $join['field_b'];
-			}
-		}
-		
-		$sql .= $join_sql;
-		
-		// Collect all of the where variables and escape them.
-		// Build the return array.
-		if ( count($this->_where_field_list) > 0 ) {
-			$where_list = array();
-			foreach ( $this->_where_field_list as $field => $value ) {
-				$where_list[] = $field . " = '" . $this->escape($value) . "'";
-			}
-			$where_sql = implode(' AND ', $where_list);
-			$sql .= ' WHERE ' . $where_sql;
-		}
-		
-		$this->_sql = $sql;
-		*/
+		//$this->reset();
 	}
 	
 	

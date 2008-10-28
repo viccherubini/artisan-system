@@ -43,20 +43,12 @@ class Artisan_Sql_Delete_Mysqli extends Artisan_Sql_Delete {
 			throw new Artisan_Sql_Exception(ARTISAN_WARNING, 'The current connection to the database does not exist, no query can be built.', __CLASS__, __METHOD__);
 		}
 		
-		$where_sql = NULL;
-		if ( count($this->_where_field_list) > 0 ) {
-			$where_list = array();
-			foreach ( $this->_where_field_list as $field => $value ) {
-				$where_list[] = $field . " = '" . $this->escape($value) . "'";
-			}
-			$where_sql = " WHERE " . implode(" AND ", $where_list);
-		}
+		$where_sql = $this->buildWhereClause($this->_where_field_list);
 		
 		$limit_sql = NULL;
 		if ( $this->_limit > 0 ) {
 			$limit_sql = " LIMIT " . $this->_limit;
 		}
-		
 		
 		$delete_start = "DELETE FROM `" . $this->_from_table . "` ";
 		$this->_sql = $delete_start . $where_sql . $limit_sql;
