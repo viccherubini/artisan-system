@@ -48,6 +48,7 @@ class Artisan_Session_Database implements Artisan_Session_Interface {
 		
 		// Because not all databases support REPLACE, this is
 		// intentionally inefficient to support the most database types
+		/*
 		try {
 			$count = $this->DB->select
 				->from('artisan_session')
@@ -80,6 +81,22 @@ class Artisan_Session_Database implements Artisan_Session_Interface {
 			} catch ( Artisan_Sql_Exception $e ) {
 				$error = true;
 			}
+		}
+		*/
+		
+		
+		try {
+			$ipv4 = asfw_get_ipv4();
+				$user_agent = asfw_get_user_agent();
+				$user_agent_hash = sha1($user_agent);
+				$this->DB->replace
+					->into('artisan_session')
+					->values($session_id, time(), $ipv4, $user_agent, $user_agent_hash, $session_data)
+					->query();
+		} catch ( Artisan_Database_Exception $e ) {
+			$error = true;
+		} catch ( Artisan_Sql_Exception $e ) {
+			$error = true;
 		}
 		
 		return !$error;
