@@ -14,3 +14,11 @@ function asfw_get_ipv4() {
 	
 	return $ip;
 }
+
+function asfw_get_user_agent() {
+	if ( true === asfw_exists('HTTP_USER_AGENT', $_SERVER) ) {
+		return $_SERVER['HTTP_USER_AGENT'];
+	}
+	
+	return NULL;
+}
