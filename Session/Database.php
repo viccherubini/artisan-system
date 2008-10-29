@@ -81,10 +81,10 @@ class Artisan_Session_Database implements Artisan_Session_Interface {
 	public function gc($life) {
 		$error = false;
 		try {
-			$del_time = time() + $life;
+			$del_time = time() - $life;
 			$this->DB->delete
 				->from('artisan_session')
-				->where(array('session_expiration_time >' => $del_time))
+				->where(array('session_expiration_time <' => $del_time))
 				->query();
 		} catch ( Artisan_Database_Exception $e ) {
 			$error = true;
