@@ -3,10 +3,7 @@
 class Artisan_Session_Database implements Artisan_Session_Interface {
 	///< Database instance passed into the class. Assumes the database already has a connection.
 	private $DB = NULL;
-	
-	
-	private $_max_lifetime = 1440;
-	
+
 	public function __construct(Artisan_Database &$DB) {
 		$this->DB = &$DB;
 		$this->_max_lifetime = intval(get_cfg_var("session.gc_maxlifetime"));
@@ -26,7 +23,24 @@ class Artisan_Session_Database implements Artisan_Session_Interface {
 	}
 	
 	public function read($session_id) {
-		//echo 'reading ' . $session_id . '<br />';
+		$error = false;
+		$session_data = NULL;
+		try {
+			$session_data = $this->DB->select
+				->from('artisan_session', asfw_create_table_alias('artisan_session'), 'session_data')
+				->where(array('session_id' => $session_id))
+				->query()
+				->fetch();
+			if ( true === empty($session_data) ) {
+				$session_data = NULL;
+			}
+		} catch ( Artisan_Database_Exception $e ) {
+			$error = true;
+		} catch ( Artisan_Sql_Exception $e ) {
+			$error = true;
+		}
+		
+		return $session_data;
 	}
 	
 	public function write($session_id, $session_data) {
@@ -44,6 +58,9 @@ class Artisan_Session_Database implements Artisan_Session_Interface {
 			// Do nothing, assume count is 0 and insert into the database
 			$count = 0;
 			$error = true;
+		} catch ( Artisan_Sql_Exception $e ) {
+			$count = 0;
+			$error = true;
 		}
 		
 		
@@ -51,12 +68,16 @@ class Artisan_Session_Database implements Artisan_Session_Interface {
 			// Update
 		} else {
 			try {
+				$ipv4 = asfw_get_ipv4();
+				$user_agent = asfw_get_user_agent();
+				$user_agent_hash = sha1($user_agent);
 				$this->DB->insert
-					->into('artisan_session', array('session_id', 'session_expiration_time', 'session_data'))
-					->values($session_id, time(), $session_data)
+					->into('artisan_session')
+					->values($session_id, time(), $ipv4, $user_agent, $user_agent_hash, $session_data)
 					->query();
 			} catch ( Artisan_Database_Exception $e ) {
-				// Do nothing
+				$error = true;
+			} catch ( Artisan_Sql_Exception $e ) {
 				$error = true;
 			}
 		}
@@ -73,6 +94,8 @@ class Artisan_Session_Database implements Artisan_Session_Interface {
 				->query();
 		} catch ( Artisan_Database_Exception $e ) {
 			$error = true;
+		} catch ( Artisan_Sql_Exception $e ) {
+			$error = true;
 		}
 		
 		return !$error;
@@ -87,6 +110,8 @@ class Artisan_Session_Database implements Artisan_Session_Interface {
 				->where(array('session_expiration_time <' => $del_time))
 				->query();
 		} catch ( Artisan_Database_Exception $e ) {
+			$error = true;
+		} catch ( Artisan_Sql_Exception $e ) {
 			$error = true;
 		}
 
