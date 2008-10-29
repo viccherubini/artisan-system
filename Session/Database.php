@@ -4,6 +4,9 @@ class Artisan_Session_Database implements Artisan_Session_Interface {
 	///< Database instance passed into the class. Assumes the database already has a connection.
 	private $DB = NULL;
 
+	///< The max_lifetime that the session runs before garbage collection executes.
+	private $_max_lifetime = 0;
+	
 	public function __construct(Artisan_Database &$DB) {
 		$this->DB = &$DB;
 		$this->_max_lifetime = intval(get_cfg_var("session.gc_maxlifetime"));
