@@ -5,6 +5,7 @@ Artisan_Library::load('Sql/Mysqli/Select');
 Artisan_Library::load('Sql/Mysqli/Insert');
 Artisan_Library::load('Sql/Mysqli/Delete');
 Artisan_Library::load('Sql/Mysqli/General');
+Artisan_Library::load('Sql/Mysqli/Replace');
 
 /**
  * The Mysqli class for connecting to a mysql database.
@@ -38,6 +39,10 @@ class Artisan_Database_Mysqli extends Artisan_Database {
 	///< The instance of the Artisan_Sql_General_Mysqli class for executing queries.
 	public $general = NULL;
 	
+	///< The instance of the Artisan_Sql_Replace_Mysqli class for executing queries.
+	public $replace = NULL;
+
+
 	public function __destruct() {
 		if ( true === $this->_is_connected && true === is_object($this->CONN) ) {
 			$this->disconnect();
@@ -81,6 +86,7 @@ class Artisan_Database_Mysqli extends Artisan_Database {
 		$this->select = new Artisan_Sql_Select_Mysqli($this->CONN);
 		$this->insert = new Artisan_Sql_Insert_Mysqli($this->CONN);
 		$this->delete = new Artisan_Sql_Delete_Mysqli($this->CONN);
+		$this->replace = new Artisan_Sql_Replace_Mysqli($this->CONN);
 		$this->general = new Artisan_Sql_General_Mysqli($this->CONN);
 		
 		return $this->CONN;
