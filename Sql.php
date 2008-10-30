@@ -35,55 +35,46 @@ class Artisan_Sql {
 			// Make an array of values to replace
 			$fv_list = array_splice($argv, 1, $argc, array());
 			
+			// Create an array of locations of all ?'s in the string.
+			// Each entry in here will correspond to the index of the array
+			// after str_split() below allowing for easy replacement.
+			$qm_loc = array();
+			$qm_count = 0;
+			$fo_len = strlen($field_op);
+			for ( $i=0; $i<$fo_len; $i++ ) {
+				if ( '?' == $field_op[$i] ) {
+					$qm_loc[] = $i;
+					$qm_count++;
+				}
+			}
+			
+			// Go through and perform all of the replacements
 			$fvl_len = count($fv_list);
-			for ( $i=0; $i<$fvl_len; $i++ ) {
-				$fv = $this->escape($fv_list[$i]);
-				if ( false === is_numeric($fv) ) {
-					$fv = " AND '" . $fv . "'";
-				}
-				
-				$fv_list[$i] = $fv;
-			}
-			
-			// If there are less ?'s than elements in the array,
-			// something is wrong, so ignore everything
-			$qm_count = substr_count($field_op, '?');
-			
-			if ( $qm_count >= $fvl_len ) {
-				//$qm_list = array_fill(0, $qm_count, '/[?]/i');
-				//$where_item = str_replace($qm_list, $fv_list, $field_op);
-				
-				
-				
-				
-				
-				
-				/*
-				// To make this robust, we're going to loop through each character of 
-				// $field_op and if we come upon a ?, replace it with the top of 
-				// $fv_list queue.
-				$fo_len = strlen($field_op);
-				for ( $i=0; $i<$fo_len; $i++ ) {
-					if ( '?' == $field_op[$i] ) {
-						$replace = array_shift($fv_list);
-						$field_op[$i] = $replace;
+			$field_op = str_split($field_op);
+			if ( $qm_count == $fvl_len ) {
+				for ( $i=0; $i<$fvl_len; $i++ ) {
+					$fv = $this->escape($fv_list[$i]);
+					if ( false === is_numeric($fv) ) {
+						$fv = " '" . $fv . "'";
 					}
+					
+					$field_op[$qm_loc[$i]] = $fv;
 				}
-				*/
-				$where_item = $field_op;
 				
+				$where_item = implode('', $field_op);
+			} else {
+				// There are extra question marks and shouldn't be, unset everything.
+				$where_item = NULL;
 			}
-		}		
-		/*
+		}
+
 		if ( false === empty($where_item) ) {
 			$this->_where_field_list[] = $where_item;
 		}
-		*/
 		
 		return $this;
 	}
-
-
+	
 	/**
 	 * Because several SQL classes use a WHERE clause, this class
 	 * sets the list of fields in the WHERE clause. It bubbles up to
