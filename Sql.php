@@ -39,7 +39,7 @@ class Artisan_Sql {
 			for ( $i=0; $i<$fvl_len; $i++ ) {
 				$fv = $this->escape($fv_list[$i]);
 				if ( false === is_numeric($fv) ) {
-					$fv = "'" . $fv . "'";
+					$fv = " AND '" . $fv . "'";
 				}
 				
 				$fv_list[$i] = $fv;
@@ -50,12 +50,13 @@ class Artisan_Sql {
 			$qm_count = substr_count($field_op, '?');
 			
 			if ( $qm_count >= $fvl_len ) {
-				$qm_list = array_fill(0, $qm_count, '/[?]/i');
+				//$qm_list = array_fill(0, $qm_count, '/[?]/i');
 				//$where_item = str_replace($qm_list, $fv_list, $field_op);
 				
-				//for ( $i=0; $i<$qm_count; $i++ ) {
-				//	$field_op = str_replace('?', $fv_list[$i], $field_op);
-				//}
+				
+				
+				
+				
 				
 				/*
 				// To make this robust, we're going to loop through each character of 
@@ -72,38 +73,8 @@ class Artisan_Sql {
 				$where_item = $field_op;
 				
 			}
-			//echo $where_item;
 		}		
 		/*
-		switch ( $argc ) {
-			case 1: {
-				// The first element is just a plain "field op value" query, no replacement
-				
-				break;
-			}
-			
-			case 2: {
-				// The first element is "field op ?" and the second value is the replacement
-				$field_op = trim($argv[0]);
-				$field_value = $argv[1];
-				
-				// If field_value is numeric, don't include the quotes, otherwise, use them
-				$field_value = $this->escape($field_value);
-				if ( false === is_numeric($field_value) ) {
-					$field_value = "'" . $field_value . "'";
-				}
-				
-				$where_item = str_replace('?', $field_value, $field_op);
-				
-				break;
-			}
-			
-			default: {
-				$where_item = NULL;
-				break;
-			}
-		} 
-		
 		if ( false === empty($where_item) ) {
 			$this->_where_field_list[] = $where_item;
 		}
@@ -136,6 +107,11 @@ class Artisan_Sql {
 		}
 		
 		return $where_sql;
+	}
+
+	private function _where($type) {
+
+
 	}
 	
 	
