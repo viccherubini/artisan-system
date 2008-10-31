@@ -29,9 +29,12 @@ class Artisan_Sql_Select_Mysqli extends Artisan_Sql_Select {
 		
 		$select_field_list = implode(", ", $this->_field_list);
 		$select_sql  = "SELECT " . $distinct_sql . " " . $select_field_list . " FROM `" . $this->_from_table . "` ";
-		$select_sql .= '`' . $this->_from_table_alias . '` ';
 		
-		$where_sql = $this->buildWhereClause($this->_where_field_list);
+		if ( false === empty($this->_from_table_alias) ) {
+			$select_sql .= '`' . $this->_from_table_alias . '` ';
+		}
+		
+		$where_sql = $this->buildWhereClause();
 		
 		$group_sql = NULL;
 		if ( count($this->_group_field_list) > 0 ) {
@@ -41,8 +44,6 @@ class Artisan_Sql_Select_Mysqli extends Artisan_Sql_Select {
 		
 		
 		$this->_sql = $select_sql . $where_sql . $group_sql;
-		
-		//$this->reset();
 	}
 	
 	
