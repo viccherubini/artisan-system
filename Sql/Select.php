@@ -55,7 +55,14 @@ abstract class Artisan_Sql_Select extends Artisan_Sql {
 		if ( $arg_length > 2 ) {
 			$args = func_get_args();
 			$arg_len = count($args);
-			$fields = array_splice($args, 2, $arg_len, array());
+			
+			// If the arg_len is equal to 3, and the third 
+			// parameter is an array, use that, otherwise, splice them up
+			if ( 3 === $arg_len && true === is_array($args[2]) ) {
+				$fields = $args[2];
+			} else {
+				$fields = array_splice($args, 2, $arg_len, array());
+			}
 		}
 		
 		if ( '*' !== $fields ) {
@@ -73,6 +80,7 @@ abstract class Artisan_Sql_Select extends Artisan_Sql {
 	
 	public function distinct() {
 		$this->_distinct = true;
+		return $this;
 	}
 	
 	
@@ -111,7 +119,7 @@ abstract class Artisan_Sql_Select extends Artisan_Sql {
 			$order_fields = func_get_args();
 		}
 		
-		
+		return $this;
 	}
 	
 	public function asc() {
