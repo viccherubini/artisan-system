@@ -3,6 +3,11 @@
 Artisan_Library::load('Session/Exception');
 Artisan_Library::load('Session/Interface');
 
+/**
+ * Singleton class for handling sessions. It allows different session handlers,
+ * such as a database and filesystem.
+ * @author vmc <vmc@leftnode.com>
+ */
 class Artisan_Session {
 	///< Since this is a singleton, the instance of this class.
 	private static $INST = NULL;
@@ -10,8 +15,10 @@ class Artisan_Session {
 	///< The save_handler instance for how this class should be built.
 	private $SH;
 
-
+	///< The name of the session set.
 	private $_session_name;
+	
+	///< The ID of the session set.
 	private $_session_id;
 
 	/**
@@ -94,6 +101,13 @@ class Artisan_Session {
 		return true;
 	}
 	
+	/**
+	 * Starts a session and uses a session handler.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $session_name Optional parameter to name the session. Must match regex /^[a-zA-Z0-9]+$/
+	 * @throw Artisan_Session_Exception If the session handler variable ($this->SH) is not an object. Must be configured first.
+	 * @retval boolean Returns true.
+	 */
 	public function start($session_name = NULL) {
 		if ( false === empty($session_name) ) {
 			$match_alpha_num = preg_match('/^[a-zA-Z0-9]+$/', $session_name);
@@ -143,6 +157,12 @@ class Artisan_Session {
 		return $started;
 	}
 	
+	/**
+	 * Destroys a session permanently. Calls the session handler to delete all of the
+	 * data in there as well.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval boolean Returns true.
+	 */
 	public function destroy() {
 		session_destroy();
 
@@ -158,7 +178,8 @@ class Artisan_Session {
 		
 		return true;
 	}	
-		
+	
+	
 	public function add($name, $value) {
 		$_SESSION[$name] = $value;
 	}
