@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * This class allows the storage of sessions in a database. It is database agnostic
+ * and dependent on whatever built database object is passed into it.
+ * @author vmc <vmc@leftnode.com>
+ */
 class Artisan_Session_Database implements Artisan_Session_Interface {
 	///< Database instance passed into the class. Assumes the database already has a connection.
 	private $DB = NULL;
@@ -31,7 +36,7 @@ class Artisan_Session_Database implements Artisan_Session_Interface {
 		try {
 			$session_data = $this->DB->select
 				->from('artisan_session', asfw_create_table_alias('artisan_session'), 'session_data')
-				->where(array('session_id' => $session_id))
+				->where('session_id = ?', $session_id)
 				->query()
 				->fetch();
 			if ( true === empty($session_data) ) {
@@ -48,54 +53,15 @@ class Artisan_Session_Database implements Artisan_Session_Interface {
 	
 	public function write($session_id, $session_data) {
 		$error = false;
-		
-		// Because not all databases support REPLACE, this is
-		// intentionally inefficient to support the most database types
-		/*
-		try {
-			$count = $this->DB->select
-				->from('artisan_session')
-				->where(array('session_id' => $session_id))
-				->query()
-				->numRows();
-		} catch ( Artisan_Database_Exception $e ) {
-			// Do nothing, assume count is 0 and insert into the database
-			$count = 0;
-			$error = true;
-		} catch ( Artisan_Sql_Exception $e ) {
-			$count = 0;
-			$error = true;
-		}
-		
-		
-		if ( 1 === $count ) {
-			// Update
-		} else {
-			try {
-				$ipv4 = asfw_get_ipv4();
-				$user_agent = asfw_get_user_agent();
-				$user_agent_hash = sha1($user_agent);
-				$this->DB->insert
-					->into('artisan_session')
-					->values($session_id, time(), $ipv4, $user_agent, $user_agent_hash, $session_data)
-					->query();
-			} catch ( Artisan_Database_Exception $e ) {
-				$error = true;
-			} catch ( Artisan_Sql_Exception $e ) {
-				$error = true;
-			}
-		}
-		*/
-		
-		
+				
 		try {
 			$ipv4 = asfw_get_ipv4();
-				$user_agent = asfw_get_user_agent();
-				$user_agent_hash = sha1($user_agent);
-				$this->DB->replace
-					->into('artisan_session')
-					->values($session_id, time(), $ipv4, $user_agent, $user_agent_hash, $session_data)
-					->query();
+			$user_agent = asfw_get_user_agent();
+			$user_agent_hash = sha1($user_agent);
+			$this->DB->replace
+				->into('artisan_session')
+				->values($session_id, time(), $ipv4, $user_agent, $user_agent_hash, $session_data)
+				->query();
 		} catch ( Artisan_Database_Exception $e ) {
 			$error = true;
 		} catch ( Artisan_Sql_Exception $e ) {
@@ -110,7 +76,7 @@ class Artisan_Session_Database implements Artisan_Session_Interface {
 		try {
 			$this->DB->delete
 				->from('artisan_session')
-				->where(array('session_id' => $session_id))
+				->where('session_id = ?', $session_id)
 				->query();
 		} catch ( Artisan_Database_Exception $e ) {
 			$error = true;
@@ -127,7 +93,7 @@ class Artisan_Session_Database implements Artisan_Session_Interface {
 			$del_time = time() - $life;
 			$this->DB->delete
 				->from('artisan_session')
-				->where(array('session_expiration_time <' => $del_time))
+				->where('session_expiration_time < ?', $del_time)
 				->query();
 		} catch ( Artisan_Database_Exception $e ) {
 			$error = true;
