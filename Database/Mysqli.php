@@ -137,9 +137,14 @@ class Artisan_Database_Mysqli extends Artisan_Database {
 		}
 	}
 
-
-
-	public function prepare($sql) {
+	/**
+	 * Prepare a query for execution and then execute it.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $sql The SQL to prepare to execute.
+	 * @throw Artisan_Database_Exception If the statement is currently fetching all of its data, it can not be restarted.
+	 * @throw Artisan_Database_Exception If the query is empty.
+	 */
+	public function prepareExecute($sql) {
 		if ( true === $this->STATEMENT instanceof mysqli_result ) {
 			throw new Artisan_Database_Exception(ARTISAN_WARNING, 
 				'A statement has not finished fetching all of its data. Please close the current statement.', __CLASS__, __FUNCTION__);
@@ -149,26 +154,10 @@ class Artisan_Database_Mysqli extends Artisan_Database {
 		if ( true === empty($sql) ) {
 			throw new Artisan_Database_Exception(ARTISAN_WARNING, 'The SQL statement is empty.', __CLASS__, __FUNCTION__);
 		}
-		
-		$this->CONN->prepare($sql);
+	
+		$this->STATEMENT = $this->CONN->prepare($sql);
 		
 		return $this;
-	}
-
-
-	public function bind_param() {
-	
-		return $this;	
-	}
-
-	public function execute() {
-	
-		return $this;
-	}
-
-
-	public function prepareExecute($sql, $type_list, $param_list) {
-	
 	}
 	
 
@@ -200,9 +189,11 @@ class Artisan_Database_Mysqli extends Artisan_Database {
 	}
 
 	/**
-	 * Support for transactional queries. $query_list should be an array
-	 * of Artisan_Sql objects. If any of the queries fail, all of them fail,
+	 * Support for transactional queries. If any of the queries fail, all of them fail,
 	 * and the database is returned to its original state.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $query_list A list of queries to queue and execute. Can be an array of Artisan_Sql objects or an array of string queries.
+	 * @retval boolean Returns true if successfully execute, false otherwise.
 	 */
 	public function queue($query_list) {
 		$this->_start();
@@ -216,7 +207,7 @@ class Artisan_Database_Mysqli extends Artisan_Database {
 		$len = count($query_list);
 		for ( $i=0; $i<$len; $i++ ) {
 			if ( true === $query_list[$i] instanceof Artisan_Sql ) {
-				$success = $this->query($query_list[$i]);
+				//$success = $this->query($query_list[$i]);
 
 				if ( false === $success ) {
 					$error = true;
