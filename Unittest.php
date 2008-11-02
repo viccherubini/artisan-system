@@ -1,63 +1,95 @@
 <?php
 
-class Artisan_Unittest {
-	public $_test_count = 0;
-	public $_test_passed = 0;
-	public $_test_failed = 0;
+define('TEST_TRUE', 1, false);
+define('TEST_FALSE', 2, false);
+define('TEST_EXCEPTION', 3, false);
+define('TEST_VALUE', 4, false);
 
+
+class Unit_Test {
+	private $_tests = array();
+
+	private $_types = array(
+		1 => 'Truthy',
+		2 => 'Falsy',
+		3 => 'Exception',
+		4 => 'Value'
+	);
+	
 	public function __construct() {
-		$this->_test_count = 0;
-		$this->_test_passed = 0;
-		$this->_test_failed = 0;
+	
 	}
-
+	
 	public function __destruct() {
 	
 	}
-
-
-	public function assertTrue($expr) {
-		$this->_test_count++;
-
-		if ( true === $expr ) {
-			$this->_test_passed++;
-		} else {
-			$this->_test_failed++;
-		}
-		return true;
+	
+	public function testTrue($true_value, $name) {
+		$this->_tests[] = array(
+			'name' => $name,
+			'type' => TEST_TRUE,
+			'value' => ( true === $true_value ? 'true' : 'false' ),
+			'passed' => ( true === $true_value )
+		);
 	}
 
+	public function testFalse($false_value, $name) {
+		$this->_tests[] = array(
+			'name' => $name,
+			'type' => TEST_FALSE,
+			'value' => ( false === $false_value ? 'false' : 'true' ),
+			'passed' => ( false === $false_value )
+		);
+	}
 
-	public function assertFalse($expr) {
-		$this->_test_count++;
-
-		if ( false === $expr ) {
-			$this->_test_passed++;
-		} else {
-			$this->_test_failed++;
+	public function testException($method, $name) {
+		$passed = true;
+		try {
+			eval($method . ';');
+		} catch ( Exception $e ) {
+			$value = $e->getMessage();
+			$passed = false;
 		}
-		return true;
+		
+		$this->_tests[] = array(
+			'name' => $name,
+			'type' => TEST_EXCEPTION,
+			'value' => $value,
+			'passed' => $passed
+		);
 	}
 	
-	public function assertEquals($expr, $value) {
-		$this->_test_count++;
-		
-		if ( $expr == $value ) {
-			$this->_test_passed++;
-		} else {
-			$this->_test_failed++;
-		}
-		return true;
+	public function testValue($expected, $actual, $name) {
+		$this->_tests[] = array(
+			'name' => $name,
+			'type' => TEST_VALUE,
+			'value' => $expected . ' equals ' . $actual,
+			'passed' => ( $expected === $actual )
+		);
 	}
 	
-	public function assertNotEquals($expr, $value) {
-		$this->_test_count++;
-		
-		if ( $expr != $value ) {
-			$this->_test_passed++;
-		} else {
-			$this->_test_failed++;
-		}
-		return true;
+	public function showTests() {
+		?>
+		<table width="100%" cellspacing="0" cellpadding="0">
+			<tr style="font-weight: bold;">
+				<td width="20%">Test Type</td>
+				<td width="30%">Test Name</td>
+				<td width="50%">Test Value</td>
+			</tr>
+			<?php
+			foreach ( $this->_tests as $test ) {
+				?>
+				<tr style="background-color: <?php echo ( true === $test['passed'] ? '#50DB56' : '#DB5050' ); ?>">
+					<td><?php echo $this->_types[$test['type']]; ?></td>
+					<td><?php echo $test['name']; ?></td>
+					<td><?php echo $test['value']; ?></td>
+				</tr>
+				<?php
+			}
+		?>
+		</table>
+		<?php
 	}
 }
+
+?>
