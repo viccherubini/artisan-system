@@ -43,9 +43,7 @@ class Artisan_Session {
 	 * @author vmc <vmc@leftnode.com>
 	 * @retval boolean Returns true.
 	 */
-	public function __destruct() {
-		
-	}
+	public function __destruct() { }
 	
 	/**
 	 * The method to return the instance of this class.
@@ -181,7 +179,7 @@ class Artisan_Session {
 		}
 		
 		return true;
-	}	
+	}
 	
 	/**
 	 * Pushes an element onto the session.
