@@ -2,7 +2,7 @@
 
 
 /**
- * This function wraps &lt;pre&gt; tags around an array or object before printing
+ * This method wraps &lt;pre&gt; tags around an array or object before printing
  * it out to display it nicely in a browser.
  * @author vmc <vmc@leftnode.com>
  * @param $array The array or object to display.

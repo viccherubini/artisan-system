@@ -2,6 +2,8 @@
 
 /**
  * Returns the first letter of a string.
+ * @author vmc <vmc@leftnode.com>
+ * @retval string The first letter of the string.
  */
 function asfw_first_letter($word) {
 	$w = NULL;
@@ -12,6 +14,12 @@ function asfw_first_letter($word) {
 	return $w;
 }
 
+/**
+ * Renames a controller string to be safe for PHP execution.
+ * @author vmc <vmc@leftnode.com>
+ * @param $controller The name of the controller to rename.
+ * @retval string The new safe controller name.,
+*/
 function asfw_rename_controller($controller) {
 	$controller = strtolower($controller);
 	

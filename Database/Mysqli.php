@@ -42,7 +42,18 @@ class Artisan_Database_Mysqli extends Artisan_Database {
 	///< The instance of the Artisan_Sql_Replace_Mysqli class for executing queries.
 	public $replace = NULL;
 
-
+	/**
+	 * Default constructor.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval object New database instance, ready for connection.
+	 */
+	public function __construct() { }
+	
+	/**
+	 * Destructor, disconnects from the database if currently connected.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval NULL Destroys the object.
+	 */
 	public function __destruct() {
 		if ( true === $this->_is_connected && true === is_object($this->CONN) ) {
 			$this->disconnect();
@@ -116,27 +127,6 @@ class Artisan_Database_Mysqli extends Artisan_Database {
 		return $this->_is_connected;
 	}
 
-
-	public function startTransaction() {
-		if ( false === $this->_transaction_started ) {
-			$this->CONN->autocommit(false);
-			$this->_transaction_started = true;
-		}
-	}
-
-
-	public function commitTransaction() {
-		if ( true === $this->_transaction_started ) {
-			$this->CONN->commit();
-		}
-	}
-
-	public function rollbackTransaction() {
-		if ( true === $this->_transaction_started ) {
-			$this->CONN->rollback();
-		}
-	}
-
 	/**
 	 * Prepare a query for execution and then execute it.
 	 * @author vmc <vmc@leftnode.com>
@@ -163,29 +153,44 @@ class Artisan_Database_Mysqli extends Artisan_Database {
 
 	/**
 	 * Start transtional queries.
+	 * @author vmc <vmc@leftnode.com>
+	 * @todo Finish implementing this.
+	 * @retval boolean Returns true.
 	 */
 	protected function _start() {
 		// Turn autocommit off
 		$this->CONN->autocommit(false);
 		$this->_transaction_started = true;
+		
+		return true;
 	}
 
 	/**
 	 * Rolls back any failed transitional queries.
+	 * @author vmc <vmc@leftnode.com>
+	 * @todo Finish implementing this, test the rollback and throw an exception.
+	 * @retval boolean Returns true.
 	 */
 	protected function _rollback() {
 		if ( true === $this->_transaction_started ) {
 			$this->CONN->rollback();
 		}
+		
+		return true;
 	}
 
 	/**
 	 * Commit a series of SQL transactions.
+	 * @author vmc <vmc@leftnode.com>
+	 * @todo Finish implementing this, test the commit and throw an exception.
+	 * @retval boolean Returns true;
 	 */
 	protected function _commit() {
 		if ( true === $this->_transaction_started ) {
 			$this->CONN->commit();
 		}
+		
+		return true;
 	}
 
 	/**

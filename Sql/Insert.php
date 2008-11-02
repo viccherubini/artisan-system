@@ -36,7 +36,8 @@ abstract class Artisan_Sql_Insert extends Artisan_Sql {
 	 * Sets up what table and fields to insert into.
 	 * @author vmc <vmc@leftnode.com>
 	 * @param $table The name of the table to insert into.
-	 * @param $insert_fields An optional array of fields to insert into. If not specified, class assumes all fields will have an insert value.
+	 * @param $insert_fields An optional array of fields to insert into. This is built based on the number of parameters. If not specified, class assumes all fields will have an insert value.
+	 * @throw Artisan_Sql_Exception If the table name is empty.
 	 * @retval Object Returns an instance of itself to allow chaining.
 	 */
 	public function into($table) {

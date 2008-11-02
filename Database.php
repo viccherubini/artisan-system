@@ -16,7 +16,6 @@ Artisan_Library::load('Sql/Replace');
  * @author vmc <vmc@leftnode.com>
  */
 abstract class Artisan_Database {
-
 	///< Holds the database configuration information, must be of type Artisan_Config.
 	protected $CONFIG = NULL;
 
@@ -41,11 +40,22 @@ abstract class Artisan_Database {
 		unset($this->CONFIG);
 	}
 
-
+	/**
+	 * Sets the configuration if not set through the constructor.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $C A configuration object.
+	 * @retval boolean Returns true.
+	 */
 	public function setConfig(Artisan_Config &$C) {
 		$this->CONFIG = $C;
+		return true;
 	}
 
+	/**
+	 * Returns the configuration object.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval Object Returns the configuration object.
+	 */
 	public function &getConfig() {
 		return $this->CONFIG;
 	}

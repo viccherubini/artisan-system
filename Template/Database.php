@@ -70,7 +70,7 @@ class Artisan_Template_Database extends Artisan_Template {
 	}
 
 	/**
-	 * Returns the current theme_id from the database. Note: This function is only
+	 * Returns the current theme_id from the database. Note: This method is only
 	 * available in this class.
 	 * @author vmc <vmc@leftnode.com>
 	 * @retval integer The ID of the currently selected theme.

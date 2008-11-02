@@ -70,7 +70,7 @@ function asfw_create_table_alias($table) {
 }
 
 /**
- * Returns the equivalent of the database NOW() function for date/datetime
+ * Returns the equivalent of the database NOW() method for date/datetime
  * field types.
  * @author vmc <vmc@leftnode.com>
  * @retval string The datetime value in format YYYY-MM-DD HH:MM:SS

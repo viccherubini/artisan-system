@@ -38,7 +38,13 @@ function asfw_decrypt_string($key, $string) {
 	return $decrypted_string;
 }
 
-
+/**
+ * Computes a hash with a nonce/salt.
+ * @author vmc <vmc@leftnode.com>
+ * @param $word The string to hash.
+ * @param $salt The nonce/salt to hash against.
+ * @retval string Returns the hashed value.
+ */
 function asfw_compute_hash($word, $salt) {
 	// Do the initial sha1
 	$initial_salt = sha1($word);
@@ -48,6 +54,11 @@ function asfw_compute_hash($word, $salt) {
 	return $hash;
 }
 
+/**
+ * Creates a very difficult to guess nonce/salt.
+ * @author vmc <vmc@leftnode.com>
+ * @retval string Returns the nonce/salt.
+ */
 function asfw_create_salt() {
 	$salt = sha1(uniqid('', true));
 	return $salt;
