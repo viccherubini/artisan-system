@@ -5,28 +5,60 @@
  * @author vmc <vmc@leftnode.com>
  */
 class Artisan_User_Database extends Artisan_User {
-	
+	///< Database instance passed into the class. Assumes the database already has a connection.
 	private $DB = NULL;
 	
 	///< The name of the table that holds user data, this is also defined in Artisan/Auth/Database.php!
 	const TABLE_USER = 'artisan_user';
 	
-	public function __construct(Artisan_Database &$db) {
-		$this->DB = &$db;
+	/**
+	 * Constructor for the Artisan_User class to get users from the database. Assumes
+	 * the object is already connected to the database.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $DB Database object that already has a connection.
+	 * @retval Object The new Artisan_User_Database object.
+	 */
+	public function __construct(Artisan_Database &$DB) {
+		$this->DB = &$DB;
 	}
 	
+	/**
+	 * Writes a user to the database. If the user exists, their data is updated,
+	 * if they are new, their data is inserted.
+	 * @author vmc <vmc@leftnode.com>
+	 * @todo Implement this!
+	 * @retval boolean Returns true.
+	 */
 	public function write() {
 	
+		return true;
 	}
 	
+	/**
+	 * Loads a user from the database based on their user ID.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $user_id The ID of the user to load.
+	 * @throw Artisan_User_Exception If the user can not be found.
+	 * @retval boolean Returns true.
+	 */
 	public function load($user_id) {
 		try {
 			$this->_load($user_id);
 		} catch ( Artisan_User_Exception $e ) {
 			throw $e;
 		}
+		
+		return true;
 	}
 	
+	/**
+	 * Does the actual loading of the user from the database.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $user_id The ID of the user to load.
+	 * @throw Artisan_User_Exception If the user ID specified is not numeric or less than 0.
+	 * @throw Artisan_User_Exception If the user can not be found in the database.
+	 * @retval boolean Returns true.
+	 */
 	protected function _load($user_id) {
 		$user_id = intval($user_id);
 		
@@ -59,15 +91,35 @@ class Artisan_User_Database extends Artisan_User {
 		$this->setUserStatus($user_data->user_status);
 	}
 	
+	/**
+	 * After write() is called, if the user is to be inserted, this method is called
+	 * to insert the user data.
+	 * @author vmc <vmc@leftnode.com>
+	 * @todo Implement this!
+	 * @retval boolean Returns true.
+	 */
 	protected function _insert() {
-	
+		return true;
 	}
 	
+	/**
+	 * After update() is called, if the user is to be updated, this method is called
+	 * to update the user data.
+	 * @author vmc <vmc@leftnode.com>
+	 * @todo Implement this!
+	 * @retval boolean Returns true.
+	 */
 	protected function _update() {
-	
+		return true;
 	}
 	
+	/**
+	 * Creates a Value Object of the user data to be inserted into the database.
+	 * @author vmc <vmc@leftnode.com>
+	 * @todo Implement this!
+	 * @retval boolean Returns true.
+	 */
 	protected function _makeRecord() {
-	
+		return true;
 	}
 }

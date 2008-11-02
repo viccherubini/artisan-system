@@ -21,12 +21,13 @@ class Artisan_Template_Database extends Artisan_Template {
 	 * Constructor for the Artisan_Template class to get the templates from the database. Assumes
 	 * the object is already connected to the database.
 	 * @author vmc <vmc@leftnode.com>
+	 * @param $DB Database object that already has a connection.
 	 * @retval Object The new Artisan_Template_Database object.
 	 */
-	public function __construct(Artisan_Database &$db) {
+	public function __construct(Artisan_Database &$DB) {
 		// We can only assume the database has a current connection
 		// as we don't want to attempt to connect.
-		$this->DB = &$db;
+		$this->DB = &$DB;
 	}
 
 	/**

@@ -1,8 +1,23 @@
 <?php
 
-
+/**
+ * Loads cached data from the database.
+ * @author vmc <vmc@leftnode.com>
+ * @todo Implement this!
+ */
 class Artisan_Cache_Database extends Artisan_Cache {
-
-	public function __construct($config = array()) {
+	///< Database instance passed into the class. Assumes the database already has a connection.
+	private $DB = NULL;
+	
+	/**
+	 * Constructor for the Artisan_Cache class to save logs to the database.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $DB The database object to store data into, assumes it is already connected.
+	 * @retval object The new Artisan_Cache_Database object.
+	 */
+	public function __construct(Artisan_Database &$DB) {
+		// We can only assume the database has a current connection
+		// as we don't want to attempt to connect.
+		$this->DB = &$DB;
 	}
 }
