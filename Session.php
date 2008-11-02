@@ -142,7 +142,7 @@ class Artisan_Session {
 		register_shutdown_function("session_write_close");
 
 		// $this->SH is guaranteed to have these methods because it has
-		// to implement the interface Artisan_Session_Interface
+		// to implement the interface Artisan_Session_Interface.
 		session_set_save_handler(
 			array(&$this->SH, 'open'),
 			array(&$this->SH, 'close'),
