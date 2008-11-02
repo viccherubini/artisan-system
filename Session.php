@@ -13,7 +13,7 @@ class Artisan_Session {
 	private static $INST = NULL;
 
 	///< The save_handler instance for how this class should be built.
-	private $SH;
+	private $SH = NULL;
 
 	///< The name of the session set.
 	private $_session_name;
