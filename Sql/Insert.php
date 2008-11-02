@@ -39,14 +39,28 @@ abstract class Artisan_Sql_Insert extends Artisan_Sql {
 	 * @param $insert_fields An optional array of fields to insert into. If not specified, class assumes all fields will have an insert value.
 	 * @retval Object Returns an instance of itself to allow chaining.
 	 */
-	public function into($table, $insert_fields = array()) {
+	public function into($table) {
 		if ( true === empty($table) ) {
 			throw new Artisan_Sql_Exception(ARTISAN_WARNING, 'Failed to create valid SQL INSERT class, the table name is empty.', __CLASS__, __FUNCTION__);
 		}
 		
 		$table = trim($table);
-
 		$this->_into_table = $table;
+		
+		// Determine if the insert fields are listed or just an array
+		$insert_fields = array();
+		$argc = func_num_args();
+		if ( $argc > 1 ) {
+			$argv = func_get_args();
+			array_shift($argv); // Remove the table name
+			
+			if ( true === is_array($argv[0]) && 2 === $argc ) {
+				$insert_fields = $argv[0];
+			} else {
+				$insert_fields = $argv;
+			}
+		}
+		
 		$this->_insert_field_list = asfw_sanitize_field_list($insert_fields);
 
 		return $this;
