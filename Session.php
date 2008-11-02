@@ -167,6 +167,7 @@ class Artisan_Session {
 	 * @retval boolean Returns true.
 	 */
 	public function destroy() {
+		// First, kill the session within PHP itself.
 		session_destroy();
 
 		/**
