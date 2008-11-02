@@ -6,14 +6,35 @@
  * @autor vmc <vmc@leftnode.com>
  */
 class Artisan_Controller_Plugin {
+	///< Because this class is a singleton, the instance of this class.
 	private static $INST = NULL;
 	
+	/**
+	 * Private constructor because this class is a singleton.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval NULL Returns nothing.
+	 */
 	private function __construct() { }
 	
-	public function __destruct() { }
-	
+	/**
+	 * Private clone method because this class is a singleton.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval NULL Returns nothing.
+	 */
 	private function __clone() { }
 	
+	/**
+	 * Public destructor.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval boolean Returns true.
+	 */
+	public function __destruct() { }
+	
+	/**
+	 * Returns this class for usage as a singleton.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval Object Returns the itself.
+	 */
 	public function &get() {
 		if ( true === is_null(self::$INST) ) {
 			self::$INST = new self;
@@ -22,6 +43,11 @@ class Artisan_Controller_Plugin {
 		return self::$INST;
 	}
 	
+	/**
+	 * Register a new object into this class.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval boolean Returns true.
+	 */
 	public function register(&$plugin, $name) {
 		if ( true === is_object($plugin) ) {
 			if ( false === isset($this->{$name}) ) {

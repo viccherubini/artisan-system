@@ -30,6 +30,13 @@ class Artisan_Template_Database extends Artisan_Template {
 	}
 
 	/**
+	 * Destructor to destroy the object.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval NULL Object is destroyed.
+	 */
+	public function __destruct() { }
+	
+	/**
 	 * Sets the current theme.
 	 * @author vmc <vmc@leftnode.com>
 	 * @param $theme The name of the theme to load from the filesystem or database.
@@ -60,30 +67,7 @@ class Artisan_Template_Database extends Artisan_Template {
 		
 		return true;
 	}
-	
-	/**
-	 * Parses a selected templated with the variables in $replace_list.
-	 * @author vmc <vmc@leftnode.com>
-	 * @param $template The name of the template from the current theme to load.
-	 * @param $replace_list A key/value array of values to replace.
-	 * @retval string The parsed template code.
-	 */
-	/*
-	public function parse($template, $replace_list = array()) {
-		$loaded = $this->_load($template);
-		
-		if ( false === $loaded ) {
-			return false;
-		}
-		
-		$this->_replace_list = $replace_list;
-		
-		$this->_parse();
-		
-		return $this->_template_code_parsed;
-	}
-	*/
-	
+
 	/**
 	 * Returns the current theme_id from the database. Note: This function is only
 	 * available in this class.

@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * This class authenticates a user against a database.
+ * @author vmc <vmc@leftnode.com>
+ */
 class Artisan_Auth_Database extends Artisan_Auth {
 	///< The database connection instance.
 	private $DB = NULL;
