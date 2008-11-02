@@ -156,6 +156,7 @@ class Artisan_Session {
 		$this->_session_id = session_id();
 
 		$this->_started = true;
+		
 		return $started;
 	}
 	
