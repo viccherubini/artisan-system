@@ -21,6 +21,9 @@ class Artisan_Session {
 	///< The ID of the session set.
 	private $_session_id;
 
+	///< Whether or not the session has started.
+	private $_started = false;
+
 	/**
 	 * Private constructor because this class is a singleton.
 	 * @author vmc <vmc@leftnode.com>
@@ -154,6 +157,7 @@ class Artisan_Session {
 		$started = session_start();
 		$this->_session_id = session_id();
 
+		$this->_started = true;
 		return $started;
 	}
 	
@@ -179,41 +183,50 @@ class Artisan_Session {
 		return true;
 	}	
 	
-	
+	/**
+	 * Pushes an element onto the session.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $name The name of the value to add.
+	 * @param $value The value of the variable to add.
+	 * @retval boolean Returns true.
+	 */
 	public function add($name, $value) {
-		$_SESSION[$name] = $value;
+		if ( true === $this->_started ) {
+			$_SESSION[$name] = $value;
+		}
+		
+		return true;
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	/*
+	/**
+	 * Pops an element from the session
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $name The name of the value to pop.
+	 * @retval boolean Returns true.
+	 */
 	public function remove($name) {
-	
+		if ( true === $this->_started ) {
+			if ( true === asfw_exists($name, $_SESSION) ) {
+				unset($_SESSION[$name]);
+			}
+		}
+		
+		return true;
 	}
 	
+	/**
+	 * Determines if an element exists in the session.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $name The name of the element to check.
+	 * @retval boolean Returns true if the element exists, false otherwise.
+	 */
 	public function exists($name) {
-	
+		if ( true === $this->_started ) {
+			if ( true === asfw_exists($name, $_SESSION) ) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
-	
-	public function registered($name) {
-		return array_key_exists($name, $_SESSION);
-	}
-	*/
-	
-	
 }
