@@ -3,6 +3,7 @@
 Artisan_Library::load('Session/Exception');
 Artisan_Library::load('Session/Interface');
 
+
 /**
  * Singleton class for handling sessions. It allows different session handlers,
  * such as a database and filesystem.
