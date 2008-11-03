@@ -16,47 +16,76 @@ Artisan_Library::load('Auth/Exception');
  * @author vmc <vmc@leftnode.com>
 */
 abstract class Artisan_Auth {
+	///< The user is anonymous.
 	const STATUS_ANONYMOUS = 2;
+	
+	///< The user is invalid.
 	const STATUS_INVALID = 4;
+	
+	///< The user is valid.
 	const STATUS_VALID = 8;
+	
+	///< The authentication has ended.
 	const STATUS_END = 16;
 	
+	///< The configuration object.
 	protected $CONFIG = NULL;
+	
+	///< The user object to authenticate against.
 	protected $USER = NULL;
+
+
+	/**
+	 * Default constructor, this class is abstract.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval Object Returns new Artisan_Auth instance.
+	 */
+	public function __construct() { }
 	
-	/*
-	protected $_auth = array(
-		'length' => 900,
-		'user_id' => NULL,
-		'user' => NULL,
-		'password' => NULL,
-		'name' => 'Artisan',
-		'isvalid' => false,
-		'status' => self::STATUS_ANONYMOUS
-	);
-	*/
-	
-	public function __construct() {
-	
-	}
-	
+	/**
+	 * Destructor, destroys the object.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval NULL Returns nothing.
+	 */
 	public function __destruct() {
 		unset($this->CONFIG);
 		unset($this->USER);
 	}
 	
+	/**
+	 * Sets the configuration if not set in the constructor.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval boolean Returns true.
+	 */
 	public function setConfig(Artisan_Config &$C) {
 		$this->CONFIG = $C;
+		return true;
 	}
 	
+	/**
+	 * Sets the user if not set in the constructor.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval boolean Returns true.
+	 */
 	public function setUser(Artisan_User &$U) {
 		$this->USER = $U;
+		return true;
 	}
 	
+	/**
+	 * Gets the configuration.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval Object Returns the configuration object.
+	 */
 	public function &getConfig() {
 		return $this->CONFIG;
 	}
 	
+	/**
+	 * Gets the user.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval Object Returns the user object.
+	 */
 	public function &getUser() {
 		return $this->USER;
 	}

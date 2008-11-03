@@ -9,7 +9,7 @@ Artisan_Library::load('Exception');
 // Load up the log so that its always included
 Artisan_Library::load('Log');
 
-// Load in the function libraries
+// Load in the method libraries
 Artisan_Library::load('Functions/Array');
 Artisan_Library::load('Functions/Database');
 Artisan_Library::load('Functions/Encryption');
@@ -57,7 +57,7 @@ class Artisan_Library {
 	}
 
 	/**
-	 * This function does the actual loading of the library.
+	 * This method does the actual loading of the library.
 	 * @author vmc <vmc@leftnode.com>
 	 * @param $lib_name The name or path of the library to load, examples are Database, or Database/Mysqli.
 	 * @param $build If a single class is included, and $build is true, the class will be created.

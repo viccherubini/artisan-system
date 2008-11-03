@@ -11,6 +11,11 @@ define('ARTISAN_ERROR_CORE', 100, false);
 define('ARTISAN_WARNING', 200, false);
 define('ARTISAN_NOTICE', 300, false);
 
+/**
+ * Custom exception handling routin extended from base Exception class. Allows for prettier
+ * exception formatting.
+ * @author vmc <vmc@leftnode.com>
+ */
 class Artisan_Exception extends Exception {	///< The line number the error occured on.
 	private $_line_number;
 		///< The file name the error occured in.
@@ -19,9 +24,18 @@ class Artisan_Exception extends Exception {	///< The line number the error occu
 	///< The class name the error occured in.
 	private $_class_name;
 	
-	///< The function name the error occured in.
+	///< The method name the error occured in.
 	private $_function_name;
 	
+	/**
+	 * Default constructor.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $error_code A custom numeric error code defined above.
+	 * @param $error_message The specific error message.
+	 * @param $class_name The optional name of the class the error occurred in.
+	 * @param $function_name The optional name of the method the error occurred in.
+	 * @retval Object Returns new Artisan_Exception object.
+	 */
 	public function __construct($error_code, $error_message, $class_name = NULL, $function_name = NULL) {
 		parent::__construct($error_message, $error_code);
 		
@@ -89,9 +103,9 @@ class Artisan_Exception extends Exception {	///< The line number the error occu
 	}
 	
 	/**
-	 * Returns the function name the error occurred in.
+	 * Returns the method name the error occurred in.
 	 * @author vmc <vmc@leftnode.com>
-	 * @retval string The name of the function the error occurred in.
+	 * @retval string The name of the method the error occurred in.
 	 */
 	public function getFunctionName() {
 		return $this->_function_name;

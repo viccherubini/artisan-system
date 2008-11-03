@@ -137,7 +137,7 @@ class Artisan_Session {
 		 * for class instances are called. The database class instance's destructor
 		 * will be called by the time write() is run, which the destructor disconnects
 		 * from the database and kills the configuration data. By putting this here,
-		 * the shutdown function session_write_close() will be called before that
+		 * the shutdown method session_write_close() will be called before that
 		 * occurs, allowing the data to be written properly.
 		*/
 		register_shutdown_function("session_write_close");

@@ -11,10 +11,18 @@ Artisan_Library::load('Cache/Exception');
  */
 abstract class Artisan_Cache {
 
-	public function __construct(Artisan_Config $config) {
-	}
+	/**
+	 * Constructor to build a cache object.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $C Configuration object.
+	 * @retval Object Returns new Artisan_Cache object.
+	 */
+	public function __construct(Artisan_Config &$C) { }
 	
-	public function __destruct() {
-	
-	}
+	/**
+	 * Destructor.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval NULL Returns nothing.
+	 */
+	public function __destruct() { }
 }

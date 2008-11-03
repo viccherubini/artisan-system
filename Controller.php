@@ -44,25 +44,56 @@ class Artisan_Controller {
 		}
 	}
 
+	/**
+	 * Destructor.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval NULL Returns nothing.
+	 */
 	public function __destruct() {
-	
+		unset($this->CONTROLLER);
+		unset($this->P);
 	}
 	
+	/**
+	 * Sets the configuration if not set through the constructor.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $C Configuration object.
+	 * @retval boolean Returns true.
+	 */
 	public function setConfig(Artisan_Config &$C) {
 		$this->setDirectory($C->directory);
 		$this->_default_method = $C->default_method;
 		$this->_default_controller = $C->default_controller;
+		
+		return true;
 	}
 	
-	
+	/**
+	 * Sets the directory that contains the controller classes.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $directory The name of the directory, must be valid.
+	 * @retval boolean Returns true.
+	 */
 	public function setDirectory($directory) {
 		$directory = trim($directory);
 		if ( true === is_dir($directory) ) {
 			$this->_directory = $directory;
 		}
+		
+		return true;
 	}
 	
-	
+	/**
+	 * Attempts to load the controller. If none specified, loads the default.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $controller Optional name of controller to load.
+	 * @throw Artisan_Controller_Exception If no controller directory is specified.
+	 * @throw Artisan_Controller_Exception If the specified directory is not a valid directory.
+	 * @throw Artisan_Controller_Exception If no default controller and no controller specified.
+	 * @throw Artisan_Controller_Exception If the controller file was not found.
+	 * @throw Artisan_Controller_Exception If the class was not found in the controller.
+	 * @retval boolean Returns true.
+	 */
 	public function load($controller = NULL) {
 		if ( true === empty($this->_directory) ) {
 			throw new Artisan_Controller_Exception(ARTISAN_ERROR_CORE, 'No controller directory specified.', __CLASS__, __FUNCTION__);
@@ -106,8 +137,22 @@ class Artisan_Controller {
 		} catch ( Artisan_Exception $e ) {
 			throw $e;
 		}
+		
+		return true;
 	}
 	
+	/**
+	 * Attempts to execute a specified method in a controller, passing it the arguments it needs.
+	 * If no method specified, uses the default, which is usually index().
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $method Optional name of method to execute.
+	 * @param $args An optional array of arguments to send.
+	 * @throw Artisan_Controller_Exception If the controller has not been set.
+	 * @throw Artisan_Controller_Exception If the controller does not inherit from Artisan_Controller.
+	 * @throw Artisan_Controller_Exception If no default method and method are specified.
+	 * @throw Artisan_Controller_Exception If the method does not exist in the controller.
+	 * @retval boolean Returns true.
+	 */
 	public function execute($method = NULL, $args = array()) {
 		if ( false === is_object($this->CONTROLLER) ) {
 			throw new Artisan_Controller_Exception(ARTISAN_ERROR_CORE, 'The controller has not been set yet.', __CLASS__, __FUNCTION__);
@@ -145,5 +190,7 @@ class Artisan_Controller {
 		} catch ( Artisan_Exception $e ) {
 			throw $e;
 		}
+		
+		return true;
 	}
 }

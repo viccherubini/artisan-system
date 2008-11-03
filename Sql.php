@@ -102,6 +102,15 @@ abstract class Artisan_Sql {
 		return $where_sql;
 	}
 
+	/**
+	 * Builds the appropriate WHERE clause array. The variable $field_data is one
+	 * or more elements in length. The first element is the field or list of fields
+	 * with ?'s in them to compare, any other elements are the values to replace the ?'s with.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $type The type of WHERE to do, either AND or OR.
+	 * @param $field_data The list of fields to use for the clause.
+	 * @retval boolean Returns true.
+	 */
 	private function _where($type, $field_data) {
 		$argc = count($field_data);
 		
@@ -157,6 +166,8 @@ abstract class Artisan_Sql {
 				$this->_where_field_list[$type][] = $where_item;
 			}
 		}
+		
+		return true;
 	}
 	
 	
