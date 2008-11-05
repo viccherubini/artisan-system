@@ -41,13 +41,6 @@ class Artisan_Database_Mysqli extends Artisan_Database {
 	
 	///< The instance of the Artisan_Sql_Replace_Mysqli class for executing queries.
 	public $replace = NULL;
-
-	/**
-	 * Default constructor.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval object New database instance, ready for connection.
-	 */
-	public function __construct() { }
 	
 	/**
 	 * Destructor, disconnects from the database if currently connected.

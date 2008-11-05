@@ -41,9 +41,9 @@ class Artisan_Sql_Select_Mysqli extends Artisan_Sql_Select {
 			$group_sql = " GROUP BY " . implode(", ", $this->_group_field_list);
 		}
 		
-		
-		
 		$this->_sql = $select_sql . $where_sql . $group_sql;
+		
+		return $this->_sql;
 	}
 	
 	
