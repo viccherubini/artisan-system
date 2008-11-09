@@ -211,10 +211,10 @@ class Artisan_Controller_Builder {
 						next($ctt_argv);
 					}
 				} else {
-					throw new Artisan_Controller_Exception(ARTISAN_ERROR_CORE, 'No method found in the translation table for ' . $method . '.');
+					throw new Artisan_Controller_Exception(ARTISAN_ERROR_CORE, 'No method found in the translation table for "' . $method . '".');
 				}
 			} else {
-				throw new Artisan_Controller_Exception(ARTISAN_ERROR_CORE, 'No controller found in the translation table for ' . $method . '.');
+				throw new Artisan_Controller_Exception(ARTISAN_ERROR_CORE, 'No controller found in the translation table for "' . $controller_class . '".');
 			}
 		} else {
 			self::$_method = self::$CONFIG->default_method;
