@@ -3,6 +3,7 @@
 Artisan_Library::load('Database/Exception');
 
 Artisan_Library::load('Sql/Select');
+Artisan_Library::load('Sql/Update');
 Artisan_Library::load('Sql/Insert');
 Artisan_Library::load('Sql/Delete');
 Artisan_Library::load('Sql/General');

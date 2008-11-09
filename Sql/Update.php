@@ -33,17 +33,26 @@ abstract class Artisan_Sql_Update extends Artisan_Sql {
 	/**
 	 * Sets up what table and fields to update.
 	 * @author vmc <vmc@leftnode.com>
+	 * @code
+	 * // Example:
+	 * $db->update->table('table_name', array('field1' => 'value1', 'field2' => 'value2'))->where('id = ?', $id)->query();
+	 * @endcode
 	 * @param $table The name of the table to update.
-	 * @param $update_fields An optional array of fields to update. This is built based on the number of parameters. If not specified, class assumes all fields will have an insert value.
 	 * @throw Artisan_Sql_Exception If the table name is empty.
 	 * @retval Object Returns an instance of itself to allow chaining.
 	 */
-	public function table($table) {
+	public function table($table, $field_list) {
 		if ( true === empty($table) ) {
 			throw new Artisan_Sql_Exception(ARTISAN_WARNING, 'Failed to create valid SQL UPDATE class, the table name is empty.', __CLASS__, __FUNCTION__);
 		}
 		
 		$this->_table = $table;
+		
+		if ( false === is_array($field_list) || count($field_list) < 1 ) {
+			throw new Artisan_Sql_Exception(ARTISAN_WARNING, 'At least one field must be specified to be updated.', __CLASS__, __FUNCTION__);
+		}
+		
+		$this->_update_field_list = $field_list;
 		
 		return $this;
 	}
