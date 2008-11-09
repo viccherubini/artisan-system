@@ -5,17 +5,37 @@
  * @author vmc <vmc@leftnode.com>
  */
 class Artisan_Sql_Select_Mysqli extends Artisan_Sql_Select {
+	///< The database connection object, assumes the database is already connected.
 	private $CONN = NULL;
+	
+	///< The result object after executing a query.
 	private $RESULT = NULL;
 	
+	/**
+	 * Default constructor, builds the Update class.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $CONN The database connection object.
+	 * @retval Object Returns new Artisan_Sql_Update_Mysqli object.
+	 */
 	public function __construct($CONN) {
 		if ( true === $CONN instanceof mysqli ) {
 			$this->CONN = $CONN;
 		}
 	}
 	
+	/**
+	 * Destroys the object.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval NULL Returns nothing.
+	 */
 	public function __destruct() { }
 	
+	/**
+	 * Builds the SELECT statement after all of the appropriate data has been collected.
+	 * @author vmc <vmc@leftnode.com>
+	 * @throw Artisan_Sql_Exception If the database is not of type mysqli.
+	 * @retval string Returns the newly built SQL.
+	 */
 	public function build() {
 		// Ensure that the connection actually exists before building the query.
 		if ( false === $this->CONN instanceof mysqli ) {
@@ -46,7 +66,13 @@ class Artisan_Sql_Select_Mysqli extends Artisan_Sql_Select {
 		return $this->_sql;
 	}
 	
-	
+	/**
+	 * Execute the query against the database.
+	 * @author vmc <vmc@leftnode.com>
+	 * @throw Artisan_Sql_Exception If the SELECT query is empty.
+	 * @throw Artisan_Sql_Exception If the query fails to execute.
+	 * @retval Object Returns instance of itself for chainability.
+	 */
 	public function query() {
 		// Assume $this->_sql has not been built, so build it. If it
 		// has been built, it'll simply be overwritten.
@@ -67,6 +93,12 @@ class Artisan_Sql_Select_Mysqli extends Artisan_Sql_Select {
 		return $this;
 	}
 	
+	/**
+	 * Returns a row or single field from a query. If only one field of one row was queried, it will be returned.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $field Optional parameter that if set, only that value is returned.
+	 * @retval Mixed Returns either a row or a single value. Returns an empty array if no current database connection or no query has been executed.
+	 */
 	public function fetch($field = NULL) {
 		if ( true === $this->RESULT instanceof mysqli_result ) {
 			$data = $this->RESULT->fetch_assoc();
@@ -91,10 +123,20 @@ class Artisan_Sql_Select_Mysqli extends Artisan_Sql_Select {
 		return array();
 	}
 	
+	/**
+	 * Returns all records from the database.
+	 * @author vmc <vmc@leftnode.com>
+	 * @todo Finish implementing this, not yet implemented.
+	 */
 	public function fetchAll() {
 
 	}
 	
+	/**
+	 * Free's the latest connection to release memory.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval boolean Returns true.
+	 */
 	public function free() {
 		if ( true === $this->RESULT instanceof mysqli_result ) {
 			$this->RESULT->free();
@@ -103,10 +145,20 @@ class Artisan_Sql_Select_Mysqli extends Artisan_Sql_Select {
 		return true;
 	}
 	
+	/**
+	 * Escapes a string based on the character set of the current connection.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval string Returns a context escaped string.
+	 */
 	public function escape($value) {
 		return $this->CONN->real_escape_string($value);
 	}
 	
+	/**
+	 * Returns the number of rows selected.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval int Returns the number of rows affected by the SELECT.
+	 */
 	public function numRows() {
 		if ( true === $this->RESULT instanceof mysqli_result ) {
 			return $this->RESULT->num_rows;
@@ -114,5 +166,4 @@ class Artisan_Sql_Select_Mysqli extends Artisan_Sql_Select {
 		
 		return 0;
 	}
-	
 }
