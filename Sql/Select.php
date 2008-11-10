@@ -29,6 +29,18 @@ abstract class Artisan_Sql_Select extends Artisan_Sql {
 	///< Or descending.
 	protected $_desc = NULL;
 	
+	///< An INNER JOIN clause element.
+	const SQL_JOIN_INNER = 'INNER JOIN';
+	
+	///< A LEFT JOIN clause element.
+	const SQL_JOIN_LEFT  = 'LEFT JOIN';
+	
+	///< An OUTER JOIN clause element.
+	const SQL_JOIN_OUTER = 'OUTER JOIN';
+	
+	///< A RIGHT JOIN clause element.
+	const SQL_JOIN_RIGHT = 'RIGHT JOIN';
+	
 	/**
 	 * Builds a new SELECT clause.
 	 * @author vmc <vmc@leftnode.com>
@@ -105,18 +117,31 @@ abstract class Artisan_Sql_Select extends Artisan_Sql {
 	}
 	
 	/**
-	 * Adds a JOIN to the SELECT clause.
+	 * Creates an INNER JOIN clause.
 	 * @author vmc <vmc@leftnode.com>
-	 * @param $join_type The type of JOIN to make: LEFT, INNER, OUTER, RIGHT, etc.
 	 * @param $join_table The name of the table to join on.
-	 * @param $field_a The field from the first select table.
-	 * @param $field_b The field from the joined table to compare.
-	 * @todo Finish implementing this!
-	 * @retval Object Returns itself for chaining.
+	 * @param $field_a The field of the first table to join on.
+	 * @param $field_b The field in $join_table to join on.
+	 * @retval Object Returns intself for chaining.
 	 */
-	public function join($join_type, $join_table, $field_a, $field_b) {
+	public function innerJoin($join_table, $field_a, $field_b) {
+		$this->_join(self::SQL_JOIN_INNER, $join_table, $field_a, $field_b);
 		return $this;
 	}
+	
+	/**
+	 * Creates an LEFT JOIN clause.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $join_table The name of the table to join on.
+	 * @param $field_a The field of the first table to join on.
+	 * @param $field_b The field in $join_table to join on.
+	 * @retval Object Returns intself for chaining.
+	 */
+	public function leftJoin($join_table, $field_a, $field_b) {
+		$this->_join(self::SQL_JOIN_LEFT, $join_table, $field_a, $field_b);
+		return $this;
+	}
+	
 	
 	/**
 	 * Adds a GROUP BY clause to the SELECT statement.
@@ -195,4 +220,27 @@ abstract class Artisan_Sql_Select extends Artisan_Sql {
 	 * @retval string Returns the escaped value.
 	 */
 	abstract public function escape($value);
+	
+	/**
+	 * Adds a JOIN to the SELECT clause.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $join_type The type of JOIN to make: LEFT, INNER, OUTER, RIGHT, etc.
+	 * @param $join_table The name of the table to join on.
+	 * @param $field_a The field from the first select table.
+	 * @param $field_b The field from the joined table to compare.
+	 * @todo Finish implementing this!
+	 * @retval Object Returns itself for chaining.
+	 */
+	protected function _join($join_type, $join_table, $field_a, $field_b) {
+		$join = array(
+			'type' => $join_type,
+			'table' => $join_table,
+			'field_a' => $field_a,
+			'field_b' => $field_b
+		);
+		
+		$this->_join_table_list[] = $join;
+		
+		return true;
+	}
 }

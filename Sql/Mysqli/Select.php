@@ -54,6 +54,17 @@ class Artisan_Sql_Select_Mysqli extends Artisan_Sql_Select {
 			$select_sql .= '`' . $this->_from_table_alias . '` ';
 		}
 		
+		$join_sql = NULL;
+		if ( count($this->_join_table_list) > 0 ) {
+			foreach ( $this->_join_table_list as $join ) {
+				$table_alias = asfw_create_table_alias($join['table']);
+				$join_sql .= $join['type'] . ' `' . $join['table'] . '` ';
+				$join_sql .= '`' . $table_alias . '` ';
+				$join_sql .= 'ON ' . $join['field_a'] . ' = ' . $join['field_b'];
+				$join_sql .= ' ';
+			}
+		}
+		
 		$where_sql = $this->buildWhereClause();
 		
 		$group_sql = NULL;
@@ -61,7 +72,7 @@ class Artisan_Sql_Select_Mysqli extends Artisan_Sql_Select {
 			$group_sql = " GROUP BY " . implode(", ", $this->_group_field_list);
 		}
 		
-		$this->_sql = $select_sql . $where_sql . $group_sql;
+		$this->_sql = $select_sql . $join_sql . $where_sql . $group_sql;
 		
 		return $this->_sql;
 	}
