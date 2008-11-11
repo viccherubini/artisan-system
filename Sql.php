@@ -70,6 +70,42 @@ abstract class Artisan_Sql {
 	}
 	
 	/**
+	 * Allows the creation of an IN clause. If successfully added, the data
+	 * will be put onto the same stack $_where_field_list.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $field The name of the field to select IN().
+	 * @param $value_list The list of values actually in the IN() clause.
+	 * @retval Object Returns itself for chainability.
+	 */	
+	public function inWhere($field, $value_list) {
+		// Ensure $value_list has a value
+		if ( count($value_list) > 0 && false === empty($field) ) {
+			$vl_len = count($value_list);
+			$is_numeric = true;
+			for ( $i=0; $i<$vl_len; $i++ ) {
+				if ( false === is_numeric($value_list[$i]) ) {
+					$is_numeric = false;
+					$value_list[$i] = $this->escape($value_list[$i]);
+				}
+			}
+			
+			$where_item = NULL;
+			
+			if ( true === $is_numeric ) {
+				$in_data = '(' . implode(',', $value_list) . ')';
+			} else {
+				$in_data = "('" . implode("', '", $value_list) . "')";
+			}
+			
+			$where_item = $field . ' IN' . $in_data;
+			$this->_where_field_list[self::SQL_AND][] = $where_item;
+		}
+		
+		return $this;
+	}
+	
+	
+	/**
 	 * Because several SQL classes use a WHERE clause, this class
 	 * sets the list of fields in the WHERE clause. It bubbles up to
 	 * the rest of the classes.
