@@ -174,7 +174,7 @@ class Artisan_Controller_Builder {
 			// Look up the data in the translation table.
 			if ( true === asfw_exists($controller_class, self::$CTT) ) {
 				$CTT_METHOD = self::$CTT[$controller_class];
-				if ( true === asfw_exists(self::$_method, $CTT_METHOD) ) {
+				if ( true === array_key_exists(self::$_method, $CTT_METHOD) ) {
 					$ctt_argv = $CTT_METHOD[self::$_method];
 					$ctt_argc = count($ctt_argv);
 
