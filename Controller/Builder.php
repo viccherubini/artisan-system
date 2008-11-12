@@ -164,6 +164,10 @@ class Artisan_Controller_Builder {
 			if ( count($path_info_bits) > 1 ) {
 				$method = trim($path_info_bits[1]);
 				self::$_url_argv = array_slice($path_info_bits, 2);
+				
+				if ( true === empty($method) ) {
+					$method = self::$CONFIG->default_method;
+				}
 			} else {
 				$method = self::$CONFIG->default_method;
 			}
