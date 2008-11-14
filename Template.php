@@ -93,6 +93,16 @@ abstract class Artisan_Template {
 	}
 	
 	/**
+	 * Returns the location of the stylesheet this theme should use.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval string Returns the stylesheet path.
+	 */
+	//public function getStyleSheet() {
+	//	$ss = $this->_theme . '.css';
+	//	return $ss;
+	//}
+	
+	/**
 	 * Loads a template from the currently set theme.
 	 * @author vmc <vmc@leftnode.com>
 	 * @param $template The name of the template to load.
