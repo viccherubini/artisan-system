@@ -83,12 +83,18 @@ class Artisan_Template_Filesystem extends Artisan_Template {
 			return false;
 		}
 
-		$template_location = $this->_theme_directory . $this->_theme . $template . self::TEMPLATE_EXT;
+		// See if we should load up a template with the extension or not.
+		$last_dot_pos = strrpos($template, '.');
+		if ( $last_dot_pos + 4 != strlen($template) ) {
+			$template .= self::TEMPLATE_EXT;
+		}
+		
+		$template_location = $this->_theme_directory . $this->_theme . $template;// . self::TEMPLATE_EXT;
 		
 		if ( false === is_file($template_location) ) {
 			// If the template sent in isn't in the theme directory, perhaps its global
 			// in which case it resides in the self::THEME_DIRECTORY_GLOBAL const.
-			$template_location = $this->_theme_directory . self::THEME_DIRECTORY_GLOBAL . $template . self::TEMPLATE_EXT;
+			$template_location = $this->_theme_directory . self::THEME_DIRECTORY_GLOBAL . $template;// . self::TEMPLATE_EXT;
 			
 			if ( false === is_file($template_location) ) {
 				return false;
