@@ -55,7 +55,7 @@ class Artisan_Template_Database extends Artisan_Template {
 		$tt = self::TABLE_THEME;		
 		$theme_id = $this->DB->select
 			->from($tt, asfw_create_table_alias($tt), 'theme_id')
-			->where(array('theme_name' => $theme, 'theme_status' => 1))
+			->where('theme_name = ?', $theme)->where('theme_status = 1')
 			->query()
 			->fetch('theme_id');
 	
@@ -102,7 +102,7 @@ class Artisan_Template_Database extends Artisan_Template {
 		$ttc = self::TABLE_THEME_CODE;
 		$code = $this->DB->select
 			->from($ttc, asfw_create_table_alias($ttc), 'code')
-			->where(array('code_name' => $template))
+			->where('code_name = ?', $template)
 			->query()
 			->fetch('code');
 		
