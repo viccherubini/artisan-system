@@ -169,6 +169,7 @@ class Artisan_Controller_Builder {
 					$method = self::$CONFIG->default_method;
 				}
 			} else {
+				$controller_class = strtolower(self::$CONFIG->default_controller);
 				$method = self::$CONFIG->default_method;
 			}
 
