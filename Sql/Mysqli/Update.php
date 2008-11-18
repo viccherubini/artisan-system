@@ -48,7 +48,11 @@ class Artisan_Sql_Update_Mysqli extends Artisan_Sql_Update {
 		$i=0;
 		$field_list_sql = " SET ";
 		foreach ( $this->_update_field_list as $field => $value ) {
-			$field_list_sql .= $field . " = '" . $this->escape($value) . "'";
+			if ( '`' == $value[0] ) {
+				$field_list_sql .= $field . " = " . $this->escape($value);
+			} else {
+				$field_list_sql .= $field . " = '" . $this->escape($value) . "'";
+			}
 			if ( $i != $fl_len ) {
 				$field_list_sql .= ', ';
 			}
