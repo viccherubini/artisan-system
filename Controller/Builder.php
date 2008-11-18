@@ -168,6 +168,14 @@ class Artisan_Controller_Builder {
 				if ( true === empty($method) ) {
 					$method = self::$CONFIG->default_method;
 				}
+			} elseif ( 1 === count($path_info_bits) ) {
+				$cc = strtolower($path_info_bits[0]);
+				if ( false === empty($cc) ) {
+					$controller_class = $cc;
+				} else {
+					$controller_class = strtolower(self::$CONFIG->default_controller);
+				}
+				$method = self::$CONFIG->default_method;
 			} else {
 				$controller_class = strtolower(self::$CONFIG->default_controller);
 				$method = self::$CONFIG->default_method;
