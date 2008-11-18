@@ -85,9 +85,9 @@ class Artisan_Template_Filesystem extends Artisan_Template {
 
 		// See if we should load up a template with the extension or not.
 		$last_dot_pos = strrpos($template, '.');
-		if ( $last_dot_pos + 4 != strlen($template) ) {
+		//if ( $last_dot_pos + 4 != strlen($template) ) {
 			$template .= self::TEMPLATE_EXT;
-		}
+		//}
 		
 		$template_location = $this->_theme_directory . $this->_theme . $template;// . self::TEMPLATE_EXT;
 		
