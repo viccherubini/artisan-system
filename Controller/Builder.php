@@ -147,7 +147,7 @@ class Artisan_Controller_Builder {
 	 */
 	private static function _parse() {
 		/// Get the path info
-		$path_info = asfw_exists_return('PATH_INFO', $_SERVER);
+		$path_info = asfw_exists_return('REQUEST_URI', $_SERVER);
 		$controller_class = $method = NULL;
 		self::$_url_argv = array();
 		
