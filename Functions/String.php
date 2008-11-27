@@ -21,7 +21,7 @@ function asfw_first_letter($word) {
  * @retval string The new safe controller name.,
 */
 function asfw_rename_controller($controller) {
-	$controller = strtolower($controller);
+	$controller = strtolower(trim($controller));
 	
 	// Strip out non-ascii characters
 	$controller = preg_replace('/[^a-z_0-9]/i', NULL, $controller);
@@ -30,4 +30,10 @@ function asfw_rename_controller($controller) {
 	$controller = str_replace(' ', '_', $controller);
 	
 	return $controller;
+}
+
+function asfw_class_name_to_file_name($class_name) {
+	$class_name = strtolower(trim($class_name));
+	
+	
 }
