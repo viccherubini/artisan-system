@@ -14,6 +14,22 @@ abstract class Artisan_Db_Adapter {
 	///< Whether or not a transaction has been started.
 	private $_transaction_started = false;
 
+	///< The instance of the Artisan_Db_Sql_Select_Mysqli class for executing queries.
+	public $select = NULL;
+	
+	///< The instance of the Artisan_Db_Sql_Insert_Mysqli class for executing queries.
+	public $insert = NULL;
+	
+	///< The instance of the Artisan_Db_Sql_Update_Mysqli class for executing queries.
+	public $update = NULL;
+
+	///< The instance of the Artisan_Db_Sql_Delete_Mysqli class for executing queries.
+	public $delete = NULL;
+
+	///< The instance of the Artisan_Db_Sql_Replace_Mysqli class for executing queries.
+	public $replace = NULL;
+
+
 	/**
 	 * Destructor, disconnects from the database if currently connected.
 	 * @author vmc <vmc@leftnode.com>
@@ -35,8 +51,8 @@ abstract class Artisan_Db_Adapter {
 	abstract public function disconnect();
 	abstract public function close();
 	abstract public function query($sql);
-	abstract public function update($table, $value_list, $where_sql = NULL);
-	abstract public function insert($table, $value_list);
+	//abstract public function update($table, $value_list, $where_sql = NULL);
+	//abstract public function insert($table, $value_list);
 	abstract public function escape($value);
 	
 }
