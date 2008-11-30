@@ -100,7 +100,7 @@ class Artisan_Controller_Builder {
 	 */
 	public static function registerPlugin(&$PLUGIN, $name) {
 		if ( true === empty($name) ) {
-			throw new Artisan_Controller_Exception(ARTISAN_CORE_ERROR, 'Failed to register plugin, $name is NULL.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'Failed to register plugin, $name is NULL.', __CLASS__, __FUNCTION__);
 		}
 		
 		Artisan_Controller_Plugin::get()->register($PLUGIN, $name);
@@ -224,10 +224,10 @@ class Artisan_Controller_Builder {
 						next($ctt_argv);
 					}
 				} else {
-					throw new Artisan_Controller_Exception(ARTISAN_ERROR_CORE, 'No method found in the translation table for "' . $method . '".');
+					throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'No method found in the translation table for "' . $method . '".');
 				}
 			} else {
-				throw new Artisan_Controller_Exception(ARTISAN_ERROR_CORE, 'No controller found in the translation table for "' . $controller_class . '".');
+				throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'No controller found in the translation table for "' . $controller_class . '".');
 			}
 		} else {
 			self::$_method = self::$CONFIG->default_method;

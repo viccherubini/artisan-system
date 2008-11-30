@@ -7,7 +7,7 @@
  * Exception class.
  */
 
-define('ARTISAN_ERROR_CORE', 100, false);
+define('ARTISAN_ERROR', 100, false);
 define('ARTISAN_WARNING', 200, false);
 define('ARTISAN_NOTICE', 300, false);
 

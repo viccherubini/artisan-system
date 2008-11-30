@@ -96,17 +96,17 @@ class Artisan_Controller {
 	 */
 	public function load($controller = NULL) {
 		if ( true === empty($this->_directory) ) {
-			throw new Artisan_Controller_Exception(ARTISAN_ERROR_CORE, 'No controller directory specified.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'No controller directory specified.', __CLASS__, __FUNCTION__);
 		}
 		
 		if ( false === is_dir($this->_directory) ) {
-			throw new Artisan_Controller_Exception(ARTISAN_ERROR_CORE, 'Value specified for controller directory, ' . $this->_directory . ', is not a directory.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'Value specified for controller directory, ' . $this->_directory . ', is not a directory.', __CLASS__, __FUNCTION__);
 		}
 		
 		// See if the controller isn't set and the default controller is.
 		// If so, use that, otherwise, throw an exception.
 		if ( true === empty($controller) && true === empty($this->_default_controller) ) {
-			throw new Artisan_Controller_Exception(ARTISAN_ERROR_CORE, 'No controller and default controller specified.', __CLAS__, __FUNCTION__);
+			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'No controller and default controller specified.', __CLAS__, __FUNCTION__);
 		}
 		
 		if ( true === empty($controller) ) {
@@ -120,7 +120,7 @@ class Artisan_Controller {
 		// See if that file exists in the directory
 		$controller_file = $this->_directory . $controller . EXT;
 		if ( false === is_file($controller_file) ) {
-			throw new Artisan_Controller_Exception(ARTISAN_ERROR_CORE, 'Controller file ' . $controller_file . ' was not found.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'Controller file ' . $controller_file . ' was not found.', __CLASS__, __FUNCTION__);
 		}
 		
 		// File exists, load it up
@@ -128,7 +128,7 @@ class Artisan_Controller {
 		
 		// Ensure the class exists
 		if ( false === class_exists($controller) ) {
-			throw new Artisan_Controller_Exception(ARTISAN_ERROR_CORE, 'Class ' . $controller . ' not found in file ' . $controller_file . '.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'Class ' . $controller . ' not found in file ' . $controller_file . '.', __CLASS__, __FUNCTION__);
 		}
 		
 		// Create a new instance of the controller to work with
@@ -155,16 +155,16 @@ class Artisan_Controller {
 	 */
 	public function execute($method = NULL, $args = array()) {
 		if ( false === is_object($this->CONTROLLER) ) {
-			throw new Artisan_Controller_Exception(ARTISAN_ERROR_CORE, 'The controller has not been set yet.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The controller has not been set yet.', __CLASS__, __FUNCTION__);
 		}
 		
 		if ( false === $this->CONTROLLER instanceof Artisan_Controller ) {
-			throw new Artisan_Controller_Exception(ARTISAN_ERROR_CORE, 'The controller is not of inherited type ' . __CLASS__, __CLASS__, __FUNCTION__);
+			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The controller is not of inherited type ' . __CLASS__, __CLASS__, __FUNCTION__);
 		}
 		
 		// Make sure whatever is being executed can be called with is_callable or method_exists
 		if ( false === empty($method) && empty($this->_default_method) ) {
-			throw new Artisan_Controller_Exception(ARTISAN_ERROR_CORE, 'No controller method was specified and no default method is specified.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'No controller method was specified and no default method is specified.', __CLASS__, __FUNCTION__);
 		}
 		
 		if ( true === empty($method) ) {
@@ -172,7 +172,7 @@ class Artisan_Controller {
 		}
 		
 		if ( false === method_exists($this->CONTROLLER, $method) ) {
-			throw new Artisan_Controller_Exception(ARTISAN_ERROR_CORE, 'The method ' . $method . ' does not exist in the controller ' . $this->_controller_name . '.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The method ' . $method . ' does not exist in the controller ' . $this->_controller_name . '.', __CLASS__, __FUNCTION__);
 		}
 		
 		// See if a translation exists for this method and if so,

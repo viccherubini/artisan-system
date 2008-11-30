@@ -34,7 +34,7 @@ class Artisan_Auth_Database extends Artisan_Auth {
 		
 		// See if a user has been set, if not, throw an exception
 		if ( false === $this->USER instanceof Artisan_User ) {
-			throw new Artisan_Auth_Exception(ARTISAN_ERROR_CORE, 'Failed to authenticate, the user object has not been set.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Auth_Exception(ARTISAN_ERROR, 'Failed to authenticate, the user object has not been set.', __CLASS__, __FUNCTION__);
 		}
 		
 		// Get the username and password from the user object

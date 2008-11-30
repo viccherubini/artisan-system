@@ -49,7 +49,7 @@ class Artisan_Template_Filesystem extends Artisan_Template {
 		$theme = trim($theme);
 		
 		if ( true === empty($theme) ) {
-			throw new Artisan_Template_Exception(ARTISAN_ERROR_CORE, 'The theme name is empty.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Template_Exception(ARTISAN_ERROR, 'The theme name is empty.', __CLASS__, __FUNCTION__);
 		}
 		
 		$theme = str_replace(array('/', '\\\\'), NULL, $theme);
@@ -59,7 +59,7 @@ class Artisan_Template_Filesystem extends Artisan_Template {
 		$theme_location = $this->_theme_directory . $theme;
 		
 		if ( false === is_dir($theme_location) ) {
-			throw new Artisan_Template_Exception(ARTISAN_ERROR_CORE, 'The theme location ' . $theme_location . ' is not a directory on the filesystem.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Template_Exception(ARTISAN_ERROR, 'The theme location ' . $theme_location . ' is not a directory on the filesystem.', __CLASS__, __FUNCTION__);
 		}
 		
 		$this->_theme = $theme;
