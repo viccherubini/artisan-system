@@ -1,13 +1,57 @@
 <?php
 
 define('ARTISAN_NAME', 'Artisan');
-define('EXT', '.php');
+define('PHP_EXT', '.php');
 
+/**
+ * @see Artisan_Exception
+ */
 require_once 'Artisan/Exception.php';
 
+require_once 'Artisan/Functions/Array.php';
+require_once 'Artisan/Functions/Database.php';
+require_once 'Artisan/Functions/Encryption.php';
+require_once 'Artisan/Functions/Html.php';
+require_once 'Artisan/Functions/Input.php';
+require_once 'Artisan/Functions/Log.php';
+require_once 'Artisan/Functions/String.php';
+require_once 'Artisan/Functions/System.php';
+
+
+/**
+ * The Library class allows the programmer to load in files automatically
+ * based on their class names.
+ * @author vmc <vmc@leftnode.com>
+ */
 class Artisan_Library {
-	public static function load($class_name, $sub_dir = NULL) {
+	/**
+	 * Loads in a file based on the class name. For example, if the class name is
+	 * Artisan_Template_Adapter_Database, then the file is
+	 * Artisan/Template/Adapter/Database.php. That filename is appended to each value
+	 * in the include_path from the PHP configuration and if the file exists,
+	 * it is included.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $class_name The name of the class to automatically load.
+	 * @retval boolean Returns true.
+	 */
+	public static function load($class_name) {
+		if ( true === class_exists($class_name) ) {
+			return true;
+		}
+	
+		$include_path = get_include_path();
+		$inc_path_list = explode(PATH_SEPARATOR, $include_path);
 		
+		$file_name = str_replace('_', DIRECTORY_SEPARATOR, $class_name) . PHP_EXT;
+		
+		foreach ( $inc_path_list as $path ) {
+			$full_file = $path . $file_name;
+			if ( true === file_exists($full_file) ) {
+				require_once $full_file;
+			}
+		}
+		
+		return true;
 	}
 }
 
