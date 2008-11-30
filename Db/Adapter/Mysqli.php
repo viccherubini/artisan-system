@@ -1,11 +1,19 @@
 <?php
 
+/**
+ * @see Artisan_Db_Adapter
+ */
 require_once 'Artisan/Db/Adapter.php';
 
+/**
+ * @see Artisan_Db_Exception
+ */
 require_once 'Artisan/Db/Exception.php';
 
-//require_once 'Artisan/Sql.php';
-
+/**
+ * This adapter class handles a connection to a Mysql database.
+ * @author vmc <vmc@leftnode.com>
+ */
 class Artisan_Db_Adapter_Mysqli extends Artisan_Db_Adapter {
 
 	public function __construct(Artisan_Config &$CFG) {
