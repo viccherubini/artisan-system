@@ -1,7 +1,5 @@
 <?php
 
-Artisan_Library::load('Sql/Exception');
-
 /**
  * This class allows the creation of a new Sql object to build
  * queries through chainable commands. It supports SELECT, UPDATE,
@@ -9,6 +7,9 @@ Artisan_Library::load('Sql/Exception');
  * @author vmc <vmc@leftnode.com>
  */
 abstract class Artisan_Sql {
+	protected $CONN = NULL;
+
+
 	///< The SQL that will be built.
 	protected $_sql = NULL;
 	
