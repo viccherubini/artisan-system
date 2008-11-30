@@ -1,5 +1,7 @@
 <?php
 
+require_once 'Artisan/Config.php';
+
 /**
  * Loads in configuration information through an XML file.
  * @author vmc <vmc@leftnode.com>

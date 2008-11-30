@@ -1,6 +1,9 @@
 <?php
 
-Artisan_Library::load('Config/Exception');
+//Artisan_Library::load('Config/Exception');
+require_once 'Artisan/Config/Exception.php';
+
+require_once 'Artisan/VO.php';
 
 /**
  * This class holds all configuration data that can come from different sources.

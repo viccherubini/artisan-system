@@ -1,5 +1,7 @@
 <?php
 
+require_once 'Artisan/Config.php';
+
 /**
  * Instance of the Artisan_Config class that accepts an array.
  * @author vmc <vmc@leftnode.com>
