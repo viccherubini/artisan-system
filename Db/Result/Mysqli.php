@@ -41,4 +41,8 @@ class Artisan_Db_Result_Mysqli implements Artisan_Db_Result_Interface {
 		$this->RESULT->free();
 		return true;
 	}
+	
+	public function numRows() {
+		return $this->RESULT->num_rows;
+	}
 }
