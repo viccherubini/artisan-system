@@ -67,6 +67,27 @@ function asfw_exists_return($key, $array) {
 }
 
 /**
+ * Determines if all keys in $key_list are present in an array or object.
+ * @author vmc <vmc@leftnode.com>
+ * @param $key_list An array of keys to check.
+ * @param $array The array or object to check the keys of.
+ * @retval boolean True if all values in $key_list are keys of $array, false otherwise.
+ */
+function asfw_exists_all($key_list, $array) {
+	if ( false === is_array($key_list) ) {
+		return false;
+	}
+
+	foreach ( $key_list as $key ) {
+		if ( false === asfw_exists($key, $array) ) {
+			return false;
+		}
+	}
+	
+	return true;
+}
+
+/**
  * Ensures an array is an actually associative array with string keys.
  * @author vmc <vmc@leftnode.com>
  * @param $array The array to test its associativity.
