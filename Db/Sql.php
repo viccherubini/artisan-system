@@ -10,9 +10,6 @@ require_once 'Artisan/Db/Exception.php';
  * @author vmc <vmc@leftnode.com>
  */
 abstract class Artisan_Db_Sql {
-	///< Database connection object.
-	protected $CONN = NULL;
-	
 	///< The SQL that will be built.
 	protected $_sql = NULL;
 	
@@ -221,30 +218,5 @@ abstract class Artisan_Db_Sql {
 		return $this->_sql;
 	}
 	
-	
-	
-	
-	public function query() {
-		$this->build();
-		
-		$sql = $this->_sql;
-		if ( true === empty($sql) ) {
-			throw new Artisan_Db_Exception(ARTISAN_WARNING, 'The SQL query is empty.', __CLASS__, __FUNCTION__);
-		}
-		
-		$result = $this->CONN->query($sql);
-		if ( true === is_object($result) ) {
-			return new Artisan_Db_Result_Mysqli($result);
-		}
-		
-		return $result;
-	}
-	
-	public function escape($string) {
-		if ( true === is_object($this->CONN) ) {
-			return $this->CONN->real_escape_string($string);
-		}
-	}
-	
-	abstract public function build();
+	//abstract public function build();
 }
