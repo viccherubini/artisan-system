@@ -1,18 +1,16 @@
 <?php
 
-/**
- * Artisan_Exception is a child of PHP's internal class Exception. As a result, it is *NOT* built
- * by Artisan. Therefore, it does not contain the similar methods of other Artisan classes. 
- * Artisan has it's own Exception class to overcome some of the shortcomings of the built in PHP
- * Exception class.
- */
-
 define('ARTISAN_ERROR', 100, false);
 define('ARTISAN_WARNING', 200, false);
 define('ARTISAN_NOTICE', 300, false);
 
+
+
 /**
- * Custom exception handling routin extended from base Exception class. Allows for prettier
+ * Artisan_Exception is a child of PHP's internal class Exception. As a result, it is *NOT* built
+ * by Artisan. Therefore, it does not contain the similar methods of other Artisan classes. 
+ * Artisan has it's own Exception class to overcome some of the shortcomings of the built in PHP
+ * Exception class. Allows for prettier
  * exception formatting.
  * @author vmc <vmc@leftnode.com>
  */
