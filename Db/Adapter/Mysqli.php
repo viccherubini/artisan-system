@@ -98,20 +98,26 @@ class Artisan_Db_Adapter_Mysqli extends Artisan_Db_Adapter {
 			throw new Artisan_Db_Exception(ARTISAN_WARNING, 'The SQL query is empty.', __CLASS__, __FUNCTION__);
 		}
 		
+		
+		// Determine if this is a SELECT statement.
+		// If so, see if its parameterized and do the appropriate substitutions.
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		$result = $this->CONN->query($sql);
 		if ( true === is_object($result) && true === $result instanceof mysqli_result ) {
 			return new Artisan_Db_Result_Mysqli($result);
 		}
 		
 		return $result;
-	}
-	
-	public function update($table, $value_list, $where_sql = NULL) {
-	
-	}
-	
-	public function insert($table, $value_list) {
-	
 	}
 	
 	public function escape($value) {
