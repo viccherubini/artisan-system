@@ -5,7 +5,12 @@
  */
 require_once 'Artisan/Db/Sql.php';
 
-class Artisan_Db_Sql_Select extends Artisan_Db_Sql {
+/**
+ * Through a common interface, this class allows programmers to build parameterized
+ * SQL to prevent injection attacks and to create cleaner, database independent code.
+ * @author vmc <vmc@leftnode.com>
+ */
+abstract class Artisan_Db_Sql_Select extends Artisan_Db_Sql {
 	///< The main table the query is selecting FROM.
 	protected $_from_table = NULL;
 	
@@ -41,16 +46,6 @@ class Artisan_Db_Sql_Select extends Artisan_Db_Sql {
 	
 	///< A RIGHT JOIN clause element.
 	const SQL_JOIN_RIGHT = 'RIGHT JOIN';
-	
-	/**
-	 * Builds a new SELECT clause.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval Object Returns new Artisan_Sql_Select object.
-	 */
-	public function __construct(&$CONN) {
-		$this->CONN = $CONN;
-		$this->_sql = NULL;
-	}
 	
 	/**
 	 * Destructor, destroys the object.
@@ -202,6 +197,9 @@ class Artisan_Db_Sql_Select extends Artisan_Db_Sql {
 		return true;
 	}
 	
+	/**
+	 * Builds the SELECT query to be executed.
+	 */
 	public function build() {
 		$distinct_sql = NULL;
 		if ( true === $this->_distinct ) {
@@ -237,4 +235,17 @@ class Artisan_Db_Sql_Select extends Artisan_Db_Sql {
 		
 		return $this->_sql;
 	}
+	
+	/**
+	 * Abstract method for executing a query. The query is built and then executed.
+	 * @author vmc <vmc@leftnode.com>
+	 */
+	abstract public function query();
+	
+	/**
+	 * Abstract method for escaping data based on the database connection type.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $value The value to be escaped.
+	 */
+	abstract public function escape($value);
 }
