@@ -24,7 +24,7 @@ class Artisan_Template_Database extends Artisan_Template {
 	 * @param $DB Database object that already has a connection.
 	 * @retval Object The new Artisan_Template_Database object.
 	 */
-	public function __construct(Artisan_Database &$DB) {
+	public function __construct(Artisan_Db_Adapter &$DB) {
 		// We can only assume the database has a current connection
 		// as we don't want to attempt to connect.
 		$this->DB = &$DB;
@@ -53,11 +53,13 @@ class Artisan_Template_Database extends Artisan_Template {
 		}
 		
 		$tt = self::TABLE_THEME;		
-		$theme_id = $this->DB->select
+		$result = $this->DB->select
 			->from($tt, asfw_create_table_alias($tt), 'theme_id')
 			->where('theme_name = ?', $theme)->where('theme_status = 1')
-			->query()
-			->fetch('theme_id');
+			->query();
+		if ( 1 == $result->numRows() ) {
+			$theme_id = $result->fetch('theme_id');
+		}
 	
 		if ( $theme_id < 1 ) {
 			throw new Artisan_Template_Exception(ARTISAN_ERROR, 'Theme ' . $theme . ' specified was not found in the table `' . $ttc . '`.', __CLASS__, __FUNCTION__);
@@ -100,11 +102,14 @@ class Artisan_Template_Database extends Artisan_Template {
 		}
 		
 		$ttc = self::TABLE_THEME_CODE;
-		$code = $this->DB->select
+		$result = $this->DB->select
 			->from($ttc, asfw_create_table_alias($ttc), 'code')
 			->where('code_name = ?', $template)
-			->query()
-			->fetch('code');
+			->query();
+		
+		if ( 1 == $result->numRows() ) {
+			$code = $result->fetch('code');
+		}
 		
 		if ( true === empty($code) ) {
 			return false;
