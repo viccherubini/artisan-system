@@ -54,12 +54,19 @@ class Artisan_Db {
 	 * $CFG->port
 	 * @endcode
 	 * @throw Artisan_Db_Exception If the adapter is not present in the configuration.
+	 * @throw Artisan_Db_Exception If one of the required keys above are not present in the configuration.
 	 * @retval mixed New database object if successfully created, NULL otherwise.
 	 */
 	static public function factory(Artisan_Config &$CFG) {
 		// Ensure an adapter exists
 		if ( false === asfw_exists('adapter', $CFG) ) {
 			throw new Artisan_Db_Exception(ARTISAN_WARNING, 'No adapter present in the configuration.');
+		}
+		
+		// Ensure the following keys exist in the configuration
+		$all_keys = array('server', 'username', 'password', 'database');
+		if ( false === asfw_exists_all($all_keys, $CFG) ) {
+			throw new Artisan_Db_Exception(ARTISAN_WARNING, 'One of the following keys are absent from the configuration: ' . implode(', ', $all_keys) . '.');
 		}
 		
 		// Load in the appropriate file
