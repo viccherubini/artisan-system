@@ -1,6 +1,6 @@
 <?php
 
-Artisan_Library::load('Template/Exception');
+require_once 'Artisan/Template/Exception.php';
 
 /**
  * The Artisan_Template class allows a programmer to use templates with their site.

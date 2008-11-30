@@ -1,5 +1,7 @@
 <?php
 
+require_once 'Artisan/Template.php';
+
 /**
  * Loads up a template from the database.
  * @author vmc <vmc@leftnode.com>
