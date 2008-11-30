@@ -16,9 +16,9 @@ require_once 'Artisan/Db/Exception.php';
 require_once 'Artisan/Db/Result/Mysqli.php';
 
 /**
- * @see Artisan_Db_Sql_Select
+ * @see Artisan_Db_Sql_Select_Mysqli
  */
-require_once 'Artisan/Db/Sql/Select.php';
+require_once 'Artisan/Db/Sql/Select/Mysqli.php';
 
 /**
  * This adapter class handles a connection to a Mysql database.
@@ -70,7 +70,7 @@ class Artisan_Db_Adapter_Mysqli extends Artisan_Db_Adapter {
 			throw new Artisan_Db_Exception(ARTISAN_WARNING, mysqli_connect_error(), __CLASS__, __FUNCTION__);
 		}
 
-		$this->select = new Artisan_Db_Sql_Select($this->CONN);
+		$this->select = new Artisan_Db_Sql_Select_Mysqli($this->CONN);
 
 		$this->_is_connected = true;
 		return $this->CONN;
