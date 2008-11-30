@@ -119,6 +119,15 @@ class Artisan_Db_Adapter_Mysqli extends Artisan_Db_Adapter {
 		
 		return $result;
 	}
+
+	public function insertId() {
+		return $this->CONN->insert_id;
+	}
+	
+	public function affectedRows() {
+		return $this->CONN->affected_rows;
+	}
+
 	
 	public function escape($value) {
 		return $this->CONN->real_escape_string($value);
