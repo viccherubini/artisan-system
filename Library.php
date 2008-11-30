@@ -3,7 +3,7 @@
 define('ARTISAN_NAME', 'Artisan');
 define('EXT', '.php');
 
-require_once 'Exception.php';
+require_once 'Artisan/Exception.php';
 
 class Artisan_Library {
 	public static function load($class_name, $sub_dir = NULL) {
