@@ -1,6 +1,5 @@
 <?php
 
-//Artisan_Library::load('Config/Exception');
 require_once 'Artisan/Config/Exception.php';
 
 require_once 'Artisan/VO.php';
