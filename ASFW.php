@@ -1,5 +1,5 @@
 <?php
 
-function &get() {
+function &getAsfw() {
 	return &Artisan_System()::getInstance();
 }
