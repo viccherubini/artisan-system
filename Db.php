@@ -1,20 +1,8 @@
 <?php
 
-//Artisan_Library::load('Database/Exception');
+require_once 'Artisan/Db/Exception.php';
 
-//Artisan_Library::load('Sql/Select');
-//Artisan_Library::load('Sql/Update');
-//Artisan_Library::load('Sql/Insert');
-//Artisan_Library::load('Sql/Delete');
-//Artisan_Library::load('Sql/General');
-//Artisan_Library::load('Sql/Replace');
-
-//require_once 'Db/Interface.php';
-
-
-
-require_once 'Db/Exception.php';
-
+require_once 'Artisan/Functions/Array.php';
 
 /**
  * The abstract Database class from which other database classes are extended.
@@ -26,6 +14,7 @@ class Artisan_Db {
 	///< Holds the database configuration information, must be of type Artisan_Config.
 	protected $CONFIG = NULL;
 
+	const DEFAULT_ADAPTER = 'Artisan_Db_Adapter';
 
 	const DB_MYSQLI = 'mysqli';
 	const DB_POSTGRES = 'postgres';
@@ -37,14 +26,22 @@ class Artisan_Db {
 	static public function factory(Artisan_Config &$CFG) {
 		// Ensure an adapter exists
 		if ( false === asfw_exists('adapter', $CFG) ) {
-			throw new Artisan_Db_Exception(ARTISAN_WARNING, 'No adapter present in the configuration');
+			throw new Artisan_Db_Exception(ARTISAN_WARNING, 'No adapter present in the configuration.');
 		}
 		
-		// See if the adapter type exists
-		
 		// Load in the appropriate file
+		$adapter = strtolower(trim($CFG->adapter));
+		$adapter = str_replace(' ', '_', ucwords(str_replace('_', ' ', $adapter)));
 		
+		$file = $adapter;
+		$adapter = self::DEFAULT_ADAPTER . '_' . $adapter;
 		
+		/*
+		 try {
+			Artisan_Library::load($file, 'Db');
+		} catch ( Artisan_Exception $e ) {
+			throw $e;
+		}
+		*/
 	}
-
 }
