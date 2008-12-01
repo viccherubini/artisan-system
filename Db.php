@@ -96,4 +96,16 @@ abstract class Artisan_Db {
 	abstract public function disconnect();
 
 	abstract public function query($sql);
+	
+	abstract public function select();
+	abstract public function insert();
+	abstract public function update();
+	abstract public function delete();
+	
+	abstract public function start();
+	abstract public function commit();
+	abstract public function rollback();
+	
+	abstract public function insertId();
+	abstract public function affectedRows();
 }
