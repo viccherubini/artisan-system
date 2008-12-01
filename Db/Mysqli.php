@@ -6,6 +6,14 @@ require_once 'Artisan/Db/Exception.php';
 
 require_once 'Artisan/Db/Result/Mysqli.php';
 
+require_once 'Artisan/Db/Sql/Select/Mysqli.php';
+
+require_once 'Artisan/Db/Sql/Insert/Mysqli.php';
+
+require_once 'Artisan/Db/Sql/Update/Mysqli.php';
+
+require_once 'Artisan/Db/Sql/Delete/Mysqli.php';
+
 /**
  * The Mysqli class for connecting to a mysql database.
  * @author vmc <vmc@leftnode.com>
@@ -96,5 +104,47 @@ class Artisan_Db_Mysqli extends Artisan_Db {
 		}
 		
 		return $result;
+	}
+	
+	public function select() {
+		return new Artisan_Db_Sql_Select_Mysqli($this->CONN);
+	}
+	
+	public function insert() {
+		return new Artisan_Db_Sql_Insert_Mysqli($this->CONN);
+	}
+	
+	public function update() {
+		return new Artisan_Db_Sql_Update_Mysqli($this->CONN);
+	}
+	
+	public function delete() {
+		return new Artisan_Db_Sql_Delete_Mysqli($this->CONN);
+	}
+	
+	public function start() {
+		exit('start transaction');
+	}
+	
+	public function commit() {
+		exit('commit transaction');
+	}
+	
+	public function rollback() {
+		exit('rollback transaction');
+	}
+	
+	public function insertId() {
+		if ( true === $this->CONN instanceof mysqli ) {
+			return $this->CONN->insertId;
+		}
+		return 0;
+	}
+	
+	public function affectedRows() {
+		if ( true === $this->CONN instanceof mysqli ) {
+			return $this->CONN->affected_rows;
+		}
+		return 0;
 	}
 }
