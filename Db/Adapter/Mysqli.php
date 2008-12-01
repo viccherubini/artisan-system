@@ -18,7 +18,7 @@ require_once 'Artisan/Db/Sql/Delete/Mysqli.php';
  * The Mysqli class for connecting to a mysql database.
  * @author vmc <vmc@leftnode.com>
  */
-class Artisan_Db_Mysqli extends Artisan_Db {
+class Artisan_Db_Adapter_Mysqli extends Artisan_Db {
 	///< The connection to the database (Mysqli Object)
 	private $CONN = NULL;
 
