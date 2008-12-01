@@ -18,7 +18,13 @@ abstract class Artisan_Db {
 	private $_transaction_started = false;
 	
 	///< The instance of the Artisan_Sql_Select_* class for executing SELECT queries.
-	public $select = NULL;
+	protected $_select = NULL;
+	
+	protected $_update = NULL;
+	
+	protected $_insert = NULL;
+	
+	protected $_delete = NULL;
 	
 	/**
 	 * Default constructor.
