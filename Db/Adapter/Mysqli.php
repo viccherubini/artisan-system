@@ -22,6 +22,8 @@ class Artisan_Db_Adapter_Mysqli extends Artisan_Db {
 	///< The connection to the database (Mysqli Object)
 	private $CONN = NULL;
 
+	private $_sql = NULL;
+	
 	/**
 	 * Destructor, disconnects from the database if currently connected.
 	 * @author vmc <vmc@leftnode.com>
