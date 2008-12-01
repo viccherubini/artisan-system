@@ -1,29 +1,25 @@
 <?php
 
 // Load in its own Parameterized Sql classes
-Artisan_Library::load('Sql/Mysqli/Select');
-Artisan_Library::load('Sql/Mysqli/Update');
-Artisan_Library::load('Sql/Mysqli/Insert');
-Artisan_Library::load('Sql/Mysqli/Delete');
-Artisan_Library::load('Sql/Mysqli/General');
-Artisan_Library::load('Sql/Mysqli/Replace');
+//Artisan_Library::load('Sql/Mysqli/Select');
+//Artisan_Library::load('Sql/Mysqli/Update');
+//Artisan_Library::load('Sql/Mysqli/Insert');
+//Artisan_Library::load('Sql/Mysqli/Delete');
+//Artisan_Library::load('Sql/Mysqli/General');
+//Artisan_Library::load('Sql/Mysqli/Replace');
+
+require_once 'Artisan/Database.php';
 
 /**
  * The Mysqli class for connecting to a mysql database.
  * @author vmc <vmc@leftnode.com>
  */
-class Artisan_Database_Mysqli extends Artisan_Database {
+class Artisan_Db_Mysqli extends Artisan_Db {
 	///< The connection to the database (Mysqli Object)
 	private $CONN = NULL;
 
 	///< An instance of a mysqli_result class to build parameterized query.
-	private $STATEMENT = NULL;
-
-	///< Whether or not the instance of this class is currently connected to the database.
-	private $_is_connected = false;
-
-	///< Whether or not a transaction has been started.
-	private $_transaction_started = false;
+	//private $STATEMENT = NULL;
 
 	///< The instance of the Artisan_Sql_Select_Mysqli class for executing queries.
 	public $select = NULL;
