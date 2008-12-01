@@ -43,16 +43,26 @@ abstract class Artisan_Db_Sql_Update extends Artisan_Db_Sql {
 	 * @endcode
 	 * @param $table The name of the table to update.
 	 * @throw Artisan_Db_Sql_Exception If the table name is empty.
-	 * @throw Artisan_Db_Sql_Exception If no fields are specified to be updated.
 	 * @retval Object Returns an instance of itself to allow chaining.
 	 */
-	public function table($table, $field_list) {
+	public function table($table) {
 		if ( true === empty($table) ) {
 			throw new Artisan_Db_Sql_Exception(ARTISAN_WARNING, 'Failed to create valid SQL UPDATE class, the table name is empty.', __CLASS__, __FUNCTION__);
 		}
 		
 		$this->_table = $table;
-		
+		return $this;
+	}
+	
+	/**
+	 * Sets a list of key/value pairs to be updated. The keys are the field names,
+	 * the values are the values to be updated.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $field_list The list of key/value pairs to be updated.
+	 * @throw Artisan_Db_Sql_Exception If no fields are specified to be updated.
+	 * @retval Object Returns an instance of itself to allow chaining.
+	 */
+	public function set($field_list) {
 		if ( false === is_array($field_list) || count($field_list) < 1 ) {
 			throw new Artisan_Db_Sql_Exception(ARTISAN_WARNING, 'At least one field must be specified to be updated.', __CLASS__, __FUNCTION__);
 		}
