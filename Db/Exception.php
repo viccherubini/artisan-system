@@ -1,5 +1,7 @@
 <?php
 
+require_once 'Artisan/Exception.php';
+
 /**
  * Database Exception Class.
  * @author vmc <vmc@leftnode.com>
