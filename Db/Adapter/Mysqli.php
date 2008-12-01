@@ -109,19 +109,31 @@ class Artisan_Db_Adapter_Mysqli extends Artisan_Db {
 	}
 	
 	public function select() {
-		return new Artisan_Db_Sql_Select_Mysqli($this->CONN);
+		if ( NULL == $this->_select ) {
+			$this->_select = new Artisan_Db_Sql_Select_Mysqli($this->CONN);
+		}
+		return $this->_select;
 	}
 	
 	public function insert() {
-		return new Artisan_Db_Sql_Insert_Mysqli($this->CONN);
+		if ( NULL == $this->_insert ) {
+			$this->_insert = new Artisan_Db_Sql_Insert_Mysqli($this->CONN);
+		}
+		return $this->_insert;
 	}
 	
 	public function update() {
-		return new Artisan_Db_Sql_Update_Mysqli($this->CONN);
+		if ( NULL == $this->_update ) {
+			$this->_update = new Artisan_Db_Sql_Update_Mysqli($this->CONN);
+		}
+		return $this->_update;
 	}
 	
 	public function delete() {
-		return new Artisan_Db_Sql_Delete_Mysqli($this->CONN);
+		if ( NULL == $this->_delete ) {
+			$this->_delete = new Artisan_Db_Sql_Delete_Mysqli($this->CONN);
+		}
+		return $this->_delete;
 	}
 	
 	public function start() {
