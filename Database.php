@@ -1,13 +1,6 @@
 <?php
 
-Artisan_Library::load('Database/Exception');
-
-Artisan_Library::load('Sql/Select');
-Artisan_Library::load('Sql/Update');
-Artisan_Library::load('Sql/Insert');
-Artisan_Library::load('Sql/Delete');
-Artisan_Library::load('Sql/General');
-Artisan_Library::load('Sql/Replace');
+require_once 'Artisan/Exception.php';
 
 /**
  * The abstract Database class from which other database classes are extended.
@@ -16,10 +9,16 @@ Artisan_Library::load('Sql/Replace');
  * using mysqli, you would use new Artisan_Database_Mysqli($config) and go from there.
  * @author vmc <vmc@leftnode.com>
  */
-abstract class Artisan_Database {
+abstract class Artisan_Db {
 	///< Holds the database configuration information, must be of type Artisan_Config.
 	protected $CONFIG = NULL;
 
+	///< Whether or not a current connection exists.
+	protected $_is_connected = false;
+	
+	///< Whether or not a transaction has been started.
+	private $_transaction_started = false;
+	
 	/**
 	 * Default constructor.
 	 * @author vmc <vmc@leftnode.com>
@@ -62,6 +61,25 @@ abstract class Artisan_Database {
 	}
 
 	/**
+	 * Whether or not the database currently has a connection.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval boolean Returns true if the database has a connection, false otherwise.
+	 */
+	public function isConnected() {
+		return $this->_is_connected;
+	}
+	
+	/**
+	 * Alias for disconnect();
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval boolean Returns true upon successful disconnection, false otherwise.
+	 */
+	public function close() {
+		return $this->disconnect();
+	}
+	
+	
+	/**
 	 * Connects to the specified database.
 	 * @author vmc <vmc@leftnode.com>
 	 * @throw Artisan_Database_Exception If the connection fails.
@@ -76,40 +94,5 @@ abstract class Artisan_Database {
 	 */
 	abstract public function disconnect();
 
-	/**
-	 * Whether or not the database currently has a connection.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval boolean Returns true if the database has a connection, false otherwise.
-	 */
-	abstract public function isConnected();
-
-	/**
-	 * Starts a transaction.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval boolean Returns true if the transaction was started and no transaction is currently started, false otherwise.
-	 */
-	abstract protected function _start();
-	
-	/**
-	 * Rolls back a started transaction.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval boolean Returns true if the transaction began and failed, false otherwise.
-	 */
-	abstract protected function _rollback();
-	
-	/**
-	 * Commits a transaction, saving the data to the database.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval boolean Returns true if the transaction was successfully commited, false otherwise.
-	 */
-	abstract protected function _commit();
-
-	/**
-	 * Queues a list of Artisan_Sql objects to query against the database. If any of the array elements
-	 * are not of type Artisan_Sql, or a query that will not return a value greater than 0 for an 
-	 * affected_rows() call is run, _rollback() will automatically be called.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval boolean Returns true if the list of transactions were successful, false otherwise.
-	 */
-	abstract public function queue($query_list);
+	abstract public function query($sql);
 }
