@@ -1,7 +1,5 @@
 <?php
 
-require_once 'Artisan/Exception.php';
-
 /**
  * The abstract Database class from which other database classes are extended.
  * Because this class is abstract and contains many abstract members, it is necessary
@@ -18,6 +16,9 @@ abstract class Artisan_Db {
 	
 	///< Whether or not a transaction has been started.
 	private $_transaction_started = false;
+	
+	///< The instance of the Artisan_Sql_Select_* class for executing SELECT queries.
+	public $select = NULL;
 	
 	/**
 	 * Default constructor.
