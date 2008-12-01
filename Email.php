@@ -1,7 +1,5 @@
 <?php
 
-Artisan_Library::load('Email/Exception');
-
 /**
  * This abstract class allows email to be sent several ways: through Sendmail/PHP
  * and through SMTP. Support for IMAP to come.
