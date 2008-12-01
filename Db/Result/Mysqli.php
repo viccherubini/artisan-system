@@ -1,10 +1,12 @@
 <?php
 
+require_once 'Artisan/Db/Result.php';
+
 class Artisan_Db_Result_Mysqli extends Artisan_Db_Result {
 	private $RESULT = NULL;
 
 	public function __construct(mysqli_result &$RES) {
-		$this->RESULT = $RES;
+		$this->RESULT = &$RES;
 	}
 
 	public function fetch($field = NULL) {
@@ -16,15 +18,16 @@ class Artisan_Db_Result_Mysqli extends Artisan_Db_Result {
 	}
 
 	public function free() {
-		if ( true === is_object($this->RESULT) ) {
+		if ( true === $this->RESULT instanceof mysqli_result ) {
 			$this->RESULT->free();
 		}
 		return true;
 	}
 
 	public function numRows() {
-		if ( true === is_object($this->RESULT) ) {
+		if ( true === $this->RESULT instanceof mysqli_result ) {
 			return $this->RESULT->num_rows;
 		}
+		return 0;
 	}
 }
