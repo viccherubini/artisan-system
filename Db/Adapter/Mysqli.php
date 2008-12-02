@@ -19,11 +19,6 @@ require_once 'Artisan/Db/Sql/Delete/Mysqli.php';
  * @author vmc <vmc@leftnode.com>
  */
 class Artisan_Db_Adapter_Mysqli extends Artisan_Db {
-	///< The connection to the database (Mysqli Object)
-	private $CONN = NULL;
-
-	private $_sql = NULL;
-	
 	/**
 	 * Destructor, disconnects from the database if currently connected.
 	 * @author vmc <vmc@leftnode.com>
@@ -36,7 +31,6 @@ class Artisan_Db_Adapter_Mysqli extends Artisan_Db {
 		}
 		unset($this->CONFIG);
 	}
-
 
 	/**
 	 * Connect to the database.
@@ -102,7 +96,8 @@ class Artisan_Db_Adapter_Mysqli extends Artisan_Db {
 		}
 		
 		if ( false === $result ) {
-			throw new Artisan_Db_Exception(ARTISAN_WARNING, 'Failed to execute query: "' . $sql . '"', __CLASS__, __FUNCTION__);
+			$error_string = $this->CONN->error;
+			throw new Artisan_Db_Exception(ARTISAN_WARNING, 'Failed to execute query: "' . $sql . '", MySQL said: ' . $error_string, __CLASS__, __FUNCTION__);
 		}
 		
 		return $result;
@@ -110,28 +105,28 @@ class Artisan_Db_Adapter_Mysqli extends Artisan_Db {
 	
 	public function select() {
 		if ( NULL == $this->_select ) {
-			$this->_select = new Artisan_Db_Sql_Select_Mysqli($this->CONN);
+			$this->_select = new Artisan_Db_Sql_Select_Mysqli($this);
 		}
 		return $this->_select;
 	}
 	
 	public function insert() {
 		if ( NULL == $this->_insert ) {
-			$this->_insert = new Artisan_Db_Sql_Insert_Mysqli($this->CONN);
+			$this->_insert = new Artisan_Db_Sql_Insert_Mysqli($this);
 		}
 		return $this->_insert;
 	}
 	
 	public function update() {
 		if ( NULL == $this->_update ) {
-			$this->_update = new Artisan_Db_Sql_Update_Mysqli($this->CONN);
+			$this->_update = new Artisan_Db_Sql_Update_Mysqli($this);
 		}
 		return $this->_update;
 	}
 	
 	public function delete() {
 		if ( NULL == $this->_delete ) {
-			$this->_delete = new Artisan_Db_Sql_Delete_Mysqli($this->CONN);
+			$this->_delete = new Artisan_Db_Sql_Delete_Mysqli($this);
 		}
 		return $this->_delete;
 	}
@@ -160,5 +155,12 @@ class Artisan_Db_Adapter_Mysqli extends Artisan_Db {
 			return $this->CONN->affected_rows;
 		}
 		return 0;
+	}
+	
+	public function escape($value) {
+		if ( true === $this->CONN instanceof mysqli ) {
+			return $this->CONN->real_escape_string($value);
+		}
+		return addslashes($value);
 	}
 }
