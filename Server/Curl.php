@@ -1,6 +1,8 @@
 <?php
 
-Artisan_Library::load('Server/Exception');
+require_once 'Artisan/Server.php';
+
+require_once 'Artisan/Server/Exception.php';
 
 /**
  * This class uses cURL to connect to a remote server to send or retrieve data.

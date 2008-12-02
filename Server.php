@@ -1,7 +1,5 @@
 <?php
 
-Artisan_Library::load('Server/Exception');
-
 /**
  * Abstract class to connect to another server.
  * @author vmc <vmc@leftnode.com>
