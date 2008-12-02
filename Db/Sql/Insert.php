@@ -17,16 +17,7 @@ abstract class Artisan_Db_Sql_Insert extends Artisan_Db_Sql {
 	
 	///< The list of values to insert into the fields.
 	protected $_insert_field_value_list = array();
-	
-	/**
-	 * Default constructor for building a new INSERT query.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval Object New Artisan_Sql_Insert object.
-	 */
-	public function __construct() {
-		$this->_sql = NULL;
-	}
-	
+
 	/**
 	 * Destructor.
 	 * @author vmc <vmc@leftnode.com>
@@ -84,7 +75,12 @@ abstract class Artisan_Db_Sql_Insert extends Artisan_Db_Sql {
 		// See if only one argument was set and it's an array, if so
 		// use that as the data rather than func_get_args()
 		if ( 1 === $argc && true === is_array(func_get_arg(0)) ) {
-			$this->_insert_field_value_list = func_get_arg(0);
+			$arg = func_get_arg(0);
+			if ( true === asfw_is_assoc($arg) ) {
+				$this->_insert_field_list = asfw_sanitize_field_list(array_keys($arg));
+			}
+			
+			$this->_insert_field_value_list = array_values($arg);
 		} else {
 			$ifl_len = count($this->_insert_field_list);
 			if ( $argc != $ifl_len && $ifl_len > 0 ) {
@@ -116,7 +112,7 @@ abstract class Artisan_Db_Sql_Insert extends Artisan_Db_Sql {
 		$value_list = array();
 		$insert_value_sql = " VALUES (";
 		foreach ( $this->_insert_field_value_list as $value ) {
-			$value = $this->escape($value);
+			$value = $this->DB->escape($value);
 			switch ( strtoupper($value) ) {
 				case NULL: {
 					$value_list[] = 'NULL';
@@ -142,25 +138,4 @@ abstract class Artisan_Db_Sql_Insert extends Artisan_Db_Sql {
 		
 		return true;
 	}
-
-	/**
-	 * Executes the query against the database.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval Object Returns an instance of itself for chaining.
-	 */
-	abstract public function query();
-	
-	/**
-	 * Returns the number of rows inserted.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval int Returns the number of rows affected by the INSERT.
-	 */
-	abstract public function affectedRows();
-
-	/**
-	 * Escapes a string based on the character set of the current connection.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval string Returns a context escaped string.
-	 */
-	abstract public function escape($value);
 }
