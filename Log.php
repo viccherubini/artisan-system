@@ -1,6 +1,7 @@
 <?php
 
-Artisan_Library::load('Log/Exception');
+//Artisan_Library::load('Log/Exception');
+require_once 'Artisan/Log/Exception.php';
 
 define('LOG_GENERAL', 'G', false);
 define('LOG_ERROR', 'E', false);
