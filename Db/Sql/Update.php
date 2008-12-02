@@ -17,15 +17,6 @@ abstract class Artisan_Db_Sql_Update extends Artisan_Db_Sql {
 	protected $_update_field_list = array();
 	
 	/**
-	 * Default constructor for building a new UPDATE query.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval Object New Artisan_Sql_Update object.
-	 */
-	public function __construct() {
-		$this->_sql = NULL;
-	}
-	
-	/**
 	 * Destructor.
 	 * @author vmc <vmc@leftnode.com>
 	 * @retval NULL Destroys the object.
@@ -80,9 +71,9 @@ abstract class Artisan_Db_Sql_Update extends Artisan_Db_Sql {
 		$field_list_sql = " SET ";
 		foreach ( $this->_update_field_list as $field => $value ) {
 			if ( '`' == $value[0] ) {
-				$field_list_sql .= $field . " = " . $this->escape($value);
+				$field_list_sql .= $field . " = " . $this->DB->escape($value);
 			} else {
-				$field_list_sql .= $field . " = '" . $this->escape($value) . "'";
+				$field_list_sql .= $field . " = '" . $this->DB->escape($value) . "'";
 			}
 			if ( $i != $fl_len ) {
 				$field_list_sql .= ', ';
@@ -97,24 +88,7 @@ abstract class Artisan_Db_Sql_Update extends Artisan_Db_Sql {
 		return $this->_sql;
 	}
 	
-	/**
-	 * Executes the query against the database.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval Object Returns an instance of itself for chaining.
-	 */
-	abstract public function query();
-	
-	/**
-	 * Returns the number of rows inserted.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval int Returns the number of rows affected by the INSERT.
-	 */
-	abstract public function affectedRows();
-
-	/**
-	 * Escapes a string based on the character set of the current connection.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval string Returns a context escaped string.
-	 */
-	abstract public function escape($value);
+	public function affectedRows() {
+		return $this->DB->affectedRows();
+	}
 }
