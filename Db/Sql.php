@@ -28,7 +28,7 @@ abstract class Artisan_Db_Sql {
 	 * Default constructor for building a new SQL query. This class is abstract and
 	 * can't be built directly.
 	 * @author vmc <vmc@leftnode.com>
-	 * @retval Object New Artisan_Sql object.
+	 * @retval Object New Artisan_Db_Sql object.
 	 */
 	public function __construct(Artisan_Db &$DB) {
 		$this->DB = &$DB;
