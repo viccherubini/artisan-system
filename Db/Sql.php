@@ -10,6 +10,8 @@ abstract class Artisan_Db_Sql {
 	///< The connection object or resource.
 	protected $CONN = NULL;
 
+	protected $DB = NULL;
+	
 	///< The SQL that will be built.
 	protected $_sql = NULL;
 	
@@ -28,7 +30,8 @@ abstract class Artisan_Db_Sql {
 	 * @author vmc <vmc@leftnode.com>
 	 * @retval Object New Artisan_Sql object.
 	 */
-	public function __construct() {
+	public function __construct(Artisan_Db &$DB) {
+		$this->DB = &$DB;
 	}
 	
 	/**
@@ -86,7 +89,7 @@ abstract class Artisan_Db_Sql {
 			for ( $i=0; $i<$vl_len; $i++ ) {
 				if ( false === is_numeric($value_list[$i]) ) {
 					$is_numeric = false;
-					$value_list[$i] = $this->escape($value_list[$i]);
+					$value_list[$i] = $this->DB->escape($value_list[$i]);
 				}
 			}
 			
@@ -139,6 +142,19 @@ abstract class Artisan_Db_Sql {
 		return $where_sql;
 	}
 
+	public function query() {
+		$this->build();
+		
+		if ( true === $this->DB instanceof Artisan_Db ) {
+			try {
+				$result = $this->DB->query($this->_sql);
+				return $result;
+			} catch ( Artisan_Db_Exception $e ) {
+				throw $e;
+			}
+		}
+	}
+	
 	/**
 	 * Builds the appropriate WHERE clause array. The variable $field_data is one
 	 * or more elements in length. The first element is the field or list of fields
@@ -183,7 +199,7 @@ abstract class Artisan_Db_Sql {
 				$field_op = str_split($field_op);
 				if ( $qm_count == $fvl_len ) {
 					for ( $i=0; $i<$fvl_len; $i++ ) {
-						$fv = $this->escape($fv_list[$i]);
+						$fv = $this->DB->escape($fv_list[$i]);
 						if ( false === is_numeric($fv) ) {
 							$fv = " '" . $fv . "'";
 						}
