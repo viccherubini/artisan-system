@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @see Artisan_Db_Sql
+ */
 require_once 'Artisan/Db/Sql.php';
 
 /**
@@ -48,9 +51,9 @@ abstract class Artisan_Db_Sql_Delete extends Artisan_Db_Sql {
 	}
 	
 	/**
-	 * Builds the query to execute.
+	 * Builds the correct DELETE query string.
 	 * @author vmc <vmc@leftnode.com>
-	 * @retval boolean Returns true.
+	 * @retval string Returns the built query.
 	 */
 	public function build() {
 		$where_sql = $this->buildWhereClause($this->_where_field_list);
@@ -62,9 +65,7 @@ abstract class Artisan_Db_Sql_Delete extends Artisan_Db_Sql {
 		
 		$delete_start = "DELETE FROM `" . $this->_from_table . "` ";
 		$this->_sql = $delete_start . $where_sql . $limit_sql;
-	}
-
-	public function affectedRows() {
-		return $this->DB->affectedRows();
+		
+		return $this->_sql;
 	}
 }

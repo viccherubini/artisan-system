@@ -1,7 +1,13 @@
 <?php
 
+/**
+ * @see Artisan_Db_Sql_Exception
+ */
 require_once 'Artisan/Db/Sql/Exception.php';
 
+/**
+ * @see Artisan_Db_Sql
+ */
 require_once 'Artisan/Db/Sql.php';
 
 /**
@@ -76,6 +82,9 @@ abstract class Artisan_Db_Sql_Insert extends Artisan_Db_Sql {
 		// use that as the data rather than func_get_args()
 		if ( 1 === $argc && true === is_array(func_get_arg(0)) ) {
 			$arg = func_get_arg(0);
+			
+			// If this is an associative array, use the keys as the fields and values
+			// as the values to insert.
 			if ( true === asfw_is_assoc($arg) ) {
 				$this->_insert_field_list = asfw_sanitize_field_list(array_keys($arg));
 			}
@@ -99,7 +108,7 @@ abstract class Artisan_Db_Sql_Insert extends Artisan_Db_Sql {
 	/**
 	 * Builds the query to execute.
 	 * @author vmc <vmc@leftnode.com>
-	 * @retval boolean Returns true.
+	 * @retval string Returns the built query.
 	 */
 	public function build() {
 		$insert_sql  = "INSERT INTO `" . $this->_into_table . "`";
@@ -136,6 +145,6 @@ abstract class Artisan_Db_Sql_Insert extends Artisan_Db_Sql {
 
 		$this->_sql = $insert_sql . $insert_field_sql . $insert_value_sql;
 		
-		return true;
+		return $this->_sql;
 	}
 }

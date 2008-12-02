@@ -1,7 +1,13 @@
 <?php
 
+/**
+ * @see Artisan_Db_Sql_Exception
+ */
 require_once 'Artisan/Db/Sql/Exception.php';
 
+/**
+ * @see Artisan_Db_Sql
+ */
 require_once 'Artisan/Db/Sql.php';
 
 /**
@@ -63,6 +69,11 @@ abstract class Artisan_Db_Sql_Update extends Artisan_Db_Sql {
 		return $this;
 	}
 	
+	/**
+	 * Builds the correct UPDATE query string.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval string Returns the newly build UPDATE query.
+	 */
 	public function build() {
 		$update_sql = "UPDATE `" . $this->_table . "` ";
 		
@@ -86,9 +97,5 @@ abstract class Artisan_Db_Sql_Update extends Artisan_Db_Sql {
 		$this->_sql = $update_sql . $field_list_sql . $where_sql;
 		
 		return $this->_sql;
-	}
-	
-	public function affectedRows() {
-		return $this->DB->affectedRows();
 	}
 }

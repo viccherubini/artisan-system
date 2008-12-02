@@ -2,6 +2,9 @@
 
 require_once 'Artisan/Functions/Database.php';
 
+/**
+ * @see Artisan_Db_Sql
+ */
 require_once 'Artisan/Db/Sql.php';
 
 /**
@@ -168,7 +171,7 @@ abstract class Artisan_Db_Sql_Select extends Artisan_Db_Sql {
 	}
 
 	/**
-	 * Builds the SQL query.
+	 * Builds the SELECT SQL query.
 	 * @author vmc <vmc@leftnode.com>
 	 * @retval string Returns the built SQL.
 	 */
