@@ -46,15 +46,6 @@ abstract class Artisan_Db_Sql_Select extends Artisan_Db_Sql {
 	const SQL_JOIN_RIGHT = 'RIGHT JOIN';
 	
 	/**
-	 * Builds a new SELECT clause.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval Object Returns new Artisan_Sql_Select object.
-	 */
-	public function __construct() {
-		$this->_sql = NULL;
-	}
-	
-	/**
 	 * Destructor, destroys the object.
 	 * @author vmc <vmc@leftnode.com>
 	 * @retval NULL Returns nothing.
@@ -216,22 +207,7 @@ abstract class Artisan_Db_Sql_Select extends Artisan_Db_Sql {
 		
 		return $this->_sql;
 	}
-	
-	/**
-	 * Abstract method to execute the query after it's built.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval Object Returns itself for chaining.
-	 */
-	abstract public function query();
-	
-	/**
-	 * Abstract method to escape a string before being inserted into the database.
-	 * @author vmc <vmc@leftnode.com>
-	 * @param $value The value to escape.
-	 * @retval string Returns the escaped value.
-	 */
-	abstract public function escape($value);
-	
+
 	/**
 	 * Adds a JOIN to the SELECT clause.
 	 * @author vmc <vmc@leftnode.com>
