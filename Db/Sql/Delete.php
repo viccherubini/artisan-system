@@ -14,15 +14,6 @@ abstract class Artisan_Db_Sql_Delete extends Artisan_Db_Sql {
 	protected $_limit = 0;
 	
 	/**
-	 * Default constructor for building a new INSERT query.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval Object New Artisan_Sql_Delete object.
-	 */
-	public function __construct() {
-		$this->_sql = NULL;
-	}
-	
-	/**
 	 * Destructor.
 	 * @author vmc <vmc@leftnode.com>
 	 * @retval NULL Destroys the object.
@@ -73,24 +64,7 @@ abstract class Artisan_Db_Sql_Delete extends Artisan_Db_Sql {
 		$this->_sql = $delete_start . $where_sql . $limit_sql;
 	}
 
-	/**
-	 * Executes the query against the database.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval Object Returns an instance of itself for chaining.
-	 */
-	abstract public function query();
-	
-	/**
-	 * Returns the number of rows inserted.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval int Returns the number of rows affected by the DELETE.
-	 */
-	abstract public function affectedRows();
-
-	/**
-	 * Escapes a string based on the character set of the current connection.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval string Returns a context escaped string.
-	 */
-	abstract public function escape($value);
+	public function affectedRows() {
+		return $this->DB->affectedRows();
+	}
 }
