@@ -1,6 +1,27 @@
 <?php
 
 /**
+ * @see Artisan_Session
+ */
+require_once 'Artisan/Session.php';
+
+/**
+ * @see Artisan_Session_Interface
+ */
+require_once 'Artisan/Session/Interface.php';
+
+/**
+ * @see Artisan_Session_Exception
+ */
+require_once 'Artisan/Session/Exception.php';
+
+/**
+ * @see Artisan_Db_Exceptiopn
+ */
+require_once 'Artisan/Db/Exception.php';
+
+
+/**
  * This class allows the storage of sessions in a database. It is database agnostic
  * and dependent on whatever built database object is passed into it.
  * @author vmc <vmc@leftnode.com>
@@ -18,7 +39,7 @@ class Artisan_Session_Database implements Artisan_Session_Interface {
 	 * @param $DB A built and connected to database object.
 	 * @retval Object New Artisan_Session_Database object.
 	 */
-	public function __construct(Artisan_Database &$DB) {
+	public function __construct(Artisan_Db &$DB) {
 		$this->DB = &$DB;
 		$this->_max_lifetime = intval(get_cfg_var("session.gc_maxlifetime"));
 	}
@@ -29,7 +50,6 @@ class Artisan_Session_Database implements Artisan_Session_Interface {
 	 * @retval NULL Destroys the object.
 	 */
 	public function __destruct() {
-
 	}
 	
 	/**
@@ -61,17 +81,16 @@ class Artisan_Session_Database implements Artisan_Session_Interface {
 		$error = false;
 		$session_data = NULL;
 		try {
-			$session_data = $this->DB->select
+			$result_session = $this->DB->select()
 				->from('artisan_session', asfw_create_table_alias('artisan_session'), 'session_data')
 				->where('session_id = ?', $session_id)
-				->query()
-				->fetch();
+				->query();
+			$session_data = $result_session->fetch();
+
 			if ( true === empty($session_data) ) {
 				$session_data = NULL;
 			}
-		} catch ( Artisan_Database_Exception $e ) {
-			$error = true;
-		} catch ( Artisan_Sql_Exception $e ) {
+		} catch ( Artisan_Db_Exception $e ) {
 			$error = true;
 		}
 		
@@ -94,13 +113,11 @@ class Artisan_Session_Database implements Artisan_Session_Interface {
 			$ipv4 = asfw_get_ipv4();
 			$user_agent = asfw_get_user_agent();
 			$user_agent_hash = sha1($user_agent);
-			$this->DB->replace
+			$this->DB->replace()
 				->into('artisan_session')
 				->values($session_id, time(), $ipv4, $user_agent, $user_agent_hash, $session_data)
 				->query();
-		} catch ( Artisan_Database_Exception $e ) {
-			$error = true;
-		} catch ( Artisan_Sql_Exception $e ) {
+		} catch ( Artisan_Db_Exception $e ) {
 			$error = true;
 		}
 		
@@ -116,16 +133,13 @@ class Artisan_Session_Database implements Artisan_Session_Interface {
 	public function destroy($session_id) {
 		$error = false;
 		try {
-			$this->DB->delete
+			$this->DB->delete()
 				->from('artisan_session')
 				->where('session_id = ?', $session_id)
 				->query();
-		} catch ( Artisan_Database_Exception $e ) {
+		} catch ( Artisan_Db_Exception $e ) {
 			$error = true;
-		} catch ( Artisan_Sql_Exception $e ) {
-			$error = true;
-		}
-		
+		}		
 		return !$error;
 	}
 	
@@ -139,13 +153,11 @@ class Artisan_Session_Database implements Artisan_Session_Interface {
 		$error = false;
 		try {
 			$del_time = time() - $life;
-			$this->DB->delete
+			$this->DB->delete()
 				->from('artisan_session')
 				->where('session_expiration_time < ?', $del_time)
 				->query();
-		} catch ( Artisan_Database_Exception $e ) {
-			$error = true;
-		} catch ( Artisan_Sql_Exception $e ) {
+		} catch ( Artisan_Db_Exception $e ) {
 			$error = true;
 		}
 
