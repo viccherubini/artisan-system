@@ -22,6 +22,4 @@ abstract class Artisan_Email {
 	 * @retval NULL Returns nothing.
 	 */
 	public function __destruct() { }
-	
-	
 }
