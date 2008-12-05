@@ -14,7 +14,7 @@ require_once 'Artisan/Auth/Exception.php';
  * This class authenticates a user against a database.
  * @author vmc <vmc@leftnode.com>
  */
-class Artisan_Auth_Database extends Artisan_Auth {
+class Artisan_Auth_Db extends Artisan_Auth {
 	///< The database connection instance.
 	private $DB = NULL;
 	
@@ -26,10 +26,10 @@ class Artisan_Auth_Database extends Artisan_Auth {
 	 * @author vmc <vmc@leftnode.com>
 	 * @retval Object New Artisan_Auth_Database instance.
 	 */
-	public function __construct(Artisan_Database &$db) {
+	public function __construct(Artisan_Db &$DB) {
 		// We can only assume the database has a current connection
 		// as we don't want to attempt to connect.
-		$this->DB = &$db;
+		$this->DB = &$DB;
 	}
 	
 	/**
