@@ -114,6 +114,7 @@ class Artisan_Db_Adapter_Mysqli extends Artisan_Db {
 		if ( NULL == $this->_insert ) {
 			$this->_insert = new Artisan_Db_Sql_Insert_Mysqli($this);
 		}
+		$this->_insert->setReplace(false);
 		return $this->_insert;
 	}
 	
@@ -129,6 +130,14 @@ class Artisan_Db_Adapter_Mysqli extends Artisan_Db {
 			$this->_delete = new Artisan_Db_Sql_Delete_Mysqli($this);
 		}
 		return $this->_delete;
+	}
+	
+	public function replace() {
+		if ( NULL == $this->_insert ) {
+			$this->_insert = new Artisan_Db_Sql_Insert_Mysqli($this);
+		}
+		$this->_insert->setReplace(true);
+		return $this->_insert;
 	}
 	
 	public function start() {
