@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @see Artisan_Config
+ */
 require_once 'Artisan/Config.php';
 
 /**
