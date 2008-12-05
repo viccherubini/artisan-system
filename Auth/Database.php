@@ -1,6 +1,16 @@
 <?php
 
 /**
+ * @see Artisan_Auth
+ */
+require_once 'Artisan/Auth.php';
+
+/**
+ * @see Artisan_Auth_Exception
+ */
+require_once 'Artisan/Auth/Exception.php';
+
+/**
  * This class authenticates a user against a database.
  * @author vmc <vmc@leftnode.com>
  */
@@ -43,24 +53,25 @@ class Artisan_Auth_Database extends Artisan_Auth {
 		$user_name = $this->USER->getName();
 		$user_password = $this->USER->getPassword();
 		
-		$this->DB->select
+		$result_user = $this->DB->select()
 			->from(self::TABLE_USER, asfw_create_table_alias(self::TABLE_USER))
-			->where(array('user_name' => $user_name, 'user_password' => $user_password))
+			->where('user_name = ?', $user_name)
+			->where('user_password = ?', $user_password)
 			->query();
 			
-		$row_count = $this->DB->select->numRows();
-		
 		// First, ensure at least one row was found.
-		if ( 0 === $row_count ) {
+		if ( 0 === $result_user->numRows() ) {
 			throw new Artisan_Auth_Exception(ARTISAN_WARNING, 'Failed to authenticate, no matching records found.', __CLASS__, __FUNCTION__);
 		}
 		
 		// Next, ensure not more than one row was found.
-		if ( $row_count > 1 ) {
+		if ( $result_user->numRows() > 1 ) {
 			throw new Artisan_Auth_Exception(ARTISAN_WARNING, 'Failed to authenticate, more than one matching record found. ' . $row_count . ' records found.', __CLASS__, __FUNCTION__);
 		}
 		
-		$user_data = $this->DB->select->fetch();
+		$user_data = $result_user->fetch();
+		
+		unset($result_user);
 		
 		// Ok, we're certain only one matching record was found.
 		// See if there is a hook to call on the data returned
