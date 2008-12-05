@@ -1,7 +1,13 @@
 <?php
 
+/**
+ * @see Artisan_Server
+ */
 require_once 'Artisan/Server.php';
 
+/**
+ * @see Artisan_Server_Exception
+ */
 require_once 'Artisan/Server/Exception.php';
 
 /**
@@ -44,7 +50,7 @@ class Artisan_Server_Curl extends Artisan_Server {
 	 * @author vmc <vmc@leftnode.com>
 	 * @throw Artisan_Server_Exception If the server address was empty.
 	 * @throw Artisan_Server_Exception If the connection to the server could not be made.
-	 * @retval NULL Destroys the object.
+	 * @retval boolean Returns true on successful connection.
 	 */
 	public function connect() {
 		$server = trim($this->_server_address);
