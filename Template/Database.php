@@ -1,6 +1,14 @@
 <?php
 
+/**
+ * @see Artisan_Template
+ */
 require_once 'Artisan/Template.php';
+
+/**
+ * @see Artisan_Template_Exception
+ */
+require_once 'Artisan/Template/Exception.php';
 
 /**
  * Loads up a template from the database.
@@ -26,7 +34,7 @@ class Artisan_Template_Database extends Artisan_Template {
 	 * @param $DB Database object that already has a connection.
 	 * @retval Object The new Artisan_Template_Database object.
 	 */
-	public function __construct(Artisan_Db_Adapter &$DB) {
+	public function __construct(Artisan_Db &$DB) {
 		// We can only assume the database has a current connection
 		// as we don't want to attempt to connect.
 		$this->DB = &$DB;
@@ -55,7 +63,7 @@ class Artisan_Template_Database extends Artisan_Template {
 		}
 		
 		$tt = self::TABLE_THEME;		
-		$result = $this->DB->select
+		$result = $this->DB->select()
 			->from($tt, asfw_create_table_alias($tt), 'theme_id')
 			->where('theme_name = ?', $theme)->where('theme_status = 1')
 			->query();
@@ -104,7 +112,7 @@ class Artisan_Template_Database extends Artisan_Template {
 		}
 		
 		$ttc = self::TABLE_THEME_CODE;
-		$result = $this->DB->select
+		$result = $this->DB->select()
 			->from($ttc, asfw_create_table_alias($ttc), 'code')
 			->where('code_name = ?', $template)
 			->query();

@@ -1,6 +1,16 @@
 <?php
 
 /**
+ * @see Artisan_Template
+ */
+require_once 'Artisan/Template.php';
+
+/**
+ * @see Artisan_Template_Exception
+ */
+require_once 'Artisan/Template/Exception.php';
+
+/**
  * Loads up a template from the filesystem.
  * @author vmc <vmc@leftnode.com>
  */
@@ -83,13 +93,8 @@ class Artisan_Template_Filesystem extends Artisan_Template {
 			return false;
 		}
 
-		// See if we should load up a template with the extension or not.
-		$last_dot_pos = strrpos($template, '.');
-		//if ( $last_dot_pos + 4 != strlen($template) ) {
-			$template .= self::TEMPLATE_EXT;
-		//}
-		
-		$template_location = $this->_theme_directory . $this->_theme . $template;// . self::TEMPLATE_EXT;
+		$template .= self::TEMPLATE_EXT;
+		$template_location = $this->_theme_directory . $this->_theme . $template;
 		
 		if ( false === is_file($template_location) ) {
 			// If the template sent in isn't in the theme directory, perhaps its global
