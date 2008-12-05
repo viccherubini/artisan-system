@@ -1,7 +1,9 @@
 <?php
 
-Artisan_Library::load('Session/Exception');
-Artisan_Library::load('Session/Interface');
+/**
+ * @see Artisan_Session_Exception
+ */
+require_once 'Artisan/Session/Exception.php';
 
 
 /**
