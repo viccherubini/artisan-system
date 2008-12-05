@@ -24,6 +24,8 @@ abstract class Artisan_Db_Sql_Insert extends Artisan_Db_Sql {
 	///< The list of values to insert into the fields.
 	protected $_insert_field_value_list = array();
 
+	protected $_is_replace = false;
+	
 	/**
 	 * Destructor.
 	 * @author vmc <vmc@leftnode.com>
@@ -105,13 +107,27 @@ abstract class Artisan_Db_Sql_Insert extends Artisan_Db_Sql {
 		return $this;
 	}
 	
+	public function setReplace($rep_type) {
+		if ( true === is_bool($rep_type) ) {
+			$this->_is_replace = $rep_type;
+		} else {
+			$this->_is_replace = false;
+		}
+		return true;
+	}
+	
 	/**
 	 * Builds the query to execute.
 	 * @author vmc <vmc@leftnode.com>
 	 * @retval string Returns the built query.
 	 */
 	public function build() {
-		$insert_sql  = "INSERT INTO `" . $this->_into_table . "`";
+		$query_type = 'INSERT';
+		if ( true === $this->_is_replace ) {
+			$query_type = 'REPLACE';
+		}
+	
+		$insert_sql = $query_type . " INTO `" . $this->_into_table . "`";
 		
 		$insert_field_sql = NULL;
 		if ( count($this->_insert_field_list) > 0 ) {
@@ -139,7 +155,6 @@ abstract class Artisan_Db_Sql_Insert extends Artisan_Db_Sql {
 					break;
 				}
 			}
-			
 		}
 		$insert_value_sql = " VALUES (" . implode(", ", $value_list) . ") ";
 
