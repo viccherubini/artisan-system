@@ -1,6 +1,16 @@
 <?php
 
 /**
+ * @see Artisan_User
+ */
+require_once 'Artisan/User.php';
+
+/**
+ * @see Artisan_User_Exception
+ */
+require_once 'Artisan/User/Exception.php';
+
+/**
  * This class manipulates all of the user data in the scope of a database.
  * @author vmc <vmc@leftnode.com>
  */
@@ -18,7 +28,7 @@ class Artisan_User_Database extends Artisan_User {
 	 * @param $DB Database object that already has a connection.
 	 * @retval Object The new Artisan_User_Database object.
 	 */
-	public function __construct(Artisan_Database &$DB) {
+	public function __construct(Artisan_Db &$DB) {
 		$this->DB = &$DB;
 	}
 	
@@ -66,20 +76,21 @@ class Artisan_User_Database extends Artisan_User {
 			throw new Artisan_User_Exception(ARTISAN_WARNING, 'The user ID specified must be numeric and greater than 0', __CLASS__, __FUNCTION__);
 		}
 		
-		$this->DB->select
+		$result_user = $this->DB->select()
 			->from(self::TABLE_USER, asfw_create_table_alias(self::TABLE_USER))
-			->where(array('user_id' => $user_id))
+			->where(array('user_id = ?', $user_id))
 			->query();
-		$row_count = $this->DB->select->numRows();
+		$row_count = $result_user->numRows();
 		
 		if ( 1 !== $row_count ) {
 			throw new Artisan_User_Exception(ARTISAN_WARNING, 'No user found with ID ' . $user_id . '.', __CLASS__, __FUNCTION__);
 		}
 		
 		// Now that we have a user, load up their data
-		$user_data = $this->DB->select->fetch();
+		$user_data = $result_user->fetch();
+		unset($result_user);
+
 		$user_data = new Artisan_VO($user_data);
-		
 		$this->setUserId($user_id);
 		$this->setUserName($user_data->user_name);
 		$this->setUserPassword($user_data->user_password);
