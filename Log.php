@@ -17,11 +17,12 @@ define('LOG_EXCEPTION', 400, false);
 /**
  * Class for logging data into a specified place. This class exists as a singleton.
  * @author vmc <vmc@leftnode.com>
- * @todo Finish writing this class!
  */
 class Artisan_Log {
+	///< Because this class is a singleton, the instance of this class.
 	private static $INST = NULL;
 
+	///< Instance of the writer class.
 	private $WRITER = NULL;
 	
 	///< The array of log data to flush out.
@@ -51,7 +52,11 @@ class Artisan_Log {
 	 */
 	public function __destruct() { }
 	
-	
+	/**
+	 * Returns this class for usage as a singleton.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval Object Returns the itself.
+	 */
 	public static function &get() {
 		if ( true === is_null(self::$INST) ) {
 			self::$INST = new self;
@@ -64,22 +69,22 @@ class Artisan_Log {
 	 * Adds an item onto the log class.
 	 * @author vmc <vmc@leftnode.com>
 	 * @param $log_type The type of log to create, as defined by the constants above.
-	 * @param $log_text The text of the log.
-	 * @param $log_class The class to log against.
-	 * @param $log_function The method to log against.
-	 * @param $log_trace If the log entry is an exception, this will contain the trace.
+	 * @param $entry The text of the log.
+	 * @param $class The class to log against.
+	 * @param $function The method to log against.
+	 * @param $trace If the log entry is an exception, this will contain the trace.
 	 * @retval boolean Return true.
 	 */
-	public function add($log_type, $log_text, $log_class = NULL, $log_function = NULL, $log_trace = NULL) {
+	public function add($log_type, $entry, $class = NULL, $function = NULL, $trace = NULL) {
 		$ip_address = asfw_get_ipv4();
 
 		$this->_log[] = array(
 			'code_id ' => NULL,
 			'log_date' => asfw_now(),
-			'entry' => $log_text,
-			'trace' => $log_trace,
-			'class' => $log_class,
-			'function' => $log_function,
+			'entry' => $entry,
+			'trace' => $trace,
+			'class' => $class,
+			'function' => $function,
 			'ip_address' => $ip_address,
 			'type' => $log_type
 		);
@@ -121,13 +126,28 @@ class Artisan_Log {
 		return true;
 	}
 
-
+	/**
+	 * Sets a writer class to allow flushing the log data to a specific location.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $W The Writer instance of type Artisan_Log_Writer.
+	 * @retval boolean Returns true.
+	 */
 	public function setWriter(Artisan_Log_Writer &$W) {
 		$this->WRITER = &$W;
+		return true;
 	}
 
+	/**
+	 * Flushes out the log to a specific location.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval boolean True if the log was successfully flushed, false if the writer is not set up properly.
+	 */
 	public function flush() {
 		$final_log = array();
+		
+		if ( true === is_null($this->WRITER) || false === $this->WRITER instanceof Artisan_Log_Writer ) {
+			return false;
+		}
 		
 		// Swap the values of $fll to keys for quick lookups
 		$fll = asfw_make_values_keys($this->_flush_level_list);
