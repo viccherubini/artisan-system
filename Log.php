@@ -1,45 +1,64 @@
 <?php
 
-//Artisan_Library::load('Log/Exception');
+/**
+ * @see Artisan_Log_Exception
+ */
 require_once 'Artisan/Log/Exception.php';
 
-define('LOG_GENERAL', 'G', false);
-define('LOG_ERROR', 'E', false);
-define('LOG_SUCCESS', 'S', false);
-define('LOG_EXCEPTION', 'X', false);
+require_once 'Artisan/Functions/Array.php';
+
+require_once 'Artisan/Functions/Input.php';
+
+define('LOG_GENERAL', 100, false);
+define('LOG_ERROR', 200, false);
+define('LOG_SUCCESS', 300, false);
+define('LOG_EXCEPTION', 400, false);
 
 /**
- * Abstract method for logging data to a certain place.
+ * Class for logging data into a specified place. This class exists as a singleton.
  * @author vmc <vmc@leftnode.com>
  * @todo Finish writing this class!
  */
-abstract class Artisan_Log {
-	///< The array of log data to flush out.
-	protected $_log = array();
+class Artisan_Log {
+	private static $INST = NULL;
+
+	private $WRITER = NULL;
 	
-	///< The list of data to flush out, G = General, E = Error, S = Success, X = Exception
-	protected $_flush_level_list = array('G', 'E', 'S', 'X');
+	///< The array of log data to flush out.
+	private $_log = array();
+	
+	///< The list of data to flush out, default is everything.
+	private $_flush_level_list = array(100, 200, 300, 400);
 
 	/**
-	 * Default constructor to write data to a specified source.
-	 * @author vmc <vmc@leftnode.com>
-	 * @param $C Configuration object.
-	 * @retval Object Returns a new Artisan_Log object.
-	 */
-	public function __construct(Artisan_Config &$C = NULL) {
-		if ( false === empty($C) ) {
-			if ( true === asfw_exists('flush_level_list', $C) ) {
-				$this->_flush_level_list = explode(',', str_replace(' ', NULL, $C->flush_level_list));
-			}
-		}
-	}
-	
-	/**
-	 * Destructor.
+	 * Private constructor because this class is a singleton.
 	 * @author vmc <vmc@leftnode.com>
 	 * @retval NULL Returns nothing.
 	 */
+	private function __construct() { }
+	
+	/**
+	 * Private clone method because this class is a singleton.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval NULL Returns nothing.
+	 */
+	private function __clone() { }
+	
+	/**
+	 * Public destructor.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval boolean Returns true.
+	 */
 	public function __destruct() { }
+	
+	
+	public static function &get() {
+		if ( true === is_null(self::$INST) ) {
+			self::$INST = new self;
+		}
+		
+		return self::$INST;
+	}
 	
 	/**
 	 * Adds an item onto the log class.
@@ -55,13 +74,14 @@ abstract class Artisan_Log {
 		$ip_address = asfw_get_ipv4();
 
 		$this->_log[] = array(
+			'code_id ' => NULL,
 			'log_date' => asfw_now(),
-			'log_text' => $log_text,
-			'log_trace' => $log_trace,
-			'log_class' => $log_class,
-			'log_function' => $log_function,
-			'log_ip' => $ip_address,
-			'log_type' => $log_type
+			'entry' => $log_text,
+			'trace' => $log_trace,
+			'class' => $log_class,
+			'function' => $log_function,
+			'ip_address' => $ip_address,
+			'type' => $log_type
 		);
 		
 		return true;
@@ -73,7 +93,7 @@ abstract class Artisan_Log {
 	 * @param $E The exception to push onto the log class.
 	 * @retval boolean Return true.
 	 */
-	public function addEx(Artisan_Exception &$E) {
+	public function addException(Artisan_Exception &$E) {
 		$this->add(
 			LOG_EXCEPTION,
 			$E->toString(),
@@ -101,10 +121,23 @@ abstract class Artisan_Log {
 		return true;
 	}
 
-	/**
-	 * Abstract method so different logs can flush to different areas.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval boolean Returns true.
-	 */
-	abstract public function flush();
+
+	public function setWriter(Artisan_Log_Writer &$W) {
+		$this->WRITER = &$W;
+	}
+
+	public function flush() {
+		$final_log = array();
+		
+		// Swap the values of $fll to keys for quick lookups
+		$fll = asfw_make_values_keys($this->_flush_level_list);
+		foreach ( $this->_log as $log ) {
+			if ( true === asfw_exists($log['type'], $fll) ) {
+				$final_log[] = $log;
+			}
+		}
+		
+		$this->WRITER->flush($final_log);
+		$this->_log = array();
+	}
 }
