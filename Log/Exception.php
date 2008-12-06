@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @see Artisan_Exception
+ */
+require_once 'Artisan/Exception.php';
+
+/**
  * Template Exception Class.
  * @author vmc <vmc@leftnode.com>
  */
