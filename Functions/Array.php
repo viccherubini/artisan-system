@@ -108,3 +108,22 @@ function asfw_is_assoc($array) {
 	
 	return $is_assoc;
 }
+
+/**
+ * Takes an array and makes all of values the keys of it, setting the values to
+ * true so asfw_exists() can test for the existance of a value instead of in_array().
+ * @author vmc <vmc@leftnode.com>
+ * @param $a An array to swap.
+ * @retval array Returns the swapped array.
+ */
+function asfw_make_values_keys($a) {
+	if ( 0 === count($a) ) {
+		return array();
+	}
+	
+	$during = array();
+	foreach ( $a as $k => $v ) {
+		$during[$v] = true;
+	}
+	return $during;
+}
