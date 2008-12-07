@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @see Artisan_Controller_Exception
+ */
+require_once 'Artisan/Controller/Exception.php';
+
+/**
  * This class provides a singleton instance to manipulate the controller class.
  * @author vmc <vmc@leftnode.com>
  */

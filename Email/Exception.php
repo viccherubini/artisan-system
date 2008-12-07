@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @see Artisan_Exception
+ */
 require_once 'Artisan/Exception.php';
 
 /**

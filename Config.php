@@ -1,7 +1,13 @@
 <?php
 
+/**
+ * @see Artisan_Config_Exception
+ */
 require_once 'Artisan/Config/Exception.php';
 
+/**
+ * @see Artisan_VO
+ */
 require_once 'Artisan/VO.php';
 
 /**

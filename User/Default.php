@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @see Artisan_User
+ */
+require_once 'Artisan/User.php';
+
+/**
  * Creates an Artisan_User without any external dependencies. In other words,
  * it simply creates a user within memory that can be used for manipulation.
  * @author vmc <vmc@leftnode.com>
