@@ -26,7 +26,7 @@ require_once 'Artisan/Db/Exception.php';
  * and dependent on whatever built database object is passed into it.
  * @author vmc <vmc@leftnode.com>
  */
-class Artisan_Session_Database implements Artisan_Session_Interface {
+class Artisan_Session_Db implements Artisan_Session_Interface {
 	///< Database instance passed into the class. Assumes the database already has a connection.
 	private $DB = NULL;
 
