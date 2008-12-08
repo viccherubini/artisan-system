@@ -67,7 +67,6 @@ class Artisan_Controller {
 	 */
 	public function __destruct() {
 		unset($this->CONTROLLER);
-		unset($this->P);
 	}
 	
 	/**
@@ -79,7 +78,6 @@ class Artisan_Controller {
 		if ( true === is_null(self::$INST) ) {
 			self::$INST = new self;
 		}
-		
 		return self::$INST;
 	}
 	
@@ -94,7 +92,6 @@ class Artisan_Controller {
 		$this->_default_method = $C->default_method;
 		$this->_default_controller = $C->default_controller;
 		$this->_config_set = true;
-		
 		return true;
 	}
 	
@@ -109,7 +106,6 @@ class Artisan_Controller {
 		if ( true === is_dir($directory) ) {
 			$this->_directory = $directory;
 		}
-		
 		return true;
 	}
 	
@@ -240,7 +236,7 @@ class Artisan_Controller {
 		if ( count($request_bits) > 2 ) {
 			$this->_controller_argv = array_slice($request_bits, 2);
 		}
-		
+
 		return true;
 	}
 }
