@@ -40,8 +40,10 @@ class Artisan_Controller {
 	///< The method being executed in the controller.
 	private $_controller_method = NULL;
 
+	///< The list of arguments to pass into the controller method
 	private $_controller_argv = array();
 
+	///< Whether or not the configuration has been set.
 	private $_config_set = false;
 	
 	/**
@@ -68,7 +70,6 @@ class Artisan_Controller {
 		unset($this->P);
 	}
 	
-	
 	/**
 	 * Returns this class for usage as a singleton.
 	 * @author vmc <vmc@leftnode.com>
@@ -81,12 +82,6 @@ class Artisan_Controller {
 		
 		return self::$INST;
 	}
-	
-	
-	
-	
-	
-	
 	
 	/**
 	 * Sets the configuration if not set through the constructor.
@@ -118,7 +113,18 @@ class Artisan_Controller {
 		return true;
 	}
 	
-	
+	/**
+	 * Executes the loaded controller and method.
+	 * @author vmc <vmc@leftnode.com>
+	 * @throw Artisan_Controller_Exception If the configuration has not been set.
+	 * @throw Artisan_Controller_Exception If parsing the URI does not execute correctly.
+	 * @throw Artisan_Controller_Exception If the controller file does not exist.
+	 * @throw Artisan_Controller_Exception If the controller class does not exist in the controller file.
+	 * @throw Artisan_Controller_Exception If the controller instance is not inherited from Artisan_Controller.
+	 * @throw Artisan_Controller_Exception If the method specified does not exist in the Controller.
+	 * @throw Artisan_Exception Any exception thrown from the specified Controller.
+	 * @retval boolean Returns true.
+	 */
 	public function execute() {
 		if ( false === $this->_config_set ) {
 			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The ' . __CLASS__ . ' Configuration was not set.', __CLASS__, __METHOD__);
@@ -139,7 +145,7 @@ class Artisan_Controller {
 		}
 		
 		// File exists, load it up
-		require_once $controller_file;
+		@require_once $controller_file;
 		
 		// Ensure the class exists
 		if ( false === class_exists($controller) ) {
@@ -159,11 +165,9 @@ class Artisan_Controller {
 		
 		$method = $this->_controller_method;
 		if ( false === method_exists($this->CONTROLLER, $method) ) {
-			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The method ' . $method . ' does not exist in the controller ' . $this->_controller_name . '.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The method ' . $method . ' does not exist in the controller ' . $controller . '.', __CLASS__, __FUNCTION__);
 		}
 		
-		// See if a translation exists for this method and if so,
-		// get the data from the $data variable.
 		$method = new ReflectionMethod($this->CONTROLLER, $method);
 
 		$param_count = $method->getNumberOfRequiredParameters();
@@ -174,10 +178,6 @@ class Artisan_Controller {
 				$argv = array_pad($argv, $param_count, NULL);
 			}
 		}
-
-		//for ( $i=0; $i<$argc; $i++ ) {
-		//	$argv[$i] = urldecode($argv[$i]);
-		//}
 
 		try {
 			if ( true === $method->isPublic() ) {
@@ -190,8 +190,17 @@ class Artisan_Controller {
 		} catch ( Artisan_Exception $e ) {
 			throw $e;
 		}
+		
+		return true;
 	}
 	
+	/**
+	 * Parses the URI to extract the appropriate parameters. Sets the appropriate internal
+	 * methods with the specified Controller, Method, and arguments.
+	 * @author vmc <vmc@leftnode.com>
+	 * @throw Artisan_Controller_Exception If the SCRIPT_NAME or REQUEST_URI is not specified in the $_SERVER superglobal.
+	 * @retval boolean Returns true.
+	 */
 	private function _parseUri() {
 		$script_name = asfw_exists_return('SCRIPT_NAME', $_SERVER);
 		$request_uri = asfw_exists_return('REQUEST_URI', $_SERVER);
@@ -215,7 +224,7 @@ class Artisan_Controller {
 		 * NORMALIZE THE BITS
 		 * Bit 0 is the Controller
 		 * Bit 1 is the Method
-		 * Any bit after that is the parameters to pass to the method
+		 * Any bit after that are the parameters to pass to the method.
 		 */
 		if ( false === asfw_exists(0, $request_bits) ) {
 			$request_bits[0] = $this->_default_controller;
@@ -231,5 +240,7 @@ class Artisan_Controller {
 		if ( count($request_bits) > 2 ) {
 			$this->_controller_argv = array_slice($request_bits, 2);
 		}
+		
+		return true;
 	}
 }
