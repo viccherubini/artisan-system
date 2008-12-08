@@ -1,9 +1,13 @@
 <?php
 
+require_once 'Artisan/Controller/Exception.php';
 
-Artisan_Library::load('Controller/Exception');
-Artisan_Library::load('Controller/Plugin');
-Artisan_Library::load('Controller/Builder');
+require_once 'Artisan/Functions/String.php';
+
+require_once 'Artisan/Functions/Array.php';
+
+
+
 
 /**
  * Handles the Model-View Controller design pattern. The Plugin architecture allows
@@ -12,6 +16,9 @@ Artisan_Library::load('Controller/Builder');
  * @author vmc <vmc@leftnode.com>
  */
 class Artisan_Controller {
+	///< Because this class is a singleton, the instance of this class.
+	private static $INST = NULL;
+	
 	///< Instance of the Artisan_Controller_Plugin class.
 	protected $P = NULL;
 	
@@ -27,23 +34,30 @@ class Artisan_Controller {
 	///< If no controller is specified, this one is used.
 	private $_default_controller = NULL;
 	
-	///< The name of the controller currently being done.
+	///< The name of the controller currently being used.
 	private $_controller_name = NULL;
+	
+	///< The method being executed in the controller.
+	private $_controller_method = NULL;
 
+	private $_controller_argv = array();
+
+	private $_config_set = false;
+	
 	/**
-	 * Builds a new Artisan_Controller instance.
+	 * Private constructor because this class is a singleton.
 	 * @author vmc <vmc@leftnode.com>
-	 * @param $C Optional configuration parameter of type Artisan_Config.
-	 * @retval Object Returns new Artisan_Controller instance.
+	 * @retval NULL Returns nothing.
 	 */
-	public function __construct(Artisan_Config &$C = NULL) {
-		$this->P = &Artisan_Controller_Plugin::get();
-		
-		if ( true === is_object($C) ) {
-			$this->setConfig($C);
-		}
-	}
-
+	private function __construct() { }
+	
+	/**
+	 * Private clone method because this class is a singleton.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval NULL Returns nothing.
+	 */
+	private function __clone() { }
+	
 	/**
 	 * Destructor.
 	 * @author vmc <vmc@leftnode.com>
@@ -53,6 +67,26 @@ class Artisan_Controller {
 		unset($this->CONTROLLER);
 		unset($this->P);
 	}
+	
+	
+	/**
+	 * Returns this class for usage as a singleton.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval Object Returns the itself.
+	 */
+	public static function &get() {
+		if ( true === is_null(self::$INST) ) {
+			self::$INST = new self;
+		}
+		
+		return self::$INST;
+	}
+	
+	
+	
+	
+	
+	
 	
 	/**
 	 * Sets the configuration if not set through the constructor.
@@ -64,6 +98,7 @@ class Artisan_Controller {
 		$this->setDirectory($C->directory);
 		$this->_default_method = $C->default_method;
 		$this->_default_controller = $C->default_controller;
+		$this->_config_set = true;
 		
 		return true;
 	}
@@ -83,114 +118,56 @@ class Artisan_Controller {
 		return true;
 	}
 	
-	/**
-	 * Attempts to load the controller. If none specified, loads the default.
-	 * @author vmc <vmc@leftnode.com>
-	 * @param $controller Optional name of controller to load.
-	 * @throw Artisan_Controller_Exception If no controller directory is specified.
-	 * @throw Artisan_Controller_Exception If the specified directory is not a valid directory.
-	 * @throw Artisan_Controller_Exception If no default controller and no controller specified.
-	 * @throw Artisan_Controller_Exception If the controller file was not found.
-	 * @throw Artisan_Controller_Exception If the class was not found in the controller.
-	 * @retval boolean Returns true.
-	 */
-	public function load($controller = NULL) {
-		if ( true === empty($this->_directory) ) {
-			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'No controller directory specified.', __CLASS__, __FUNCTION__);
+	
+	public function execute() {
+		if ( false === $this->_config_set ) {
+			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The ' . __CLASS__ . ' Configuration was not set.', __CLASS__, __METHOD__);
 		}
 		
-		if ( false === is_dir($this->_directory) ) {
-			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'Value specified for controller directory, ' . $this->_directory . ', is not a directory.', __CLASS__, __FUNCTION__);
-		}
+		$this->_parseUri();
 		
-		// See if the controller isn't set and the default controller is.
-		// If so, use that, otherwise, throw an exception.
-		if ( true === empty($controller) && true === empty($this->_default_controller) ) {
-			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'No controller and default controller specified.', __CLAS__, __FUNCTION__);
-		}
-		
-		if ( true === empty($controller) ) {
-			$controller = $this->_default_controller;
-		}
-		
-		// Correctly name the controller according to the naming conventions
-		$controller = asfw_rename_controller($controller);
-		$this->_controller_name = $controller;
-		
-		// See if that file exists in the directory
-		$controller_file = $this->_directory . $controller . EXT;
-		if ( false === is_file($controller_file) ) {
-			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'Controller file ' . $controller_file . ' was not found.', __CLASS__, __FUNCTION__);
-		}
-		
-		// File exists, load it up
-		require_once $controller_file;
-		
-		// Ensure the class exists
-		if ( false === class_exists($controller) ) {
-			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'Class ' . $controller . ' not found in file ' . $controller_file . '.', __CLASS__, __FUNCTION__);
-		}
-		
-		// Create a new instance of the controller to work with
-		try {
-			$this->CONTROLLER = new $controller();
-		} catch ( Artisan_Exception $e ) {
-			throw $e;
-		}
-		
-		return true;
+		echo 'using controller => ' . $this->_controller_name . '<br />';
+		echo 'with method => ' . $this->_controller_method . '<br />';
+		echo 'with arguments => ' . asfw_print_r($this->_controller_argv, true);
 	}
 	
-	/**
-	 * Attempts to execute a specified method in a controller, passing it the arguments it needs.
-	 * If no method specified, uses the default, which is usually index().
-	 * @author vmc <vmc@leftnode.com>
-	 * @param $method Optional name of method to execute.
-	 * @param $args An optional array of arguments to send.
-	 * @throw Artisan_Controller_Exception If the controller has not been set.
-	 * @throw Artisan_Controller_Exception If the controller does not inherit from Artisan_Controller.
-	 * @throw Artisan_Controller_Exception If no default method and method are specified.
-	 * @throw Artisan_Controller_Exception If the method does not exist in the controller.
-	 * @retval boolean Returns true.
-	 */
-	public function execute($method = NULL, $args = array()) {
-		if ( false === is_object($this->CONTROLLER) ) {
-			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The controller has not been set yet.', __CLASS__, __FUNCTION__);
-		}
-		
-		if ( false === $this->CONTROLLER instanceof Artisan_Controller ) {
-			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The controller is not of inherited type ' . __CLASS__, __CLASS__, __FUNCTION__);
-		}
-		
-		// Make sure whatever is being executed can be called with is_callable or method_exists
-		if ( false === empty($method) && empty($this->_default_method) ) {
-			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'No controller method was specified and no default method is specified.', __CLASS__, __FUNCTION__);
-		}
-		
-		if ( true === empty($method) ) {
-			$method = $this->_default_method;
-		}
-		
-		if ( false === method_exists($this->CONTROLLER, $method) ) {
-			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The method ' . $method . ' does not exist in the controller ' . $this->_controller_name . '.', __CLASS__, __FUNCTION__);
-		}
-		
-		// See if a translation exists for this method and if so,
-		// get the data from the $data variable.
-		$method = new ReflectionMethod($this->CONTROLLER, $method);
+	private function _parseUri() {
+		$script_name = asfw_exists_return('SCRIPT_NAME', $_SERVER);
+		$request_uri = asfw_exists_return('REQUEST_URI', $_SERVER);
 
-		try {
-			if ( true === $method->isPublic() ) {
-				if ( true === $method->isStatic() ) {
-					$method->invokeArgs(NULL, $args);
-				} else {
-					$method->invokeArgs($this->CONTROLLER, $args);
-				}
-			}
-		} catch ( Artisan_Exception $e ) {
-			throw $e;
+		if ( true === empty($script_name) || true === empty($request_uri) ) {
+			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The SCRIPT_NAME or REQUEST_URI is empty.', __CLASS__, __METHOD__);
 		}
+
+		$script_name = asfw_strip_end_slashes($script_name);
+		$request_uri = asfw_strip_end_slashes(asfw_controller_create_base_uri($request_uri));
+
+		$request_bits = explode('/', $request_uri);
+
+		// See if the first element of the array is also the script name, if so, remove it
+		if ( trim(current($request_bits)) == trim($script_name) ) {
+			$request_bits = array_slice($request_bits, 1);
+		}
+
+		/**
+		 * NORMALIZE THE BITS
+		 * Bit 0 is the Controller
+		 * Bit 1 is the Method
+		 * Any bit after that is the parameters to pass to the method
+		 */
+		if ( false === asfw_exists(0, $request_bits) ) {
+			$request_bits[0] = $this->_default_controller;
+		}
+
+		if ( false === asfw_exists(1, $request_bits) ) {
+			$request_bits[1] = $this->_default_method;
+		}
+
+		$this->_controller_name = asfw_rename_controller($request_bits[0]);
+		$this->_controller_method = asfw_rename_controller_method($request_bits[1]);
 		
-		return true;
+		if ( count($request_bits) > 2 ) {
+			$this->_controller_argv = array_slice($request_bits, 2);
+		}
 	}
 }
