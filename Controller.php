@@ -1,13 +1,13 @@
 <?php
 
+/**
+ * @see Artisan_Controller_Exception
+ */
 require_once 'Artisan/Controller/Exception.php';
 
 require_once 'Artisan/Functions/String.php';
 
 require_once 'Artisan/Functions/Array.php';
-
-
-
 
 /**
  * Handles the Model-View Controller design pattern. The Plugin architecture allows
@@ -20,7 +20,7 @@ class Artisan_Controller {
 	private static $INST = NULL;
 	
 	///< Instance of the Artisan_Controller_Plugin class.
-	protected $P = NULL;
+	//protected $P = NULL;
 	
 	///< Instance of the controller specified to use.
 	private $CONTROLLER = NULL;
@@ -28,11 +28,11 @@ class Artisan_Controller {
 	///< The directory to load controllers from.
 	private $_directory = NULL;
 	
-	///< If no method is specified, this one is used.
-	private $_default_method = 'index';
-	
 	///< If no controller is specified, this one is used.
 	private $_default_controller = NULL;
+	
+	///< If no method is specified, this one is used.
+	private $_default_method = 'index';
 	
 	///< The name of the controller currently being used.
 	private $_controller_name = NULL;
