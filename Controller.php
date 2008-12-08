@@ -124,11 +124,72 @@ class Artisan_Controller {
 			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The ' . __CLASS__ . ' Configuration was not set.', __CLASS__, __METHOD__);
 		}
 		
-		$this->_parseUri();
+		try {
+			$this->_parseUri();
+		} catch ( Artisan_Controller_Exception $e ) {
+			throw $e;
+		}
 		
-		echo 'using controller => ' . $this->_controller_name . '<br />';
-		echo 'with method => ' . $this->_controller_method . '<br />';
-		echo 'with arguments => ' . asfw_print_r($this->_controller_argv, true);
+		$controller = trim($this->_controller_name);
+		
+		// See if that file exists in the directory
+		$controller_file = $this->_directory . $controller . '.php';
+		if ( false === is_file($controller_file) ) {
+			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'Controller file ' . $controller_file . ' was not found.', __CLASS__, __FUNCTION__);
+		}
+		
+		// File exists, load it up
+		require_once $controller_file;
+		
+		// Ensure the class exists
+		if ( false === class_exists($controller) ) {
+			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'Class ' . $this->_controller_name . ' not found in file ' . $controller_file . '.', __CLASS__, __FUNCTION__);
+		}
+		
+		// Create a new instance of the controller to work with
+		try {
+			$this->CONTROLLER = new $controller();
+		} catch ( Artisan_Exception $e ) {
+			throw $e;
+		}
+		
+		if ( false === $this->CONTROLLER instanceof Artisan_Controller ) {
+			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The controller is not of inherited type ' . __CLASS__, __CLASS__, __FUNCTION__);
+		}
+		
+		$method = $this->_controller_method;
+		if ( false === method_exists($this->CONTROLLER, $method) ) {
+			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The method ' . $method . ' does not exist in the controller ' . $this->_controller_name . '.', __CLASS__, __FUNCTION__);
+		}
+		
+		// See if a translation exists for this method and if so,
+		// get the data from the $data variable.
+		$method = new ReflectionMethod($this->CONTROLLER, $method);
+
+		$param_count = $method->getNumberOfRequiredParameters();
+		$argv = $this->_controller_argv;
+		$argc = count($argv);
+		if ( $param_count != $argc ) {
+			if ( $param_count > $argc ) {
+				$argv = array_pad($argv, $param_count, NULL);
+			}
+		}
+
+		//for ( $i=0; $i<$argc; $i++ ) {
+		//	$argv[$i] = urldecode($argv[$i]);
+		//}
+
+		try {
+			if ( true === $method->isPublic() ) {
+				if ( true === $method->isStatic() ) {
+					$method->invokeArgs(NULL, $argv);
+				} else {
+					$method->invokeArgs($this->CONTROLLER, $argv);
+				}
+			}
+		} catch ( Artisan_Exception $e ) {
+			throw $e;
+		}
 	}
 	
 	private function _parseUri() {
@@ -142,6 +203,7 @@ class Artisan_Controller {
 		$script_name = asfw_strip_end_slashes($script_name);
 		$request_uri = asfw_strip_end_slashes(asfw_controller_create_base_uri($request_uri));
 
+		$request_uri = urldecode($request_uri);
 		$request_bits = explode('/', $request_uri);
 
 		// See if the first element of the array is also the script name, if so, remove it
