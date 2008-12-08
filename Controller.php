@@ -18,10 +18,7 @@ require_once 'Artisan/Functions/Array.php';
 class Artisan_Controller {
 	///< Because this class is a singleton, the instance of this class.
 	private static $INST = NULL;
-	
-	///< Instance of the Artisan_Controller_Plugin class.
-	//protected $P = NULL;
-	
+
 	///< Instance of the controller specified to use.
 	private $CONTROLLER = NULL;
 	
