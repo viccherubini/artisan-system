@@ -2,8 +2,12 @@
 
 @set_magic_quotes_runtime(0);
 
+define('ARTISAN_', 'Artisan_', false);
+
 class Artisan_System {
-	private static $_instance = NULL;
+	private static $INST = NULL;
+	
+	protected static $object_list;
 
 	private function __construct() {
 	
@@ -13,12 +17,16 @@ class Artisan_System {
 	
 	}
 	
-	public static function &getInstance() {
-		if ( true === is_null(self::$_instance) || false === self::$_instance instanceof self ) {
-				self::$_instance = new self;
+	/**
+	 * Returns this class for usage as a singleton.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval Object Returns the itself.
+	 */
+	public static function &get() {
+		if ( true === is_null(self::$INST) ) {
+			self::$INST = new self;
 		}
-		
-		return self::$_instance;
+		return self::$INST;
 	}
 	
 	public function build($object_name) {
@@ -38,11 +46,26 @@ class Artisan_System {
 		//}
 		
 		// Load in the file based on the class name.
-		
 	}
 	
+	public function push($obj) {
+		if ( false === is_object($obj) ) {
+			return false;
+		}
+		
+		if ( false === method_exists($obj, 'name') ) {
+			return false;
+		}
+		
+		$obj_name = $obj->name();
+		$obj_name = $this->_makeName($obj_name);
+		
+		$this->$obj_name = $obj;
+	}
 	
 	private function _makeName($object_name) {
-		
+		$class_short = str_replace(ARTISAN_, NULL, $class_name);
+		$class_short = strtolower($class_short);
+		return $class_short;
 	}
 }
