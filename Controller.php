@@ -23,10 +23,10 @@ class Artisan_Controller {
 	private $CONTROLLER = NULL;
 	
 	///< The directory to load controllers from.
-	private $_directory = NULL;
+	private $_directory = './';
 	
 	///< If no controller is specified, this one is used.
-	private $_default_controller = NULL;
+	private $_default_controller = 'Site';
 	
 	///< If no method is specified, this one is used.
 	private $_default_method = 'index';
@@ -41,7 +41,7 @@ class Artisan_Controller {
 	private $_controller_argv = array();
 
 	///< Whether or not the configuration has been set.
-	private $_config_set = false;
+	private $_config_set = true;
 	
 	/**
 	 * Private constructor because this class is a singleton.
