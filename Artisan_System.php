@@ -4,10 +4,12 @@
 
 define('ARTISAN_', 'Artisan_', false);
 
+require_once 'Artisan/Functions/Array.php';
+
 class Artisan_System {
 	private static $INST = NULL;
 	
-	protected static $object_list;
+	protected static $_object_list;
 
 	private function __construct() {
 	
@@ -60,11 +62,17 @@ class Artisan_System {
 		$obj_name = $obj->name();
 		$obj_name = $this->_makeName($obj_name);
 		
+		echo $obj_name;
+		// See if this object exists in the object_list
+		if ( true === asfw_exists($obj_name, self::$_object_list) ) {
+			throw new Artisan_Exception(ARTISAN_ERROR, 'The key ' . $obj_name . ' already exists on the stack, please rename it.', __CLASS__, __FUNCTION__);
+		}
+		
 		$this->$obj_name = $obj;
 	}
 	
 	private function _makeName($object_name) {
-		$class_short = str_replace(ARTISAN_, NULL, $class_name);
+		$class_short = str_replace(ARTISAN_, NULL, $object_name);
 		$class_short = strtolower($class_short);
 		return $class_short;
 	}
