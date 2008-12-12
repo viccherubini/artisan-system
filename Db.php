@@ -48,6 +48,15 @@ abstract class Artisan_Db {
 	}
 
 	/**
+	 * Returns the name of this class.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval string Returns the name of the class.
+	 */
+	public function name() {
+		return __CLASS__;
+	}
+
+	/**
 	 * Sets the configuration if not set through the constructor.
 	 * @author vmc <vmc@leftnode.com>
 	 * @param $C A configuration object.
