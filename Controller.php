@@ -5,6 +5,11 @@
  */
 require_once 'Artisan/Controller/Exception.php';
 
+/**
+ * @see Artisan_Controller_Site
+ */
+require_once 'Artisan/Controller/Site.php';
+
 require_once 'Artisan/Functions/String.php';
 
 require_once 'Artisan/Functions/Array.php';
@@ -152,7 +157,7 @@ class Artisan_Controller {
 			throw $e;
 		}
 		
-		if ( false === $this->CONTROLLER instanceof Artisan_Controller ) {
+		if ( false === $this->CONTROLLER instanceof Artisan_Controller_Site ) {
 			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The controller is not of inherited type ' . __CLASS__, __CLASS__, __FUNCTION__);
 		}
 		
