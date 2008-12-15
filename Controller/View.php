@@ -44,6 +44,10 @@ abstract class Artisan_Controller_View {
 		$controller = asfw_rename_controller($controller);
 		$view = asfw_rename_controller_method($view);
 
+		if ( true === empty($this->_layout) ) {
+			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The layout is empty.', __CLASS__, __FUNCTION__);
+		}
+
 		// See if Controllers/$controller/Views/$view.phtml exists, if not, 
 		// look in Controllers/Views/$view.phtml. If that doesn't exist, throw an error.
 		$view_file = $this->_controller_dir . $ds . $controller . $ds . $this->_views_dir . $ds . $view . $this->_ext;
