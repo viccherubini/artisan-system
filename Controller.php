@@ -14,6 +14,8 @@ require_once 'Artisan/Functions/String.php';
 
 require_once 'Artisan/Functions/Array.php';
 
+require_once 'Artisan/Controller/View.php';
+
 /**
  * Handles the Model-View Controller design pattern. The Plugin architecture allows
  * one to easily push a class (Aritsan or not) into the controller so that children
@@ -28,10 +30,10 @@ class Artisan_Controller {
 	private $CONTROLLER = NULL;
 	
 	///< The directory to load controllers from.
-	private $_directory = './';
+	private $_directory = '';
 	
 	///< If no controller is specified, this one is used.
-	private $_default_controller = 'Site';
+	private $_default_controller = '';
 	
 	///< If no method is specified, this one is used.
 	private $_default_method = 'index';
@@ -136,14 +138,24 @@ class Artisan_Controller {
 		
 		$controller = trim($this->_controller_name);
 		
+		
+		// So we have the controller now
+		// and the method to use
+		// and the arguments to send to the controller.
+		// So lets do all of that, and then call
+		// the view->execute() to set the layout_content
+		// and display that.
+		
+
 		// See if that file exists in the directory
-		$controller_file = $this->_directory . $controller . '.php';
+		$controller_file = $this->_directory . DIRECTORY_SEPARATOR . $controller . '.php';
 		if ( false === is_file($controller_file) ) {
 			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'Controller file ' . $controller_file . ' was not found.', __CLASS__, __FUNCTION__);
 		}
-		
+
 		// File exists, load it up
 		@require_once $controller_file;
+
 		
 		// Ensure the class exists
 		if ( false === class_exists($controller) ) {
@@ -156,8 +168,9 @@ class Artisan_Controller {
 		} catch ( Artisan_Exception $e ) {
 			throw $e;
 		}
+
 		
-		if ( false === $this->CONTROLLER instanceof Artisan_Controller_Site ) {
+		if ( false === $this->CONTROLLER instanceof Artisan_Controller_View ) {
 			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The controller is not of inherited type ' . __CLASS__, __CLASS__, __FUNCTION__);
 		}
 		
@@ -166,9 +179,9 @@ class Artisan_Controller {
 			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The method ' . $method . ' does not exist in the controller ' . $controller . '.', __CLASS__, __FUNCTION__);
 		}
 		
-		$method = new ReflectionMethod($this->CONTROLLER, $method);
+		$M = new ReflectionMethod($this->CONTROLLER, $method);
 
-		$param_count = $method->getNumberOfRequiredParameters();
+		$param_count = $M->getNumberOfRequiredParameters();
 		$argv = $this->_controller_argv;
 		$argc = count($argv);
 		if ( $param_count != $argc ) {
@@ -178,18 +191,21 @@ class Artisan_Controller {
 		}
 
 		try {
-			if ( true === $method->isPublic() ) {
-				if ( true === $method->isStatic() ) {
-					$method->invokeArgs(NULL, $argv);
+			if ( true === $M->isPublic() ) {
+				if ( true === $M->isStatic() ) {
+					$M->invokeArgs(NULL, $argv);
 				} else {
-					$method->invokeArgs($this->CONTROLLER, $argv);
+					$M->invokeArgs($this->CONTROLLER, $argv);
 				}
 			}
 		} catch ( Artisan_Exception $e ) {
 			throw $e;
 		}
 		
-		return true;
+		$this->CONTROLLER->__setControllerDirectory($this->_directory);
+		$content = $this->CONTROLLER->__execute($controller, $method);
+		
+		return $content;
 	}
 	
 	/**
