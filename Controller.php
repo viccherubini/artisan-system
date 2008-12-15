@@ -138,15 +138,6 @@ class Artisan_Controller {
 		
 		$controller = trim($this->_controller_name);
 		
-		
-		// So we have the controller now
-		// and the method to use
-		// and the arguments to send to the controller.
-		// So lets do all of that, and then call
-		// the view->execute() to set the layout_content
-		// and display that.
-		
-
 		// See if that file exists in the directory
 		$controller_file = $this->_directory . DIRECTORY_SEPARATOR . $controller . '.php';
 		if ( false === is_file($controller_file) ) {
@@ -156,7 +147,6 @@ class Artisan_Controller {
 		// File exists, load it up
 		@require_once $controller_file;
 
-		
 		// Ensure the class exists
 		if ( false === class_exists($controller) ) {
 			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'Class ' . $this->_controller_name . ' not found in file ' . $controller_file . '.', __CLASS__, __FUNCTION__);
@@ -169,7 +159,6 @@ class Artisan_Controller {
 			throw $e;
 		}
 
-		
 		if ( false === $this->CONTROLLER instanceof Artisan_Controller_View ) {
 			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The controller is not of inherited type ' . __CLASS__, __CLASS__, __FUNCTION__);
 		}
@@ -203,7 +192,12 @@ class Artisan_Controller {
 		}
 		
 		$this->CONTROLLER->__setControllerDirectory($this->_directory);
-		$content = $this->CONTROLLER->__execute($controller, $method);
+		
+		try {
+			$content = $this->CONTROLLER->__execute($controller, $method);
+		} catch ( Artisan_Exception $e ) {
+			throw $e;
+		}
 		
 		return $content;
 	}
