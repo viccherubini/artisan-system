@@ -12,11 +12,7 @@ abstract class Artisan_Controller_View {
 	protected $_view = NULL;
 	
 	protected $layout_content = NULL;
-	
-	//public function __construct($cdir) {
-	//	$this->_controller_dir = trim($cdir);
-	//}
-	
+
 	public function __setControllerDirectory($cdir) {
 		$this->_controller_dir = trim($cdir);
 	}
@@ -47,7 +43,6 @@ abstract class Artisan_Controller_View {
 		
 		$controller = asfw_rename_controller($controller);
 		$view = asfw_rename_controller_method($view);
-
 
 		// See if Controllers/$controller/Views/$view.phtml exists, if not, 
 		// look in Controllers/Views/$view.phtml. If that doesn't exist, throw an error.
