@@ -4,6 +4,8 @@ require_once 'Artisan/Functions/Array.php';
 
 require_once 'Artisan/Db/Result.php';
 
+require_once 'Artisan/VO.php';
+
 class Artisan_Db_Result_Mysqli extends Artisan_Db_Result {
 	private $RESULT = NULL;
 
@@ -18,15 +20,6 @@ class Artisan_Db_Result_Mysqli extends Artisan_Db_Result {
 				$this->free();
 			} else {
 				reset($data);
-				
-				// Check if only one field was returned, if so, return that
-				if ( 1 === count($data) ) {
-					$data = current($data);
-				} else {
-					if ( false === empty($field) && true === asfw_exists($field, $data) ) {
-						$data = $data[$field];				
-					}
-				}			
 			}
 
 			return $data;
@@ -37,6 +30,15 @@ class Artisan_Db_Result_Mysqli extends Artisan_Db_Result {
 
 	public function fetchAll($key_on_primary = false) {
 
+	}
+
+	public function fetchAllVo() {
+		$result_data = array();
+		while ( $row = $this->fetch() ) {
+			$result_data[] = new Artisan_VO($row);
+		}
+
+		return $result_data;
 	}
 
 	public function free() {
