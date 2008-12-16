@@ -30,6 +30,12 @@ abstract class Artisan_Db_Sql_Select extends Artisan_Db_Sql {
 	///< The list of fields to use in the GROUP BY clause.
 	protected $_group_field_list = array();
 	
+	///< The field to order by.
+	protected $_order_field;
+	
+	///< The method to sort the field by.
+	protected $_order_method;
+	
 	///< Whether to sort ascending.
 	protected $_asc = NULL;
 	
@@ -161,10 +167,12 @@ abstract class Artisan_Db_Sql_Select extends Artisan_Db_Sql {
 	 * @todo Finish implementing this!
 	 * @retval Object Returns itself for chaining.
 	 */
-	public function orderBy() {
+	public function orderBy($field, $method = 'ASC') {
 		$order_fields = array();
 		if ( func_num_args() > 0 ) {
-			$order_fields = func_get_args();
+			//$order_fields = func_get_args();
+			$this->_order_field = $field;
+			$this->_order_method = $method;
 		}
 		
 		return $this;
@@ -201,12 +209,17 @@ abstract class Artisan_Db_Sql_Select extends Artisan_Db_Sql {
 		
 		$where_sql = $this->buildWhereClause();
 		
+		$order_sql = NULL;
+		if ( false === empty($this->_order_field) ) {
+			$order_sql = " ORDER BY `" . $this->_order_field . "` " . strtoupper($this->_order_method);
+		}
+		
 		$group_sql = NULL;
 		if ( count($this->_group_field_list) > 0 ) {
 			$group_sql = " GROUP BY " . implode(", ", $this->_group_field_list);
 		}
 		
-		$this->_sql = $select_sql . $join_sql . $where_sql . $group_sql;
+		$this->_sql = $select_sql . $join_sql . $where_sql . $order_sql . $group_sql;
 		
 		return $this->_sql;
 	}
