@@ -210,7 +210,7 @@ abstract class Artisan_Db_Sql_Select extends Artisan_Db_Sql {
 		
 		$order_sql = NULL;
 		if ( false === empty($this->_order_field) ) {
-			$order_sql = " ORDER BY `" . $this->_order_field . "` " . strtoupper($this->_order_method);
+			$order_sql = " ORDER BY " . $this->_order_field . " " . strtoupper($this->_order_method);
 		}
 		
 		$group_sql = NULL;
@@ -219,6 +219,8 @@ abstract class Artisan_Db_Sql_Select extends Artisan_Db_Sql {
 		}
 		
 		$this->_sql = $select_sql . $join_sql . $where_sql . $order_sql . $group_sql;
+		
+		$this->_where_field_list = array();
 		
 		return $this->_sql;
 	}
