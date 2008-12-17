@@ -145,7 +145,7 @@ class Artisan_Controller {
 		}
 
 		// File exists, load it up
-		@require_once $controller_file;
+		require_once $controller_file;
 
 		// Ensure the class exists
 		if ( false === class_exists($controller) ) {
@@ -160,7 +160,7 @@ class Artisan_Controller {
 		}
 
 		if ( false === $this->CONTROLLER instanceof Artisan_Controller_View ) {
-			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The controller is not of inherited type ' . __CLASS__, __CLASS__, __FUNCTION__);
+			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The controller is not of inherited type Artisan_Controller_View.', __CLASS__, __FUNCTION__);
 		}
 		
 		$method = $this->_controller_method;
@@ -191,15 +191,19 @@ class Artisan_Controller {
 			throw $e;
 		}
 		
-		$this->CONTROLLER->__setControllerDirectory($this->_directory);
-		
-		try {
-			$content = $this->CONTROLLER->__execute($controller, $method);
-		} catch ( Artisan_Exception $e ) {
-			throw $e;
+		// If the method starts with an _, it's not publically available per say, so
+		// do not execute the view part, just allow the method to handle viewing and
+		// redirection.
+		if ( '_' != $method[0] ) {
+			$this->CONTROLLER->__setControllerDirectory($this->_directory);
+			try {
+				$content = $this->CONTROLLER->__execute($controller, $method);
+			} catch ( Artisan_Exception $e ) {
+				throw $e;
+			}
+			return $content;
 		}
-		
-		return $content;
+		return NULL;
 	}
 	
 	/**
