@@ -170,7 +170,6 @@ abstract class Artisan_Db_Sql_Select extends Artisan_Db_Sql {
 	public function orderBy($field, $method = 'ASC') {
 		$order_fields = array();
 		if ( func_num_args() > 0 ) {
-			//$order_fields = func_get_args();
 			$this->_order_field = $field;
 			$this->_order_method = $method;
 		}
