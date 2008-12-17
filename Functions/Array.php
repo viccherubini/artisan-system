@@ -127,3 +127,14 @@ function asfw_make_values_keys($a) {
 	}
 	return $during;
 }
+
+function asfw_stripslashes_recursive($array) {
+	foreach ( $array as $k => $v ) {
+		if ( true === is_array($v) ) {
+			$array[$k] = asfw_stripslashes_recursive($v);
+		} else {
+			$array[$k] = stripslashes($v);
+		}
+	}
+	return $array;
+}
