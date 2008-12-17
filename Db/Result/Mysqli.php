@@ -21,15 +21,26 @@ class Artisan_Db_Result_Mysqli extends Artisan_Db_Result {
 			} else {
 				reset($data);
 			}
-
 			return $data;
 		}
-		
-		return array();
+		return NULL;
+	}
+	
+	public function fetchVo() {
+		$vo = $this->fetch();
+		if ( false === empty($vo) ) {
+			$vo = new Artisan_VO($vo);
+			return $vo;
+		}
+		return NULL;
 	}
 
 	public function fetchAll($key_on_primary = false) {
-
+		$result_data = array();
+		while ( $row = $this->fetch() ) {
+			$result_data[] = $row;
+		}
+		return $result_data;
 	}
 
 	public function fetchAllVo() {
@@ -37,7 +48,6 @@ class Artisan_Db_Result_Mysqli extends Artisan_Db_Result {
 		while ( $row = $this->fetch() ) {
 			$result_data[] = new Artisan_VO($row);
 		}
-
 		return $result_data;
 	}
 
