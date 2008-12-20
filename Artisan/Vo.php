@@ -5,13 +5,13 @@
  * it with each member of the array becoming an element of the class.
  * @author vmc <vmc@leftnode.com>
  */
-class Artisan_VO {
+class Artisan_Vo {
 
 	/**
 	 * Default constructor, builds the object.
 	 * @author vmc <vmc@leftnode.com>
 	 * @param $array A hash key/value array to internalize.
-	 * @retval Object Returns a new Artisan_VO object.
+	 * @retval Object Returns a new Artisan_Vo object.
 	 */
 	public function __construct($array) {
 		if ( true === is_array($array) && count($array) > 0 ) {
@@ -30,13 +30,24 @@ class Artisan_VO {
 	 * This method takes an array, taking each key of that array and making that
 	 * an element of this class dynamically. It runs recursively if necessary.
 	 * @author vmc <vmc@leftnode.com>
+	 * @code
+	 * $arr = array(
+	 *     'a' => 'value',
+	 *     'b' => 'value2',
+	 *     'c' => array( 'd' => 'value3' )
+	 * );
+	 * @endcode
+	 * To:
+	 * $object->a has the value 'value', and
+	 * $object->c->d has the value 'value3' in it.
+	 * This way, one can easily internalize an array to access each element easily.
 	 * @param $root The start of the array to build.
 	 * @retval NULL Returns nothing.
 	 */
 	protected function _init($root) {
 		foreach ( $root as $k => $v ) {
 			if ( true === is_array($v) ) {
-				$this->$k = new Artisan_VO($v);
+				$this->$k = new Artisan_Vo($v);
 			} else {
 				$this->$k = $v;
 			}

@@ -2,9 +2,15 @@
 
 require_once 'Artisan/Functions/Array.php';
 
+/**
+ * @see Artisan_Db_Result
+ */
 require_once 'Artisan/Db/Result.php';
 
-require_once 'Artisan/VO.php';
+/**
+ * @see Artisan_Vo
+ */
+require_once 'Artisan/Vo.php';
 
 class Artisan_Db_Result_Mysqli extends Artisan_Db_Result {
 	private $RESULT = NULL;
@@ -49,7 +55,7 @@ class Artisan_Db_Result_Mysqli extends Artisan_Db_Result {
 	public function fetchVo() {
 		$vo = $this->fetch();
 		if ( true === is_array($vo) ) {
-			$vo = new Artisan_VO($vo);
+			$vo = new Artisan_Vo($vo);
 		}
 		return $vo;
 	}
@@ -65,7 +71,7 @@ class Artisan_Db_Result_Mysqli extends Artisan_Db_Result {
 	public function fetchAllVo() {
 		$result_data = array();
 		while ( $row = $this->fetch() ) {
-			$result_data[] = new Artisan_VO($row);
+			$result_data[] = new Artisan_Vo($row);
 		}
 		return $result_data;
 	}
