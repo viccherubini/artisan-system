@@ -1,6 +1,9 @@
 <?php
 
-
+/**
+ * Writes a log array to the filesystem.
+ * @author vmc <vmc@leftnode.com>
+ */
 class Artisan_Log_Filesystem extends Artisan_Log_Writer {
 	private $_save_dir = NULL;
 	private $_log_name = NULL;
@@ -22,7 +25,6 @@ class Artisan_Log_Filesystem extends Artisan_Log_Writer {
 		foreach ( $log as $l ) {
 			// Write log data to the file
 		}
-		
 		return true;
 	}
 }
