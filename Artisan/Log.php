@@ -79,7 +79,7 @@ class Artisan_Log {
 		$ip_address = asfw_get_ipv4();
 
 		$this->_log[] = array(
-			'code_id ' => NULL,
+			'code_id' => NULL,
 			'log_date' => asfw_now(),
 			'entry' => $entry,
 			'trace' => $trace,
