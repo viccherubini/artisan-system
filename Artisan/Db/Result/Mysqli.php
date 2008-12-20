@@ -12,6 +12,19 @@ class Artisan_Db_Result_Mysqli extends Artisan_Db_Result {
 	public function __construct(mysqli_result &$RES) {
 		$this->RESULT = &$RES;
 	}
+	
+	public function row($offset) {
+		if ( true === $this->RESULT instanceof mysqli_result ) {
+			$offset = abs($offset);
+			if ( $offset > -1 ) {
+				$row_count = $this->numRows();
+				if ( $offset < $row_count ) {
+					$this->RESULT->data_seek($offset);
+				}
+			}
+		}
+		return true;
+	}
 
 	public function fetch($field = NULL) {
 		if ( true === $this->RESULT instanceof mysqli_result ) {
@@ -21,6 +34,13 @@ class Artisan_Db_Result_Mysqli extends Artisan_Db_Result {
 			} else {
 				reset($data);
 			}
+			
+			if ( false === empty($field) ) {
+				if ( true === asfw_exists($field, $data) ) {
+					$data = $data[$field];
+				}
+			}
+			
 			return $data;
 		}
 		return NULL;
@@ -28,11 +48,10 @@ class Artisan_Db_Result_Mysqli extends Artisan_Db_Result {
 	
 	public function fetchVo() {
 		$vo = $this->fetch();
-		if ( false === empty($vo) ) {
+		if ( true === is_array($vo) ) {
 			$vo = new Artisan_VO($vo);
-			return $vo;
 		}
-		return NULL;
+		return $vo;
 	}
 
 	public function fetchAll($key_on_primary = false) {
