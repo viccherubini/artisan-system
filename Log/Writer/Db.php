@@ -52,10 +52,14 @@ class Artisan_Log_Writer_Db extends Artisan_Log_Writer {
 		}
 
 		foreach ( $log as $l ) {
-			$this->DB->insert()
-				->into($this->_log_table)
-				->values($l)
-				->query();
+			try {
+				$this->DB->insert()
+					->into($this->_log_table)
+					->values($l)
+					->query();
+			} catch ( Artisan_Db_Exception $e ) {
+				exit($e);
+			}
 		}
 		
 		return true;
