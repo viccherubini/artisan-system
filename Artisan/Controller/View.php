@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @see Artisan_Controller
+ */
 require_once 'Artisan/Controller.php';
 
 abstract class Artisan_Controller_View {
