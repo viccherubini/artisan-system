@@ -16,6 +16,9 @@ class Artisan_Log_Writer_Filesystem extends Artisan_Log_Writer {
 	///< The name of the log file.
 	private $_log_name = NULL;
 	
+	///< Whether or not to overwrite the log file.
+	private $_overwrite = false;
+	
 	/**
 	 * Default constructor to build a filesystem writer.
 	 * @author vmc <vmc@leftnode.com>
@@ -53,6 +56,13 @@ class Artisan_Log_Writer_Filesystem extends Artisan_Log_Writer {
 		return true;
 	}
 	
+	public function setOverwrite($overwrite) {
+		if ( true === is_bool($overwrite) ) {
+			$this->_overwrite = $overwrite;
+		}
+		return true;
+	}
+	
 	/**
 	 * Write the log data out to the specified directory.
 	 * @author vmc <vmc@leftnode.com>
@@ -73,7 +83,11 @@ class Artisan_Log_Writer_Filesystem extends Artisan_Log_Writer {
 		
 		// Although its generally a bad idea to suppress warnings, doing it here is
 		// necessary to avoid having to log the warnings!
-		$fh = @fopen($log_file, 'a');
+		$log_write_method = 'a';
+		if ( true === $this->_overwrite ) {
+			$log_write_method = 'w+';
+		}
+		$fh = @fopen($log_file, $log_write_method);
 		
 		foreach ( $log as $l ) {
 			foreach ( $l as $k => $v ) {
