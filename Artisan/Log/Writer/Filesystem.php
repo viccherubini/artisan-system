@@ -56,6 +56,13 @@ class Artisan_Log_Writer_Filesystem extends Artisan_Log_Writer {
 		return true;
 	}
 	
+	/**
+	 * If the overwrite flag is set to true, the log file is truncated to 0 length,
+	 * otherwise, new log messages are appended to the end of it.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $overwrite Boolean value of whether or not to overwrite the log file.
+	 * @retval boolean Returns true.
+	*/
 	public function setOverwrite($overwrite) {
 		if ( true === is_bool($overwrite) ) {
 			$this->_overwrite = $overwrite;
