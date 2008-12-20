@@ -61,7 +61,7 @@ class Artisan_Log_Writer_Filesystem extends Artisan_Log_Writer {
 	 */
 	public function flush(&$log) {
 		if ( 0 === count($log) ) {
-			return true;
+			return false;
 		}
 		
 		// Ensure the directory is writable to supress warnings.
@@ -76,13 +76,11 @@ class Artisan_Log_Writer_Filesystem extends Artisan_Log_Writer {
 		$fh = @fopen($log_file, 'a');
 		
 		foreach ( $log as $l ) {
-			// Write log data to the file
 			foreach ( $l as $k => $v ) {
 				fwrite($fh, '[' . $k . '] => ' . trim($v) . "\n");
 			}
 			fwrite($fh, str_repeat('=', 80) . "\n");
 		}
-		
 		fclose($fh);
 		return true;
 	}
