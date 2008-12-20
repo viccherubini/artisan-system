@@ -45,7 +45,7 @@ class Artisan_Log_Filesystem extends Artisan_Log_Writer {
 	 */
 	public function setName($log_name) {
 		$this->_log_name = trim($log_name);
-		return true.
+		return true;
 	}
 	
 	/**
