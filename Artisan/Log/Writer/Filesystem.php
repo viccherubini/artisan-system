@@ -27,6 +27,12 @@ class Artisan_Log_Filesystem extends Artisan_Log_Writer {
 		$this->_log_name = trim($log_name);
 	}
 	
+	/**
+	 * Write the log data out to the specified directory.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $log Reference to the log array to print.
+	 * @retval boolean Returns true.
+	 */
 	public function flush(&$log) {
 		if ( 0 === count($log) ) {
 			return true;
