@@ -1,10 +1,15 @@
 <?php
 
 /**
+ * @see Artisan_Log_Writer
+ */
+require_once 'Artisan/Log/Writer.php';
+
+/**
  * Writes a log array to the filesystem.
  * @author vmc <vmc@leftnode.com>
  */
-class Artisan_Log_Filesystem extends Artisan_Log_Writer {
+class Artisan_Log_Writer_Filesystem extends Artisan_Log_Writer {
 	///< The name of the directory to save the file in.
 	private $_save_dir = NULL;
 	
@@ -58,10 +63,24 @@ class Artisan_Log_Filesystem extends Artisan_Log_Writer {
 		if ( 0 === count($log) ) {
 			return true;
 		}
-
+		
+		if ( false === is_writable($this->_save_dir) ) {
+			return false;
+		}
+		
+		$log_file = $this->_save_dir . DIRECTORY_SEPARATOR . $this->_log_name;
+		
+		$fh = fopen($log_file, 'a');
+		
 		foreach ( $log as $l ) {
 			// Write log data to the file
+			foreach ( $l as $k => $v ) {
+				fwrite($fh, '[' . $k . '] => ' . trim($v) . "\n");
+			}
+			fwrite($fh, str_repeat('=', 80) . "\n");
 		}
+		
+		fclose($fh);
 		return true;
 	}
 }
