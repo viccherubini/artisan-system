@@ -128,6 +128,14 @@ function asfw_make_values_keys($a) {
 	return $during;
 }
 
+/**
+ * Method to recursively stripslashes from an array. Although Artisan_System is by
+ * no means PHP4 compatible, this is essentially a duplicate of array_map_recursive().
+ * This method can typically be used to get around magic_quotes.
+ * @author vmc <vmc@leftnode.com>
+ * @param $array The array to recursively strip the slashes of.
+ * @retval array Returns the clean array.
+ */
 function asfw_stripslashes_recursive($array) {
 	foreach ( $array as $k => $v ) {
 		if ( true === is_array($v) ) {
