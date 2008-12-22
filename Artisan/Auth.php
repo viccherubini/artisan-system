@@ -1,6 +1,9 @@
 <?php
 
-Artisan_Library::load('Auth/Exception');
+/**
+ * @see Artisan_Auth_Exception
+ */
+require_once 'Artisan/Auth/Exception.php';
 
 /**
  * Authentication takes a username and password and authenticates it against a specified system. 
@@ -33,7 +36,6 @@ abstract class Artisan_Auth {
 	
 	///< The user object to authenticate against.
 	protected $USER = NULL;
-
 
 	/**
 	 * Default constructor, this class is abstract.
@@ -97,5 +99,4 @@ abstract class Artisan_Auth {
 	 * @retval boolean True if able to be authenticated, false otherwise.
 	 */
 	abstract public function authenticate($validation_hook = NULL);
-	
 }
