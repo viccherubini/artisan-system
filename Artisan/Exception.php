@@ -4,8 +4,6 @@ define('ARTISAN_ERROR', 100, false);
 define('ARTISAN_WARNING', 200, false);
 define('ARTISAN_NOTICE', 300, false);
 
-
-
 /**
  * Artisan_Exception is a child of PHP's internal class Exception. As a result, it is *NOT* built
  * by Artisan. Therefore, it does not contain the similar methods of other Artisan classes. 
@@ -14,9 +12,11 @@ define('ARTISAN_NOTICE', 300, false);
  * exception formatting.
  * @author vmc <vmc@leftnode.com>
  */
-class Artisan_Exception extends Exception {	///< The line number the error occured on.
+class Artisan_Exception extends Exception {
+	///< The line number the error occured on.
 	private $_line_number;
-		///< The file name the error occured in.
+	
+	///< The file name the error occured in.
 	private $_file_name;
 	
 	///< The class name the error occured in.
