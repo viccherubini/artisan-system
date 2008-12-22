@@ -22,7 +22,6 @@ abstract class Artisan_Server {
 	 */
 	public function __construct(Artisan_Config &$C) {
 		$this->_unsetIsConnected();
-		
 		$this->_server_address = $C->server_address;
 		$this->_server_port = $C->server_port;
 	}
