@@ -6,5 +6,4 @@
  */
 class Artisan_Validate {
 
-
 }
