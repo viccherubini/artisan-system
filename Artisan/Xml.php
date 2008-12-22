@@ -7,7 +7,8 @@
  * @author vmc <vmc@leftnode.com>
  */
 class Artisan_Xml {
-	private static $XML; ///< The XML to be loaded from the SimpleXMLElement PHP class.
+	///< The XML to be loaded from the SimpleXMLElement PHP class.
+	private static $XML;
 
 	/**
 	 * Loads an XML file from source into a string.
@@ -25,7 +26,6 @@ class Artisan_Xml {
 				self::$XML = simplexml_load_string($src, NULL, LIBXML_NOERROR);
 			}
 		}
-
 		return true;
 	}
 
@@ -36,10 +36,7 @@ class Artisan_Xml {
 	 */
 	public static function toArray() {
 		$xml_a = self::_parseXml(self::$_xml);
-
-		// Free up some memory.
 		self::$_xml = NULL;
-
 		return $xml_a;
 	}
 
@@ -55,7 +52,6 @@ class Artisan_Xml {
 		$xml_x  = "<" . $root . ">\n";
 		$xml_x .= "\t" . $xml . "\n";
 		$xml_x .= "</" . $root . ">";
-
 		return $xml_x;
 	}
 
@@ -67,11 +63,11 @@ class Artisan_Xml {
 	 * @author vmc <vmc@leftnode.com>
 	 */
 	private static function _unparseXml($root, $usetag = NULL) {
+		// Not the band name.
 		static $x = NULL;
 
 		foreach ( $root as $tag => $value ) {
 			if ( true === is_array($value) ) {
-
 				/**
 				 * The array_sum(array_keys()) is to test if an array is
 				 * returned as a normal array or a hash array.
@@ -130,18 +126,16 @@ class Artisan_Xml {
 				$x .= "</" . $tag . ">\n";
 			}
 		}
-
 		return $x;
 	}
 
 	/**
 	 * Parses the XML object into a key/value array.
 	 * @return The hash array of XML values.
-	 * @author vmc <vmc@leftnode.com>
+	 * @author vmc <vmc@leftnode.com> with help from php.net
 	 */
 	private static function _parseXml($root) {
 		$x = array();
-
 		if ( true === is_array($root) ) {
 			foreach ( $root as $key => $value ) {
 				$x[$key] = self::_parseXml($value);
@@ -159,7 +153,6 @@ class Artisan_Xml {
 				$x = strval($root);
 			}
 		}
-
 		return $x;
 	}
 }
