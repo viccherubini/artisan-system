@@ -58,7 +58,6 @@ class Artisan_Session {
 		if ( true === is_null(self::$INST) ) {
 			self::$INST = new self;
 		}
-	
 		return self::$INST;
 	}
 	
@@ -80,7 +79,6 @@ class Artisan_Session {
 		} catch ( Artisan_Session_Exception $e ) {
 			throw $e;
 		}
-		
 		return true;
 	}
 	
@@ -101,7 +99,6 @@ class Artisan_Session {
 		}
 		
 		$this->SH = &$S;
-		
 		return true;
 	}
 	
@@ -182,7 +179,6 @@ class Artisan_Session {
 		if ( true === asfw_exists($this->_session_name, $_COOKIE) ) {
 			setcookie($this->_session_name, '', 1, '/');
 		}
-		
 		return true;
 	}
 	
@@ -197,7 +193,6 @@ class Artisan_Session {
 		if ( true === $this->_started ) {
 			$_SESSION[$name] = $value;
 		}
-		
 		return true;
 	}
 	
@@ -213,7 +208,6 @@ class Artisan_Session {
 				unset($_SESSION[$name]);
 			}
 		}
-		
 		return true;
 	}
 	
@@ -229,7 +223,6 @@ class Artisan_Session {
 				return true;
 			}
 		}
-		
 		return false;
 	}
 }
