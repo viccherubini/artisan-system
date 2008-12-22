@@ -18,7 +18,7 @@ class Artisan_Auth_Db extends Artisan_Auth {
 	///< The database connection instance.
 	private $DB = NULL;
 	
-	///< The name of the table that holds user data, this is also defined in Artisan/User/Database.php!
+	///< The name of the table that holds user data, this is also defined in Artisan/User/Db.php!
 	const TABLE_USER = 'artisan_user';
 	
 	/**
