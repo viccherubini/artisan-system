@@ -81,11 +81,3 @@ function asfw_strip_end_slashes($string) {
 	
 	return $string;
 }
-
-
-
-function asfw_class_name_to_file_name($class_name) {
-	$class_name = strtolower(trim($class_name));
-	
-	
-}
