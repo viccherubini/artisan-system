@@ -23,7 +23,8 @@ abstract class Artisan_Db_Result {
 	abstract public function fetch($field = NULL);
 	
 	/**
-	 * 
+	 * Returns all data, with each row as an array, from a query. Be warned that
+	 * this can return a lot of data if the query returns a lot.
 	 * @author vmc <vmc@leftnode.com>
 	 * @param $key_on_primary
 	 * @todo Finish implemented $key_on_primary.
@@ -31,13 +32,13 @@ abstract class Artisan_Db_Result {
 	abstract public function fetchAll($key_on_primary = false);
 	
 	/**
-	 *
+	 * Frees memory from the result.
 	 * @author vmc <vmc@leftnode.com>
 	 */
 	abstract public function free();
 	
 	/**
-	 *
+	 * Returns the number of rows from the SELECT query.
 	 * @author vmc <vmc@leftnode.com>
 	 */
 	abstract public function numRows();

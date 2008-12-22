@@ -7,9 +7,7 @@
  * @author vmc <vmc@leftnode.com>
  */
 abstract class Artisan_Db_Sql {
-	///< The connection object or resource.
-	protected $CONN = NULL;
-
+	///< The database object or resource.
 	protected $DB = NULL;
 	
 	///< The SQL that will be built.
@@ -142,6 +140,12 @@ abstract class Artisan_Db_Sql {
 		return $where_sql;
 	}
 
+	/**
+	 * Build the query from the functions and then execute it.
+	 * @author vmc <vmc@leftnode.com>
+	 * @throw Artisan_Db_Exception Throws an exception if the query fails.
+	 * @retval Object Returns new Artisan_Db_Result_* object where * is the database driver (Mysqli, Oracle, etc.)
+	 */
 	public function query() {
 		$this->build();
 		
@@ -222,7 +226,6 @@ abstract class Artisan_Db_Sql {
 		
 		return true;
 	}
-	
 	
 	/**
 	 * Converts the SQL to a string to echo out.

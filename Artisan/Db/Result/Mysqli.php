@@ -12,6 +12,10 @@ require_once 'Artisan/Db/Result.php';
  */
 require_once 'Artisan/Vo.php';
 
+/**
+ * Creates a new result object after a successful SELECT statement.
+ * @author vmc <vmc@leftnode.com>
+ */
 class Artisan_Db_Result_Mysqli extends Artisan_Db_Result {
 	private $RESULT = NULL;
 

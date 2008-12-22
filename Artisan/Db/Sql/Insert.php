@@ -24,6 +24,7 @@ abstract class Artisan_Db_Sql_Insert extends Artisan_Db_Sql {
 	///< The list of values to insert into the fields.
 	protected $_insert_field_value_list = array();
 
+	///< If the INSERT query should be executed as a REPLACE query instead.
 	protected $_is_replace = false;
 	
 	/**
