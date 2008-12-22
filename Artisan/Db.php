@@ -22,10 +22,13 @@ abstract class Artisan_Db {
 	///< The instance of the Artisan_Sql_Select_* class for executing SELECT queries.
 	protected $_select = NULL;
 	
+	///< The instance of the Artisan_Sql_Update_* class for executing UPDATE queries.
 	protected $_update = NULL;
 	
+	///< The instance of the Artisan_Sql_Insert_* class for executing INSERT/UPDATE queries.
 	protected $_insert = NULL;
 	
+	///< The instance of the Artisan_Sql_Delete_* class for executing DELETE queries.
 	protected $_delete = NULL;
 	
 	/**
@@ -112,17 +115,89 @@ abstract class Artisan_Db {
 	 */
 	abstract public function disconnect();
 
+	/**
+	 * Executes a query against the database server.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $sql The query to execute.
+	 * @retval mixed Returns a result object if the query returns data, boolean true/false otherwise.
+	 */
 	abstract public function query($sql);
 	
+	/**
+	 * Creates a new SELECT object to fetch data from the database. Uses Lazy Initialization.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval object Returns new Artisan_Db_Sql_Select_* object.
+	 */
 	abstract public function select();
+	
+	/**
+	 * Creates a new INSERT object to add data to the database. Uses Lazy Initialization.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval object Returns new Artisan_Db_Sql_Insert_* object.
+	 */
 	abstract public function insert();
+	
+	/**
+	 * Creates a new REPLACE object. Uses Lazy Initialization.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval object Returns new Artisan_Db_Sql_Insert_* object with the REPLACE parameter set.
+	 */
+	abstract public function replace();
+	
+	/**
+	 * Creates a new UPDATE object. Uses Lazy Initialization.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval object Returns new Artisan_Db_Sql_Update_* object.
+	 */
 	abstract public function update();
+	
+	/**
+	 * Creates a new DELETE object. Uses Lazy Initialization.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval Returns a new Artisan_Db_Sql_Delete_* object.
+	 */
 	abstract public function delete();
 	
+	/**
+	 * Starts a transaction if the database or table type supports transactions.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval boolean Returns true.
+	 */
 	abstract public function start();
+	
+	/**
+	 * Commits the transaction queries.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval boolean Returns true on success, false otherwise.
+	 */
 	abstract public function commit();
+	
+	/**
+	 * Rollbacks the transaction queries if any of them fail.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval boolean Returns true on success, false otherwise.
+	 */
 	abstract public function rollback();
 	
+	/**
+	 * Returns the last INSERT ID from the last INSERT query.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval int The INSERT ID.
+	 */
 	abstract public function insertId();
+	
+	/**
+	 * Returns the number of affected rows from the last UPDATE/INSERT/REPLACE query.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval int The number of affected rows.
+	 */
 	abstract public function affectedRows();
+	
+	/**
+	 * Escapes a value to make it safe for insertion into a database.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $value The value to escape.
+	 * @retval string The escaped value.
+	 */
+	abstract public function escape($value);
 }
