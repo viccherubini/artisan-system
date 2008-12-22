@@ -61,7 +61,6 @@ class Artisan_Log {
 		if ( true === is_null(self::$INST) ) {
 			self::$INST = new self;
 		}
-		
 		return self::$INST;
 	}
 	
@@ -88,7 +87,6 @@ class Artisan_Log {
 			'ip_address' => $ip_address,
 			'type' => $log_type
 		);
-		
 		return true;
 	}
 	
@@ -106,7 +104,6 @@ class Artisan_Log {
 			$E->getFunctionName(),
 			$E->getTraceAsString()
 		);
-		
 		return true;
 	}
 	
@@ -120,9 +117,7 @@ class Artisan_Log {
 		if ( false === is_array($flush_level_list) ) {
 			return false;
 		}
-		
 		$this->_flush_level_list = $flush_level_list;
-		
 		return true;
 	}
 

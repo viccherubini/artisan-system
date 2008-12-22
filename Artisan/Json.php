@@ -16,7 +16,6 @@ class Artisan_Json {
 				return json_encode($data);
 			}
 		}
-		
 		return NULL;
 	}
 	
@@ -31,7 +30,6 @@ class Artisan_Json {
 				return json_decode($data, true);
 			}
 		}
-		
 		return NULL;
 	}
 }
