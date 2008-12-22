@@ -63,7 +63,6 @@ abstract class Artisan_Template {
 		if ( true === is_bool($debug_mode) ) {
 			$this->_debug_mode = $debug_mode;
 		}
-		
 		return true;
 	}
 	
