@@ -1,7 +1,9 @@
 <?php
 
-
-Artisan_Library::load('Cache/Exception');
+/**
+ * @see Artisan_Cach_Exception
+ */
+require_once 'Artisan/Cache/Exception.php';
 
 /**
  * The Artisan_Cache class allows one to store data in an easy to retrieve location,
