@@ -37,6 +37,9 @@ class Artisan_Auth_Db extends Artisan_Auth {
 	 * the method $this->setUser().
 	 * @author vmc <vmc@leftnode.com>
 	 * @param $validation_hook Optional hook/callback to call after validation to further validate the data.
+	 * @throw Artisan_Auth_Exception If the user of the class is not of type Artisan_User.
+	 * @throw Artisan_Auth_Exception If the user fails to authenticate because no records are found.
+	 * @throw Artisan_Auth_Exception If the user fails to authenticate because more than one record was found.
 	 * @retval boolean True if fully authenticated, false otherwise.
 	 */
 	public function authenticate($validation_hook = NULL) {
