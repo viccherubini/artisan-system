@@ -14,6 +14,9 @@ require_once 'Artisan/Functions/String.php';
 
 require_once 'Artisan/Functions/Array.php';
 
+/**
+ * @see Artisan_Controller_View
+ */
 require_once 'Artisan/Controller/View.php';
 
 /**
@@ -252,7 +255,6 @@ class Artisan_Controller {
 		if ( count($request_bits) > 2 ) {
 			$this->_controller_argv = array_slice($request_bits, 2);
 		}
-
 		return true;
 	}
 }
