@@ -10,6 +10,10 @@ require_once 'Artisan/Server.php';
  */
 require_once 'Artisan/Server/Exception.php';
 
+/**
+ * Connects to another server via UNIX sockets.
+ * @author vmc <vmc@leftnode.com>
+ */
 class Artisan_Server_Socket extends Artisan_Server {
 	/**
 	 * Default constructor for connecting to a server.
