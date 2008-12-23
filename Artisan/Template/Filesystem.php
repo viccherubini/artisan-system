@@ -73,7 +73,6 @@ class Artisan_Template_Filesystem extends Artisan_Template {
 		}
 		
 		$this->_theme = $theme;
-		
 		return true;
 	}
 	
@@ -118,7 +117,6 @@ class Artisan_Template_Filesystem extends Artisan_Template {
 		}
 		
 		$this->_template_code = $code;
-		
 		return $code;
 	}
 }

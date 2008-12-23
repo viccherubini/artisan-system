@@ -5,8 +5,16 @@
  */
 require_once 'Artisan/Controller.php';
 
+/**
+ * Loads up a view specified by the controller method and execute its, trapping
+ * its return data and allowing the controller to continue handling it.
+ * @author vmc <vmc@leftnode.com>
+ */
 abstract class Artisan_Controller_View {
+	///< The default directory the views are located in.
 	private $_views_dir = 'Views';
+	
+	///< The default directory that the layouts are located in.
 	private $_layout_dir = 'Layout';
 	
 	private $_controller_dir = NULL;

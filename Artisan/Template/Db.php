@@ -77,7 +77,6 @@ class Artisan_Template_Database extends Artisan_Template {
 		
 		$this->_theme = $theme;
 		$this->_theme_id = $theme_id;
-		
 		return true;
 	}
 
@@ -126,7 +125,6 @@ class Artisan_Template_Database extends Artisan_Template {
 		}
 		
 		$this->_template_code = $code;
-		
 		return $code;
 	}
 }
