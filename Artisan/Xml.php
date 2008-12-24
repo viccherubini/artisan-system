@@ -13,6 +13,7 @@ class Artisan_Xml {
 	/**
 	 * Loads an XML file from source into a string.
 	 * @return Always returns true.
+	 * @param $src The filename or string of XML to load.
 	 * @author vmc <vmc@leftnode.com>
 	 */
 	public static function load($src) {
@@ -43,6 +44,7 @@ class Artisan_Xml {
 	/**
 	 * Convert the loaded array to XML.
 	 * @return A string of XML.
+	 * @param $data The array of data to turn into XML.
 	 * @author vmc <vmc@leftnode.com>
 	 */
 	public static function toXml($data) {
