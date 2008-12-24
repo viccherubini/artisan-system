@@ -73,4 +73,20 @@ class Artisan_Vo {
 	public function __toString() {
 		return asfw_print_r($this, true);
 	}
+	
+	public function exists() {
+		$argv = func_get_args();
+		$argc = func_num_args();
+		if ( 1 == $argc && true === is_array($argv[0]) ) {
+			$argv = current($argv);
+		}
+		
+		$found = true;
+		foreach ( $argv as $e ) {
+			if ( false === isset($this->$e) ) {
+				$found = false;
+			}
+		}
+		return $found;
+	}
 }
