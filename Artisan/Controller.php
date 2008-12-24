@@ -5,11 +5,6 @@
  */
 require_once 'Artisan/Controller/Exception.php';
 
-/**
- * @see Artisan_Controller_Site
- */
-require_once 'Artisan/Controller/Site.php';
-
 require_once 'Artisan/Functions/String.php';
 
 require_once 'Artisan/Functions/Array.php';
