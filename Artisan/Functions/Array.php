@@ -146,3 +146,29 @@ function asfw_stripslashes_recursive($array) {
 	}
 	return $array;
 }
+
+/**
+ * Ensure that an array of values exist as keys of an array.
+ * @author vmc <vmc@leftnode.com>
+ * @param $keys The array of values that should be keys of $array.
+ * @param $array The array that should have $keys values as keys.
+ * @retval boolean True if all of the $keys in $array exist, false otherwise.
+ */
+function asfw_array_keys_exist($keys, $array) {
+	if ( false === asfw_is_assoc($array) ) {
+		return false;
+	}
+	
+	$found = true;
+	foreach ( $keys as $k ) {
+		// ake() is slightly slower than isset(), however, isset() returns false
+		// if the value is NULL, and this method should just check that the key exists,
+		// not the specific value of it.
+		if ( false === array_key_exists($k, $array) ) {
+			$found = false;
+			break;
+		}
+	}
+	
+	return $found;
+}
