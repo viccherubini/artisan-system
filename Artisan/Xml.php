@@ -45,9 +45,11 @@ class Artisan_Xml {
 	 * @return A string of XML.
 	 * @author vmc <vmc@leftnode.com>
 	 */
-	public static function toXml($data, $root) {
-		$x = NULL;
-		$xml = self::_unparseXml($data, $x);
+	public static function toXml($data) {
+		// The $root is the first key of the data
+		$root = key($data);
+		
+		$xml = self::_unparseXml($data, NULL);
 
 		$xml_x  = "<" . $root . ">\n";
 		$xml_x .= "\t" . $xml . "\n";
