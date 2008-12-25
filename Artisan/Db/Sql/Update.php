@@ -96,6 +96,8 @@ abstract class Artisan_Db_Sql_Update extends Artisan_Db_Sql {
 		
 		$this->_sql = $update_sql . $field_list_sql . $where_sql;
 		
+		$this->_where_field_list = array();
+		
 		return $this->_sql;
 	}
 }
