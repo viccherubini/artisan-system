@@ -89,4 +89,22 @@ class Artisan_Vo {
 		}
 		return $found;
 	}
+	
+	public function toArray() {
+		$vo_a = $this->_unwind($this);
+		return $vo_a;
+	}
+	
+	private function _unwind($root) {
+		$x = array();
+		if ( true === is_object($root) ) {
+			foreach ( $root as $key => $value ) {
+				$x[$key] = $this->_unwind($value);
+			}
+		} else {
+			$x = strval($root);
+		}
+		
+		return $x;
+	}
 }
