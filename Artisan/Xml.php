@@ -10,6 +10,8 @@ class Artisan_Xml {
 	///< The XML to be loaded from the SimpleXMLElement PHP class.
 	private static $XML;
 
+	private static $stack = array();
+	
 	/**
 	 * Loads an XML file from source into a string.
 	 * @return Always returns true.
@@ -36,8 +38,8 @@ class Artisan_Xml {
 	 * @author vmc <vmc@leftnode.com>
 	 */
 	public static function toArray() {
-		$xml_a = self::_parseXml(self::$_xml);
-		self::$_xml = NULL;
+		$xml_a = self::_parseXml(self::$XML);
+		//self::$XML = NULL;
 		return $xml_a;
 	}
 
@@ -63,74 +65,13 @@ class Artisan_Xml {
 	 * Take a multidimensional array and convert it to an XML document.
 	 * $usetag is used if a specific tag should be used for opening and
 	 * closing each element rather than the tag that comes from the loop.
-	 * @return A string of XML.
 	 * @author vmc <vmc@leftnode.com>
+	 * @param $root The root of the XML array to begin building.
+	 * @todo Finish implementing this!
+	 * @return A string of XML.
 	 */
-	private static function _unparseXml($root, $usetag = NULL) {
-		// Not the band name.
-		static $x = NULL;
-
-		foreach ( $root as $tag => $value ) {
-			if ( true === is_array($value) ) {
-				/**
-				 * The array_sum(array_keys()) is to test if an array is
-				 * returned as a normal array or a hash array.
-				 * For example, the following XML:
-				 * @code
-				 * <class_list>
-				 *     <class>PHP_Class1</class>
-				 *     <class>PHP_Class2</class>
-				 *     <class>PHP_Class3</class>
-				 * </class_list>
-				 * @endcode
-				 * would be stored as so in PHP:
-				 * @code
-				 * $xml = array(
-				 *     'class_list' => array(
-				 *         'class' => array(
-				 *             0 => PHP_Class1,
-				 *             1 => PHP_Class2,
-				 *             2 => PHP_Class3
-				 *         )
-				 *     )
-				 * );
-				 * @endcode
-				 * Clearly, we just don't want the XML to be returned
-				 * with the integer keys, so $usetag is used. In this case,
-				 * $usetag would be set to 'class' and then passed recursively.
-				 * In the resulting else of this function, the code would use
-				 * $usetag to create &lt;class&gt;PHP_Class1&lt;/class&gt; rather than
-				 * &lt;0&gt;PHP_Class1&lt;/0&gt;. To accomplish this, the keys of the
-				 * array are summed. If they are greater than 0, its a pretty
-				 * good chance the array is a normal array and not a hash
-				 * array, and thus, set the $usetag value.
-				 */
-				$key_sum = 0;
-				$key_sum = array_sum(array_keys($value));
-
-				$usetag = NULL;
-				if ( $key_sum > 0 ) {
-					$usetag = $tag;
-				} else {
-					$x .= "<" . $tag . ">\n";
-				}
-				self::_unparseXml($value, $usetag);
-			} else {
-				$end_tag = NULL;
-				if ( false === empty($usetag) ) {
-					$tag = $usetag;
-					$end_tag = "</" . $tag . ">\n";
-				}
-
-				$x .= "<" . $tag . ">" . $value;
-				$x .= $end_tag;
-			}
-
-			if ( true === empty($usetag) ) {
-				$x .= "</" . $tag . ">\n";
-			}
-		}
-		return $x;
+	private static function _unparseXml($root) {
+		exit('Finish Implementing This.');
 	}
 
 	/**
@@ -147,7 +88,6 @@ class Artisan_Xml {
 		} else {
 			if ( true === is_object($root) ) {
 				$objvars = get_object_vars($root);
-
 				if ( false === empty($objvars) ) {
 					foreach ( $objvars as $key => $value ) {
 						$x[$key] = self::_parseXml($value);
