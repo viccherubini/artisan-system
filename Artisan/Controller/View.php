@@ -91,4 +91,22 @@ abstract class Artisan_Controller_View {
 		require_once $layout_file;
 		return ob_get_clean();
 	}
+	
+	/**
+	 * Writes a JS inclusion line out to the view.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $js_file The JavaScript filename to include.
+	 * @retval string The <script> tag with the filename included.
+	 */
+	public function getJs($js_file) {
+		$ds = $this->ds;
+	}
+	
+	public function getCss($css_file, $media = 'screen') {
+	
+	}
+	
+	public function getImage($image_file) {
+	
+	}
 }
