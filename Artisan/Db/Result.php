@@ -11,6 +11,7 @@ abstract class Artisan_Db_Result {
 	 * rows returned.
 	 * @author vmc <vmc@leftnode.com>
 	 * @param $offset The row to point to.
+	 * @retval boolean Returns true.
 	 */
 	abstract public function row($offset);
 	
@@ -19,6 +20,7 @@ abstract class Artisan_Db_Result {
 	 * result array, just that specific data is returned.
 	 * @author vmc <vmc@leftnode.com>
 	 * @param $field If not null, and found in the result, the specific field to return.
+	 * @retval Returns an associative array from the query, or a single value if $field is found.
 	 */
 	abstract public function fetch($field = NULL);
 	
@@ -26,7 +28,8 @@ abstract class Artisan_Db_Result {
 	 * Returns all data, with each row as an array, from a query. Be warned that
 	 * this can return a lot of data if the query returns a lot.
 	 * @author vmc <vmc@leftnode.com>
-	 * @param $key_on_primary
+	 * @param $key_on_primary If true, all keys of the returned array will have the value of the primary key, otherwise
+	 * they will be the index of the array.
 	 * @todo Finish implemented $key_on_primary.
 	 */
 	abstract public function fetchAll($key_on_primary = false);
