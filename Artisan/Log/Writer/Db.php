@@ -61,7 +61,6 @@ class Artisan_Log_Writer_Db extends Artisan_Log_Writer {
 				exit($e);
 			}
 		}
-		
 		return true;
 	}
 }
