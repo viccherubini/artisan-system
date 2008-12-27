@@ -6,7 +6,6 @@
  * @author vmc <vmc@leftnode.com>
  */
 class Artisan_Vo {
-
 	/**
 	 * Default constructor, builds the object.
 	 * @author vmc <vmc@leftnode.com>
@@ -57,6 +56,7 @@ class Artisan_Vo {
 	/**
 	 * Overloaded magic method to ensure a value exists before getting it.
 	 * @author vmc <vmc@leftnode.com>
+	 * @param $e The element of the object to return.
 	 * @retval Mixed Returns the value if set, NULL otherwise.
 	 */
 	public function __get($e) {
@@ -74,6 +74,18 @@ class Artisan_Vo {
 		return asfw_print_r($this, true);
 	}
 	
+	/**
+	 * Determines if one or more elements exists in this value object. This method
+	 * can be used by passing a variable number of arguments, or a single array:
+	 * @code
+	 * $exists = $VO->exists('elem1', 'elem2', 'elem3');
+	 * $exists = $VO->exists(array('elem1', 'elem2', 'elem3'));
+	 * @endcode
+	 * In order for $exists to be true in the example above, all of the values must
+	 * exist and NOT be NULL.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval boolean Returns true if all of the elements exist in the object and are not null, false otherwise.
+	 */
 	public function exists() {
 		$argv = func_get_args();
 		$argc = func_num_args();
@@ -90,11 +102,22 @@ class Artisan_Vo {
 		return $found;
 	}
 	
+	/**
+	 * Converts a Value Object back to the initial array that it was built from.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval array The Value Object array.
+	 */
 	public function toArray() {
 		$vo_a = $this->_unwind($this);
 		return $vo_a;
 	}
 	
+	/**
+	 * Unwinds the Value Object back to an array.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $root The root of the object to start at.
+	 * @retval array The unwound Value Object array.
+	 */
 	private function _unwind($root) {
 		$x = array();
 		if ( true === is_object($root) ) {
