@@ -54,7 +54,7 @@ class Artisan_Xml {
 		$xml = self::_unparseXml($data, NULL);
 
 		$xml_x  = "<" . $root . ">\n";
-		$xml_x .= "\t" . $xml . "\n";
+		$xml_x .= $xml . "\n";
 		$xml_x .= "</" . $root . ">";
 		return $xml_x;
 	}
@@ -69,7 +69,31 @@ class Artisan_Xml {
 	 * @return A string of XML.
 	 */
 	private static function _unparseXml($root) {
-		exit('Finish Implementing This.');
+		$xml_x = "";
+		foreach ( $root as $key => $value) {
+			if ( true === is_array($value) ) {
+				$sum = array_sum(array_keys($value));
+				if ( $sum > 0 ) {
+					foreach ($value as $n_key => $n_value) {
+						$xml_x .= "\n\t<" . $key . ">\n";
+						$xml_x .= self::_unparseXml($n_value);
+						$xml_x .= "\t</" . $key . ">\n";
+					}
+				} else {
+					$xml_x .= "<" . $key . ">\n";
+					foreach ($value as $o_key => $o_value) {
+						$xml_x .= "\t\t<" . $o_key . ">";
+						$xml_x .= $o_value;
+						$xml_x .= "</" . $o_key . ">\n";
+					}
+					$xml_x .= "</" . $key . ">";
+				}
+				
+			} else {
+				$xml_x .= "<" . $key . ">" . $value . "</" . $key . ">\n";	
+			}
+		}
+		return $xml_x;
 	}
 
 	/**
