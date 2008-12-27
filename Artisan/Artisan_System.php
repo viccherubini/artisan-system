@@ -1,5 +1,7 @@
 <?php
 
+exit('This file does not do anything yet.');
+
 @set_magic_quotes_runtime(0);
 
 define('ARTISAN_', 'Artisan_', false);
