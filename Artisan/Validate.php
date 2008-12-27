@@ -6,7 +6,12 @@
  * @todo Finish writing this class!
  */
 class Artisan_Validate {
-
+	/**
+	 * Test if a value is composed entirely of ASCII values.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $val The value to test.
+	 * @retval boolean True if $val is all ASCII text, false otherwise.
+	 */
 	public static function isAscii($val) {
 		$clamp_low = ord(' ');
 		$clamp_high = ord('~');
@@ -21,9 +26,17 @@ class Artisan_Validate {
 		return $is_ascii;
 	}
 	
+	/**
+	 * Test if a value is a valid URI or not.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $u The URI to test.
+	 * @retval boolean Returns true if value is an array, false otherwise.
+	 * @todo Finish implementing this method.
+	 */
 	public static function isUri($u) {
 		/**
 		 * $matches will look like:
+		 * @code
 		 * $matches => Array(
 		 *  [0] => $u,
 		 *  [1] => http:// (also supports svn+ssh:// or other protocols)
@@ -32,6 +45,7 @@ class Artisan_Validate {
 		 *  [4] => :443
 		 *  [5] => /index.php?query_string#anchor
 		 * );
+		 * @endcode
 		 * I'm kinda proud of that RegEx :)
 		 */
 		$matches = array();
@@ -41,6 +55,13 @@ class Artisan_Validate {
 		asfw_print_r($matches);
 	}
 	
+	/**
+	 * Determines if a value is a valid IPv4 address.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $ip The IP address to test.
+	 * @retval boolean Returns true if $ip is a valid IPv4 address, false otherwise.
+	 * @todo Finish implementing this method.
+	 */
 	public static function isIpv4($ip) {
 		
 	}
