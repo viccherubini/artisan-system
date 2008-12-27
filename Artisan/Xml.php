@@ -9,14 +9,12 @@
 class Artisan_Xml {
 	///< The XML to be loaded from the SimpleXMLElement PHP class.
 	private static $XML;
-
-	private static $stack = array();
 	
 	/**
-	 * Loads an XML file from source into a string.
-	 * @return Always returns true.
-	 * @param $src The filename or string of XML to load.
+	 * Loads an XML file from source into a SimpleXml object.
 	 * @author vmc <vmc@leftnode.com>
+	 * @param $src The filename or string of XML to load.
+	 * @return Always returns true.
 	 */
 	public static function load($src) {
 		// See if source is a file or not. If it is, SimpleXMLElement
@@ -34,8 +32,8 @@ class Artisan_Xml {
 
 	/**
 	 * Convert the loaded XML to an array.
-	 * @return A hash array of XML key/value pairs.
 	 * @author vmc <vmc@leftnode.com>
+	 * @return A hash array of XML key/value pairs.
 	 */
 	public static function toArray() {
 		$xml_a = self::_parseXml(self::$XML);
@@ -45,9 +43,9 @@ class Artisan_Xml {
 
 	/**
 	 * Convert the loaded array to XML.
-	 * @return A string of XML.
-	 * @param $data The array of data to turn into XML.
 	 * @author vmc <vmc@leftnode.com>
+	 * @param $data The array of data to turn into XML.
+	 * @return A string of XML.
 	 */
 	public static function toXml($data) {
 		// The $root is the first key of the data
@@ -76,8 +74,9 @@ class Artisan_Xml {
 
 	/**
 	 * Parses the XML object into a key/value array.
-	 * @return The hash array of XML values.
 	 * @author vmc <vmc@leftnode.com> with help from php.net
+	 * @param $root The root of the XML object to allow recursion.
+	 * @return The hash array of XML values.
 	 */
 	private static function _parseXml($root) {
 		$x = array();
