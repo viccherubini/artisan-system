@@ -72,6 +72,8 @@ abstract class Artisan_Server {
 	/**
 	 * Abstract method to send a header to the server.
 	 * @author vmc <vmc@leftnode.com>
+	 * @param $name The name of the header to set.
+	 * @param $value The value of the header to set.
 	 * @retval boolean Returns true.
 	 */
 	abstract public function setHeader($name, $value);
@@ -79,6 +81,7 @@ abstract class Artisan_Server {
 	/**
 	 * Abstract method to send a list of headers to the server.
 	 * @author vmc <vmc@leftnode.com>
+	 * @param $header_list An array of key/value pairs to set as headers.
 	 * @retval boolean Returns true.
 	 */
 	abstract public function setHeaderList($header_list);
