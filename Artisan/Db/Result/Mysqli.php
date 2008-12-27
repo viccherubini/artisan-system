@@ -115,6 +115,11 @@ class Artisan_Db_Result_Mysqli extends Artisan_Db_Result {
 		return $result_data;
 	}
 
+	/**
+	 * Frees memory from the result.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval boolean Returns true.
+	 */
 	public function free() {
 		if ( true === $this->RESULT instanceof mysqli_result ) {
 			$this->RESULT->free();
@@ -122,6 +127,11 @@ class Artisan_Db_Result_Mysqli extends Artisan_Db_Result {
 		return true;
 	}
 
+	/**
+	 * Returns the number of rows from the SELECT query.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval int Returns the number of rows from the query, 0 if nothing to be found.
+	 */
 	public function numRows() {
 		if ( true === $this->RESULT instanceof mysqli_result ) {
 			return $this->RESULT->num_rows;

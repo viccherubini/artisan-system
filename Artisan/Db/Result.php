@@ -52,12 +52,14 @@ abstract class Artisan_Db_Result {
 	/**
 	 * Frees memory from the result.
 	 * @author vmc <vmc@leftnode.com>
+	 * @retval boolean Returns true.
 	 */
 	abstract public function free();
 	
 	/**
 	 * Returns the number of rows from the SELECT query.
 	 * @author vmc <vmc@leftnode.com>
+	 * @retval int Returns the number of rows from the query.
 	 */
 	abstract public function numRows();
 }
