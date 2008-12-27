@@ -99,7 +99,6 @@ abstract class Artisan_Db {
 		return $this->disconnect();
 	}
 	
-	
 	/**
 	 * Connects to the specified database.
 	 * @author vmc <vmc@leftnode.com>
