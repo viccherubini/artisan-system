@@ -81,10 +81,14 @@ class Artisan_Xml {
 					}
 				} else {
 					$xml_x .= "<" . $key . ">\n";
-					foreach ($value as $o_key => $o_value) {
-						$xml_x .= "\t\t<" . $o_key . ">";
-						$xml_x .= $o_value;
-						$xml_x .= "</" . $o_key . ">\n";
+					foreach ($value as $n_key => $n_value) {
+						$xml_x .= "\t\t<" . $n_key . ">";
+						if ( true === is_array($n_value) ) {
+							$xml_x .= self::_unparseXml($value);
+						} else {
+							$xml_x .= $n_value;
+						}
+						$xml_x .= "</" . $n_key . ">\n";
 					}
 					$xml_x .= "</" . $key . ">";
 				}
