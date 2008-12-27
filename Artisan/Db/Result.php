@@ -25,6 +25,13 @@ abstract class Artisan_Db_Result {
 	abstract public function fetch($field = NULL);
 	
 	/**
+	 * Fetches a Value Object from the result.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval Object Returns a Value Object representation of the associative array.
+	 */
+	abstract public function fetchVo();
+	
+	/**
 	 * Returns all data, with each row as an array, from a query. Be warned that
 	 * this can return a lot of data if the query returns a lot.
 	 * @author vmc <vmc@leftnode.com>
@@ -33,6 +40,14 @@ abstract class Artisan_Db_Result {
 	 * @todo Finish implemented $key_on_primary.
 	 */
 	abstract public function fetchAll($key_on_primary = false);
+	
+	/**
+	 * Returns all data as a 2D array with each array value being a Value Object representation
+	 * of the associative array row.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval array A 2D array of all fields matching the result query.
+	 */
+	abstract public function fetchAllVo();
 	
 	/**
 	 * Frees memory from the result.

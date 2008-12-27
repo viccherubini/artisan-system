@@ -58,6 +58,7 @@ class Artisan_Db_Adapter_Mysqli extends Artisan_Db {
 	 * Connect to the database.
 	 * @throw Artisan_Database_Exception Throws a new exception if the database connection can not be made.
 	 * @retval Object New database connection
+	 * @todo Update the isset() below for the port to uses CONFIG->exists().
 	 */
 	public function connect() {
 		$server = $this->CONFIG->server;
