@@ -1,6 +1,6 @@
 <?php
 
-exit('This file does not do anything yet.');
+exit('This file, ' . __FILE__ . ', does not do anything yet.');
 
 @set_magic_quotes_runtime(0);
 
