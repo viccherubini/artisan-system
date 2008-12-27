@@ -24,6 +24,7 @@ class Artisan_Auth_Db extends Artisan_Auth {
 	/**
 	 * Default constructor to authenticate someone against a database.
 	 * @author vmc <vmc@leftnode.com>
+	 * @param $DB A database object instance that already has a valid connection.
 	 * @retval Object New Artisan_Auth_Database instance.
 	 */
 	public function __construct(Artisan_Db &$DB) {
@@ -76,6 +77,18 @@ class Artisan_Auth_Db extends Artisan_Auth {
 		
 		unset($result_user);
 		
+		/**
+		 * The $validation_hook is a name of a function that takes a single argument
+		 * as the array of user data.
+		 * @code
+		 * function validate_more($user_data) {
+		 *     if ( $user_data['user_id'] == 5 ) {
+		 *         return true;
+		 *     }
+		 *     return false;
+		 * }
+		 * @endcode
+		 */
 		// Ok, we're certain only one matching record was found.
 		// See if there is a hook to call on the data returned
 		if ( false === empty($validation_hook) ) {
