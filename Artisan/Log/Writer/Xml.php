@@ -16,7 +16,7 @@ require_once 'Artisan/Log/Writer/Filesystem.php';
  */
 class Artisan_Log_Writer_Xml extends Artisan_Log_Writer_Filesystem {
 	/**
-	 * Write the log data out to the specified directory.
+	 * Write the log data out to the specified directory as an XML file.
 	 * @author vmc <vmc@leftnode.com>
 	 * @param $log Reference to the log array to print.
 	 * @retval boolean Returns true.
