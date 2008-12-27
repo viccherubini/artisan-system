@@ -51,7 +51,6 @@ abstract class Artisan_Db_Sql {
 	public function where() {
 		$argv = func_get_args();
 		$this->_where(self::SQL_AND, $argv);
-
 		return $this;
 	}
 	
@@ -92,7 +91,6 @@ abstract class Artisan_Db_Sql {
 			}
 			
 			$where_item = NULL;
-			
 			if ( true === $is_numeric ) {
 				$in_data = '(' . implode(',', $value_list) . ')';
 			} else {
@@ -102,7 +100,6 @@ abstract class Artisan_Db_Sql {
 			$where_item = $field . ' IN' . $in_data;
 			$this->_where_field_list[self::SQL_AND][] = $where_item;
 		}
-		
 		return $this;
 	}
 	
@@ -129,14 +126,12 @@ abstract class Artisan_Db_Sql {
 	 */
 	public function buildWhereClause() {
 		$where_sql = NULL;
-		
 		if ( count($this->_where_field_list) > 0 ) {
 			$where_sql = " WHERE (" . implode(") " . self::SQL_AND . " (", $this->_where_field_list[self::SQL_AND]) . ")";
 			
 			// Ignore OR for now
 			//$where_sql .= " (" . implode(") " . self::SQL_OR . " (", $this->_where_field_list[self::SQL_OR]) . ")";
 		}
-		
 		return $where_sql;
 	}
 
@@ -148,7 +143,6 @@ abstract class Artisan_Db_Sql {
 	 */
 	public function query() {
 		$this->build();
-		
 		if ( true === $this->DB instanceof Artisan_Db ) {
 			try {
 				$result = $this->DB->query($this->_sql);
@@ -223,7 +217,6 @@ abstract class Artisan_Db_Sql {
 				$this->_where_field_list[$type][] = $where_item;
 			}
 		}
-		
 		return true;
 	}
 	

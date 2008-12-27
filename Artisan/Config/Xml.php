@@ -6,7 +6,7 @@
 require_once 'Artisan/Config.php';
 
 /**
- * Loads in configuration information through an XML file.
+ * Loads in configuration information through an XML file or string.
  * @author vmc <vmc@leftnode.com>
  */
 class Artisan_Config_Xml extends Artisan_Config {

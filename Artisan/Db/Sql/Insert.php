@@ -60,9 +60,7 @@ abstract class Artisan_Db_Sql_Insert extends Artisan_Db_Sql {
 				$insert_fields = $argv;
 			}
 		}
-		
 		$this->_insert_field_list = asfw_sanitize_field_list($insert_fields);
-
 		return $this;
 	}
 
@@ -91,7 +89,6 @@ abstract class Artisan_Db_Sql_Insert extends Artisan_Db_Sql {
 			if ( true === asfw_is_assoc($arg) ) {
 				$this->_insert_field_list = asfw_sanitize_field_list(array_keys($arg));
 			}
-			
 			$this->_insert_field_value_list = array_values($arg);
 		} else {
 			$ifl_len = count($this->_insert_field_list);
@@ -101,10 +98,8 @@ abstract class Artisan_Db_Sql_Insert extends Artisan_Db_Sql {
 					__CLASS__, __FUNCTION__
 				);
 			}
-
 			$this->_insert_field_value_list = func_get_args();
 		}
-		
 		return $this;
 	}
 	
@@ -160,7 +155,6 @@ abstract class Artisan_Db_Sql_Insert extends Artisan_Db_Sql {
 		$insert_value_sql = " VALUES (" . implode(", ", $value_list) . ") ";
 
 		$this->_sql = $insert_sql . $insert_field_sql . $insert_value_sql;
-		
 		return $this->_sql;
 	}
 }

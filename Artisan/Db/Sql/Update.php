@@ -46,7 +46,6 @@ abstract class Artisan_Db_Sql_Update extends Artisan_Db_Sql {
 		if ( true === empty($table) ) {
 			throw new Artisan_Db_Sql_Exception(ARTISAN_WARNING, 'Failed to create valid SQL UPDATE class, the table name is empty.', __CLASS__, __FUNCTION__);
 		}
-		
 		$this->_table = $table;
 		return $this;
 	}
@@ -63,9 +62,7 @@ abstract class Artisan_Db_Sql_Update extends Artisan_Db_Sql {
 		if ( false === is_array($field_list) || count($field_list) < 1 ) {
 			throw new Artisan_Db_Sql_Exception(ARTISAN_WARNING, 'At least one field must be specified to be updated.', __CLASS__, __FUNCTION__);
 		}
-		
 		$this->_update_field_list = $field_list;
-		
 		return $this;
 	}
 	
@@ -95,9 +92,7 @@ abstract class Artisan_Db_Sql_Update extends Artisan_Db_Sql {
 		$where_sql = $this->buildWhereClause();
 		
 		$this->_sql = $update_sql . $field_list_sql . $where_sql;
-		
 		$this->_where_field_list = array();
-		
 		return $this->_sql;
 	}
 }

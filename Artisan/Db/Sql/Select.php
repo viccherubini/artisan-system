@@ -96,12 +96,10 @@ abstract class Artisan_Db_Sql_Select extends Artisan_Db_Sql {
 			if ( false === is_array($fields) ) {
 				$fields = array($fields);
 			}
-			
 			$this->_field_list = asfw_create_field_list($this->_from_table, $fields, NULL);
 		} else {
 			$this->_field_list = array('*');
 		}
-		
 		return $this;
 	}
 	
@@ -141,7 +139,6 @@ abstract class Artisan_Db_Sql_Select extends Artisan_Db_Sql {
 		return $this;
 	}
 	
-	
 	/**
 	 * Adds a GROUP BY clause to the SELECT statement.
 	 * @author vmc <vmc@leftnode.com>
@@ -153,11 +150,9 @@ abstract class Artisan_Db_Sql_Select extends Artisan_Db_Sql {
 		if ( func_num_args() > 0 ) {
 			$group_fields = func_get_args();
 		}
-		
 		if ( true === is_array($group_fields) && count($group_fields) > 0 ) {
 			$this->_group_field_list = asfw_sanitize_field_list($group_fields);
 		}
-		
 		return $this;
 	}
 	
@@ -173,7 +168,6 @@ abstract class Artisan_Db_Sql_Select extends Artisan_Db_Sql {
 			$this->_order_field = $field;
 			$this->_order_method = $method;
 		}
-		
 		return $this;
 	}
 
@@ -219,9 +213,7 @@ abstract class Artisan_Db_Sql_Select extends Artisan_Db_Sql {
 		}
 		
 		$this->_sql = $select_sql . $join_sql . $where_sql . $order_sql . $group_sql;
-		
 		$this->_where_field_list = array();
-		
 		return $this->_sql;
 	}
 
@@ -244,7 +236,6 @@ abstract class Artisan_Db_Sql_Select extends Artisan_Db_Sql {
 		);
 		
 		$this->_join_table_list[] = $join;
-		
 		return true;
 	}
 }
