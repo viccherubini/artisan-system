@@ -12,10 +12,10 @@ require_once 'Artisan/Controller.php';
  */
 abstract class Artisan_Controller_View {
 	///< The default directory the views are located in.
-	private $_views_dir = 'Views';
+	private $_views_dir = 'views';
 	
 	///< The default directory that the layouts are located in.
-	private $_layout_dir = 'Layout';
+	private $_layout_dir = 'layout';
 	
 	///< The directory that the controllers are located in.
 	private $_controller_dir = NULL;
@@ -173,9 +173,9 @@ abstract class Artisan_Controller_View {
 		}
 		
 		if ( true === is_file($javascript_file) ) {
-			$js_tag = '<script src="' . $javascript_file . '"></script>';
+			$js_tag  = '<script src="' . $javascript_file . '"></script>';
+			$js_tag .= "\n";
 		}
-		
 		return $js_tag;
 	}
 	
@@ -184,25 +184,68 @@ abstract class Artisan_Controller_View {
 	 * @author vmc <vmc@leftnode.com>
 	 * @param $css_file The CSS filename to include.
 	 * @param $media The type of media being outputted.
+	 * @param $xhtml If true, echos a /&gt; end, otherwise a &gt; end.
 	 * @retval string The <link> tag with the filename included.
 	 */
-	public function css($css_file, $media = 'screen') {
+	public function css($css_file, $media = 'screen', $xhtml = true) {
 		$ds = $this->_ds;
 		if ( 0 == preg_match('/\.css$/i', $css_file) ) {
 			$css_file .= '.css';
 		}
 		
 		$css_tag = NULL;
+		$stylesheet_file = $this->_root_dir . $this->_controller . $ds . $this->_css_dir . $ds . $css_file;
+		if ( false === is_file($stylesheet_file) ) {
+			$stylesheet_file = $this->_root_dir . $this->_css_dir . $ds . $css_file;
+		}
+		
+		if ( true === is_file($stylesheet_file) ) {
+			if ( true === empty($media) ) {
+				$media = 'screen';
+			}
+		
+			$link_tag = '<link type="text/css" rel="stylesheet" href="' . $stylesheet_file . '" media="' . $media . '"';
+			if ( true === $xhtml ) {
+				$link_tag .= " />\n";
+			} else {
+				$link_tag .= ">\n";
+			}
+		}
+		return $link_tag;
 	}
 	
 	/**
 	 * Writes an image line out to the view. Uses the <img> tag.
 	 * @author vmc <vmc@leftnode.com>
 	 * @param $image_file The image file to use.
+	 * @param $alt The alt attribute value, uses the filename if NULL.
+	 * @param $xhtml If true, echos a /&gt; end, otherwise a &gt; end.
 	 * @retval string The <img> tag with the filename included.
 	 * @todo Add ability to have additional parameters.
 	 */
-	public function image($image_file) {
-	
+	public function image($img_file, $alt = NULL, $xhtml = true) {
+		$ds = $this->_ds;
+		
+		$img_tag = NULL;
+		$image_file = $this->_root_dir . $this->_controller . $ds . $this->_images_dir . $ds . $img_file;
+		
+		if ( false === is_file($image_file) ) {
+			$image_file = $this->_root_dir . $this->_images_dir . $ds . $img_file;
+		}
+
+		if ( true === is_file($image_file) ) {
+			$alt = htmlentities($alt);
+			if ( true === empty($alt) ) {
+				$alt = htmlentities($img_file);
+			}
+			
+			$img_tag = '<img src="' . $image_file . '" alt="' . $alt . '"';
+			if ( true === $xhtml ) {
+				$img_tag .= " />\n";
+			} else {
+				$img_tag .= ">\n";
+			}
+		}
+		return $img_tag;
 	}
 }
