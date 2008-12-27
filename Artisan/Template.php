@@ -94,17 +94,7 @@ abstract class Artisan_Template {
 		
 		return $this->_template_code_parsed;
 	}
-	
-	/**
-	 * Returns the location of the stylesheet this theme should use.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval string Returns the stylesheet path.
-	 */
-	//public function getStyleSheet() {
-	//	$ss = $this->_theme . '.css';
-	//	return $ss;
-	//}
-	
+
 	/**
 	 * Loads a template from the currently set theme.
 	 * @author vmc <vmc@leftnode.com>
@@ -114,7 +104,8 @@ abstract class Artisan_Template {
 	abstract protected function _load($template);
 	
 	/**
-	 * Parsed out all of the variables in a template.
+	 * Parsed out all of the variables in a template. Sets the internal code to be the
+	 * parsed code.
 	 * @author vmc <vmc@leftnode.com>
 	 * @retval boolean Returns true.
 	 */
