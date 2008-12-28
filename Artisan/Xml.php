@@ -46,19 +46,17 @@ class Artisan_Xml {
 	 * Convert the loaded array to XML.
 	 * @author vmc <vmc@leftnode.com>
 	 * @param $data The array of data to turn into XML.
+	 * @param $root Optional parameter to specify the root tag.
 	 * @return A string of XML.
 	 */
-	public static function toXml($data) {
-		// The $root is the first key of the data
-		$root = key($data);
+	public static function toXml($data, $root = NULL) {
+		$xml = self::_unparseXml($data);
+		if ( false === empty($root) ) {
+			$xml_x  = "<" . $root . ">" . $xml . "</" . $root . ">";
+		} else {
+			$xml_x = $xml;
+		}
 		
-		//$root = "wrapper";
-		
-		$xml = self::_unparseXml($data, NULL);
-
-		//$xml_x  = "<" . $root . ">\n";
-		$xml_x = $xml . "\n";
-		//$xml_x .= "</" . $root . ">";
 		return $xml_x;
 	}
 
@@ -66,38 +64,34 @@ class Artisan_Xml {
 	 * Take a multidimensional array and convert it to an XML document.
 	 * $usetag is used if a specific tag should be used for opening and
 	 * closing each element rather than the tag that comes from the loop.
-	 * @author vmc <vmc@leftnode.com>
+	 * @author rafshar <rafshar@gmail.com>
 	 * @param $root The root of the XML array to begin building.
-	 * @todo Finish implementing this!
 	 * @return A string of XML.
 	 */
 	private static function _unparseXml($root) {
 		$xml_x = NULL;
-		foreach ( $root as $key => $value ) {
+		foreach ( $root as $tag => $value ) {
 			if ( true === is_array($value) ) {
 				$sum = array_sum(array_keys($value));
 				if ( $sum > 0 ) {
-					foreach ($value as $n_key => $n_value) {
-						$xml_x .= "<" . $key . ">";
+					foreach ( $value as $n_value) {
+						$xml_x .= "<" . $tag . ">";
 						if ( true === is_array($n_value) ) {
 							$xml_x .= self::_unparseXml($n_value);
 						} else {
 							$xml_x .= $n_value;
 						}
-						$xml_x .= "</" . $key . ">\n";
+						$xml_x .= "</" . $tag . ">\n";
 					}
 				} else {
-					$xml_x .= "<" . $key . ">";
+					$xml_x .= "<" . $tag . ">";
 					$xml_x .= self::_unparseXml($value);
-					$xml_x .= "</" . $key . ">\n";
+					$xml_x .= "</" . $tag . ">\n";
 				}
 			} else {
-				$xml_x .= "<" . $key . ">";
-				$xml_x .= $value;
-				$xml_x .= "</" . $key . ">\n";	
+				$xml_x .= "<" . $tag . ">" . $value . "</" . $tag . ">\n";
 			}
 		}
-		
 		return $xml_x;
 	}
 
