@@ -173,7 +173,7 @@ abstract class Artisan_Controller_View {
 		}
 		
 		if ( true === is_file($javascript_file) ) {
-			$js_tag  = '<script src="' . $javascript_file . '"></script>';
+			$js_tag  = '<script src="' . $ds . $javascript_file . '"></script>';
 			$js_tag .= "\n";
 		}
 		return $js_tag;
@@ -204,7 +204,7 @@ abstract class Artisan_Controller_View {
 				$media = 'screen';
 			}
 		
-			$link_tag = '<link type="text/css" rel="stylesheet" href="' . $stylesheet_file . '" media="' . $media . '"';
+			$link_tag = '<link type="text/css" rel="stylesheet" href="' . $ds . $stylesheet_file . '" media="' . $media . '"';
 			if ( true === $xhtml ) {
 				$link_tag .= " />\n";
 			} else {
@@ -239,7 +239,7 @@ abstract class Artisan_Controller_View {
 				$alt = htmlentities($img_file);
 			}
 			
-			$img_tag = '<img src="' . $image_file . '" alt="' . $alt . '"';
+			$img_tag = '<img src="' . $ds . $image_file . '" alt="' . $alt . '"';
 			if ( true === $xhtml ) {
 				$img_tag .= " />\n";
 			} else {
