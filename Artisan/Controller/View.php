@@ -144,7 +144,7 @@ abstract class Artisan_Controller_View {
 		// First load up the view
 		ob_start();
 		require_once $view_file;
-		$this->layout_content = ob_get_clean();
+		$this->__content = ob_get_clean();
 		
 		// Now load up the layout
 		ob_start();
