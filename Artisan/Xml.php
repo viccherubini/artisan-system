@@ -10,6 +10,7 @@ class Artisan_Xml {
 	///< The XML to be loaded from the SimpleXMLElement PHP class.
 	private static $XML;
 	
+	public static $count = 0;
 	/**
 	 * Loads an XML file from source into a SimpleXml object.
 	 * @author vmc <vmc@leftnode.com>
@@ -49,15 +50,15 @@ class Artisan_Xml {
 	 */
 	public static function toXml($data) {
 		// The $root is the first key of the data
-		// $root = key($data);
+		$root = key($data);
 		
-		$root = "wrapper";
+		//$root = "wrapper";
 		
 		$xml = self::_unparseXml($data, NULL);
 
-		$xml_x  = "<" . $root . ">\n";
-		$xml_x .= $xml . "\n";
-		$xml_x .= "</" . $root . ">";
+		//$xml_x  = "<" . $root . ">\n";
+		$xml_x = $xml . "\n";
+		//$xml_x .= "</" . $root . ">";
 		return $xml_x;
 	}
 
@@ -71,26 +72,32 @@ class Artisan_Xml {
 	 * @return A string of XML.
 	 */
 	private static function _unparseXml($root) {
+		$xml_x = NULL;
 		foreach ( $root as $key => $value ) {
 			if ( true === is_array($value) ) {
 				$sum = array_sum(array_keys($value));
 				if ( $sum > 0 ) {
 					foreach ($value as $n_key => $n_value) {
-						$xml_x .= "\t\t<" . $key . ">\n";
-						$xml_x .= self::_unparseXml($n_value);
-						$xml_x .= "\t\t</" . $key . ">\n";
+						$xml_x .= "<" . $key . ">";
+						if ( true === is_array($n_value) ) {
+							$xml_x .= self::_unparseXml($n_value);
+						} else {
+							$xml_x .= $n_value;
+						}
+						$xml_x .= "</" . $key . ">\n";
 					}
 				} else {
-					$xml_x .= "\t<" . $key . ">\n";
+					$xml_x .= "<" . $key . ">";
 					$xml_x .= self::_unparseXml($value);
-					$xml_x .= "\t</" . $key . ">\n";
+					$xml_x .= "</" . $key . ">\n";
 				}
 			} else {
-				$xml_x .= "\t\t\t<" . $key . ">";
+				$xml_x .= "<" . $key . ">";
 				$xml_x .= $value;
 				$xml_x .= "</" . $key . ">\n";	
 			}
 		}
+		
 		return $xml_x;
 	}
 
