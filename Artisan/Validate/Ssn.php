@@ -53,7 +53,7 @@ class Artisan_Validate_Ssn extends Artisan_Validate {
 
 		// Format must be XXX-XX-XXXX
 		$ssn = trim($ssn);
-		if ( 0 == preg_match('/(\d{3}-\d{2}-\d{4})$/', $ssn) ) {
+		if ( 0 == preg_match('/^(\d{3}-\d{2}-\d{4})$/', $ssn) ) {
 			return false;
 		}
 		
