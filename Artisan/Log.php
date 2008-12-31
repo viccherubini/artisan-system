@@ -9,6 +9,8 @@ require_once 'Artisan/Functions/Array.php';
 
 require_once 'Artisan/Functions/Input.php';
 
+require_once 'Artisan/Functions/Database.php';
+
 define('LOG_GENERAL', 100, false);
 define('LOG_ERROR', 200, false);
 define('LOG_SUCCESS', 300, false);
@@ -154,5 +156,20 @@ class Artisan_Log {
 		
 		$this->WRITER->flush($final_log);
 		$this->_log = array();
+		return true;
+	}
+
+	/**
+	 * Writes the first element of the log array only and resets the array.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval boolean Returns true.
+	 */
+	public function write() {
+		$log = array();
+		@reset($this->_log);
+		$log[] = current($this->_log);
+		$this->_log = $log;
+		$this->flush();
+		return true;
 	}
 }
