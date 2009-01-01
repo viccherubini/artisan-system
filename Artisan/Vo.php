@@ -12,7 +12,7 @@ class Artisan_Vo {
 	 * @param $array A hash key/value array to internalize.
 	 * @retval Object Returns a new Artisan_Vo object.
 	 */
-	public function __construct($array) {
+	public function __construct($array = array()) {
 		if ( true === is_array($array) && count($array) > 0 ) {
 			$this->_init($array);
 		}
