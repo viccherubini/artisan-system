@@ -5,6 +5,8 @@
  */
 require_once 'Artisan/User.php';
 
+require_once 'Artisan/Functions/Database.php';
+
 /**
  * This class manipulates all of the user data in the scope of a database.
  * @author vmc <vmc@leftnode.com>
@@ -32,14 +34,18 @@ class Artisan_User_Db extends Artisan_User {
 	 * Writes a user to the database. If the user exists, their data is updated,
 	 * if they are new, their data is inserted.
 	 * @author vmc <vmc@leftnode.com>
-	 * @todo Implement this!
-	 * @retval boolean Returns true.
+	 * @retval int Returns the user ID of the newly created user or updated user.
 	 */
 	public function write() {
 		$this->_checkDb(__FUNCTION__);
 		
+		if ( $this->_user_id > 0 ) {
+			$this->_update();
+		} else {
+			$this->_insert();
+		}
 		
-		return true;
+		return $this->_user_id;
 	}
 	
 	/**
@@ -68,6 +74,7 @@ class Artisan_User_Db extends Artisan_User {
 	 * @retval boolean Returns true.
 	 */
 	protected function _load($user_id) {
+		$this->_checkDb(__FUNCTION__);
 		$user_id = intval($user_id);
 		
 		if ( $user_id < 1 ) {
@@ -76,7 +83,7 @@ class Artisan_User_Db extends Artisan_User {
 		
 		$result_user = $this->DB->select()
 			->from(self::TABLE_USER, asfw_create_table_alias(self::TABLE_USER))
-			->where(array('user_id = ?', $user_id))
+			->where('user_id = ?', $user_id)
 			->query();
 		$row_count = $result_user->numRows();
 		
@@ -85,58 +92,69 @@ class Artisan_User_Db extends Artisan_User {
 		}
 		
 		// Now that we have a user, load up their data
-		$user_data = $result_user->fetch();
-		unset($result_user);
-
-		$user_data = new Artisan_VO($user_data);
-		//$this->setUserId($user_id);
-		/*
-		$this->setUserName($user_data->user_name);
-		$this->setUserPassword($user_data->user_password);
-		$this->setUserPasswordSalt($user_data->user_password_salt);
-		$this->setUserEmailAddress($user_data->user_email_address);
-		$this->setUserFirstname($user_data->user_firstname);
-		$this->setUserMiddlename($user_data->user_middlename);
-		$this->setUserLastname($user_data->user_lastname);
-		$this->setUserStatus($user_data->user_status);
-		*/
+		$user_vo = $result_user->fetchVo();
+		unset($user_vo->user_id);
+		$this->_user = $user_vo;
+		$this->_user_id = $user_id;
 	}
 	
 	/**
 	 * After write() is called, if the user is to be inserted, this method is called
 	 * to insert the user data.
 	 * @author vmc <vmc@leftnode.com>
-	 * @todo Implement this!
+	 * @throw Artisan_Db_Exception If the INSERT query fails.
 	 * @retval boolean Returns true.
 	 */
 	protected function _insert() {
-		return true;
+		if ( $this->_user_id <= 0 ) {
+			$user_array = $this->_user->toArray();
+			
+			try {
+				$this->DB->insert()
+					->into(self::TABLE_USER)
+					->values($user_array)
+					->query();
+				$this->_user_id = $this->DB->insertId();
+			} catch ( Artisan_Db_Exception $e ) {
+				throw $e;
+			}
+		}
 	}
 	
 	/**
 	 * After update() is called, if the user is to be updated, this method is called
 	 * to update the user data.
 	 * @author vmc <vmc@leftnode.com>
-	 * @todo Implement this!
+	 * @throw Artisan_Db_Exception If the INSERT query fails.
 	 * @retval boolean Returns true.
 	 */
 	protected function _update() {
-		return true;
+		if ( $this->_user_id > 0 ) {
+			$user_array = $this->_user->toArray();
+			
+			try {
+				$this->DB->update()
+					->table(self::TABLE_USER)
+					->set($user_array)
+					->where('user_id = ?', $this->_user_id)
+					->query();
+			} catch ( Artisan_Db_Exception $e ) {
+				throw $e;
+			}
+		}
 	}
 	
 	/**
-	 * Creates a Value Object of the user data to be inserted into the database.
+	 * Ensures that a database connection exists.
 	 * @author vmc <vmc@leftnode.com>
-	 * @todo Implement this!
+	 * @param $method The method this is being called from.
+	 * @throw Artisan_User_Exception If the database connection does not exist.
 	 * @retval boolean Returns true.
 	 */
-	protected function _makeRecord() {
-		return true;
-	}
-	
 	private function _checkDb($method) {
 		if ( false === $this->DB->isConnected() ) {
 			throw new Artisan_User_Exception(ARTISAN_WARNING, 'The database does not have an active connection.', __CLASS__, $method);
 		}
+		return true;
 	}
 }
