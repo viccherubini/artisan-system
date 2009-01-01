@@ -14,7 +14,7 @@ require_once 'Artisan/User/Exception.php';
  * This class manipulates all of the user data in the scope of a database.
  * @author vmc <vmc@leftnode.com>
  */
-class Artisan_User_Database extends Artisan_User {
+class Artisan_User_Db extends Artisan_User {
 	///< Database instance passed into the class. Assumes the database already has a connection.
 	private $DB = NULL;
 	
