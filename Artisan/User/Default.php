@@ -16,7 +16,9 @@ class Artisan_User_Default extends Artisan_User {
 	 * @author vmc <vmc@leftnode.com>
 	 * @retval Object The new Artisan_User_Default object.
 	 */
-	public function __construct() { }
+	public function __construct() {
+		parent::__construct();
+	}
 	
 	/**
 	 * Default users can not be written anywhere, simply returns true.
