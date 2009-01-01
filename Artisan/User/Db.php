@@ -29,6 +29,7 @@ class Artisan_User_Db extends Artisan_User {
 	 * @retval Object The new Artisan_User_Database object.
 	 */
 	public function __construct(Artisan_Db &$DB) {
+		parent::__construct();
 		$this->DB = &$DB;
 	}
 	
@@ -40,7 +41,7 @@ class Artisan_User_Db extends Artisan_User {
 	 * @retval boolean Returns true.
 	 */
 	public function write() {
-	
+		
 		return true;
 	}
 	
@@ -134,5 +135,11 @@ class Artisan_User_Db extends Artisan_User {
 	 */
 	protected function _makeRecord() {
 		return true;
+	}
+	
+	private function _checkDb($method) {
+		if ( false === $this->DB->isConnected() ) {
+			throw new Artisan_User_Exception(ARTISAN_WARNING, 'The database does not have an active connection.', __CLASS__, $method);
+		}
 	}
 }
