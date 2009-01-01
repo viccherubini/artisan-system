@@ -91,7 +91,8 @@ class Artisan_User_Database extends Artisan_User {
 		unset($result_user);
 
 		$user_data = new Artisan_VO($user_data);
-		$this->setUserId($user_id);
+		//$this->setUserId($user_id);
+		/*
 		$this->setUserName($user_data->user_name);
 		$this->setUserPassword($user_data->user_password);
 		$this->setUserPasswordSalt($user_data->user_password_salt);
@@ -100,6 +101,7 @@ class Artisan_User_Database extends Artisan_User {
 		$this->setUserMiddlename($user_data->user_middlename);
 		$this->setUserLastname($user_data->user_lastname);
 		$this->setUserStatus($user_data->user_status);
+		*/
 	}
 	
 	/**
