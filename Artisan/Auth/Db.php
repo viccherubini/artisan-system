@@ -44,6 +44,8 @@ class Artisan_Auth_Db extends Artisan_Auth {
 	 * @retval boolean True if fully authenticated, false otherwise.
 	 */
 	public function authenticate($validation_hook = NULL) {
+		$this->_checkDb(__FUNCTION__);
+		
 		$authenticated = false;
 		
 		// See if a user has been set, if not, throw an exception
@@ -101,5 +103,19 @@ class Artisan_Auth_Db extends Artisan_Auth {
 		}
 		
 		return $authenticated;
+	}
+	
+	/**
+	 * Ensures that a database connection exists.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $method The method this is being called from.
+	 * @throw Artisan_User_Exception If the database connection does not exist.
+	 * @retval boolean Returns true.
+	 */
+	private function _checkDb($method) {
+		if ( false === $this->DB->isConnected() ) {
+			throw new Artisan_Auth_Exception(ARTISAN_WARNING, 'The database does not have an active connection.', __CLASS__, $method);
+		}
+		return true;
 	}
 }
