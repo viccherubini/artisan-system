@@ -6,11 +6,6 @@
 require_once 'Artisan/User.php';
 
 /**
- * @see Artisan_User_Exception
- */
-require_once 'Artisan/User/Exception.php';
-
-/**
  * This class manipulates all of the user data in the scope of a database.
  * @author vmc <vmc@leftnode.com>
  */
@@ -41,6 +36,8 @@ class Artisan_User_Db extends Artisan_User {
 	 * @retval boolean Returns true.
 	 */
 	public function write() {
+		$this->_checkDb(__FUNCTION__);
+		
 		
 		return true;
 	}
