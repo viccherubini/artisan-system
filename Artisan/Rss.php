@@ -30,6 +30,10 @@ abstract class Artisan_Rss {
 	///< The generator of the channel. Defaults to 'Artisan System Framework'.
 	private $_channel_generator = 'Artisan System Framework';
 	
+	protected $_map = array();
+	
+	protected $_map_set = false;
+	
 	///< An array of items to print in the RSS.
 	protected $_item_list = array();
 	
@@ -65,8 +69,6 @@ abstract class Artisan_Rss {
 	 * @todo Finish writing this function!
 	 */
 	public function addItem(Artisan_Vo $ITEM) {
-		exit('Finish implementing ' . __CLASS__ . '::' . __FUNCTION__);
-		
 		if ( false === $ITEM->exists('title', 'link', 'description', 'pubDate', 'author') ) {
 			return false;
 		}
@@ -78,10 +80,27 @@ abstract class Artisan_Rss {
 	 * Sets the mapping between the source and the layout of the RSS feed.
 	 * @author vmc <vmc@leftnode.com>
 	 * @param $map The mapping array to map the data source and the RSS feed format.
-	 * @todo Finish writing this function!
+	 * The map should be in the format:
+	 * @code
+	 * array(
+	 *   'title' => 'title_field',
+	 *   'description' => 'description_field'
+	 *   'author' => 'author_field',
+	 *   'pubDate' => 'date_field'
+	 * );
+	 * @endcode
+	 * The title, description, author, and pubDate fields are required. Optionally, 'link'
+	 * can be specified if the link is part of the dataset.
+	 * @throw Artisan_Rss_Exception If one of the title, description, author, or pubDate fields are empty.
+	 * @retval boolean Returns true.
 	 */
 	public function setMap($map) {
-		exit('Finish implementing ' . __CLASS__ . '::' . __FUNCTION__);
+		if ( false === asfw_array_keys_exist(array('title', 'description', 'author', 'pubDate'), $map) ) {
+			throw new Artisan_Rss_Exception(ARTISAN_WARNING, 'One of the title, description, author, or pubDates are missing in the $map.', __CLASS__, __FUNCTION__);
+		}
+		$this->_map = $map;
+		$this->_map_set = true;
+		return true;
 	}
 	
 	/**
@@ -90,9 +109,7 @@ abstract class Artisan_Rss {
 	 * @retval string Returns the XML string.
 	 */
 	public function write() {
-		exit('Finish implementing ' . __CLASS__ . '::' . __FUNCTION__);
-		
-		$header = array(
+		$rss = array(
 			'channel' => array(
 				'title' => $this->_channel_title,
 				'link' => $this->_channel_link,
@@ -102,12 +119,16 @@ abstract class Artisan_Rss {
 				'item' => $this->_item_list
 			)
 		);
+		
+		$rss_xml = Artisan_Xml::toXml($rss);
+		return $rss_xml;
 	}
 	
 	/**
 	 * Loads up the data from the specified source.
 	 * @author vmc <vmc@leftnode.com>
+	 * @param $urlizer A callback method to generate the URL for each item, should take the item data array as the parameter.
 	 * @retval boolean Returns true if successful load, false otherwise.
 	 */
-	abstract public function load();
+	abstract public function load($urlizer);
 }
