@@ -22,12 +22,16 @@ class Artisan_User_Db extends Artisan_User {
 	 * Constructor for the Artisan_User class to get users from the database. Assumes
 	 * the object is already connected to the database.
 	 * @author vmc <vmc@leftnode.com>
-	 * @param $DB Database object that already has a connection.
+	 * @param $DB Database object that already has an active connection.
+	 * @param $user_id Optional, the ID of the user to load.
 	 * @retval Object The new Artisan_User_Database object.
 	 */
-	public function __construct(Artisan_Db &$DB) {
+	public function __construct(Artisan_Db &$DB, $user_id = 0) {
 		parent::__construct();
 		$this->DB = &$DB;
+		if ( $user_id > 0 ) {
+			$this->load($user_id);
+		}
 	}
 	
 	/**
@@ -61,7 +65,6 @@ class Artisan_User_Db extends Artisan_User {
 		} catch ( Artisan_User_Exception $e ) {
 			throw $e;
 		}
-		
 		return true;
 	}
 	
