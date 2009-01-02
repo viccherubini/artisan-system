@@ -120,7 +120,13 @@ abstract class Artisan_Rss {
 			)
 		);
 		
-		$rss_xml = Artisan_Xml::toXml($rss);
+		
+		$rss_xml  = '<?xml version="1.0"?>';
+		$rss_xml .= '<rss version="2.0">';
+		$rss_xml .= Artisan_Xml::toXml($rss);
+		$rss_xml .= '</rss>';
+
+
 		return $rss_xml;
 	}
 	
