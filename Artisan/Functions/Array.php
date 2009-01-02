@@ -172,3 +172,34 @@ function asfw_array_keys_exist($keys, $array) {
 	
 	return $found;
 }
+
+/**
+ * Returns an array from $hash, an associative array, in which the keys match
+ * the values in $keys, preserving the original keys in $hash. In code:
+ * @code
+ * $keys = array('a', 'b', 'c');
+ * $hash = array('a' => 90, 'b' => 99, 'c' => 88, 'd' => 89, 'e' => 50);
+ * $hash = asfw_array_slice_keys($keys, $hash);
+ * $hash is now array('a' => 90, 'b' => 99, 'c' => 88);
+ * @endcode
+ * @author vmc <vmc@leftnode.com>
+ * @param $keys An array of keys to slice from $hash.
+ * @param $hash An associative array to slice from.
+ * @retval array The sliced array, or any empty array if no keys match.
+ */
+function asfw_array_slice_keys($keys, $hash) {
+	if ( false === is_array($keys) ) {
+		return array();
+	}
+	
+	$final = array();
+	$len = count($keys);
+	for ( $i=0; $i<$len; $i++ ) {
+		if ( true === isset($keys[$i], $hash) ) {
+			$final[$keys[$i]] = $hash[$keys[$i]];
+		} else {
+			$final[$keys[$i]] = NULL;
+		}
+	}
+	return $final;
+}
