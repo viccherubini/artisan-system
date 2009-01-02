@@ -19,11 +19,17 @@ abstract class Artisan_User {
 	///< The ID of the user.
 	protected $_user_id;
 	
+	///< The use Value Object for storing dynamic user data.
 	protected $_user = NULL;
 
 	///< The status of the user, integer value.
 	protected $_user_status;
 
+	/**
+	 * Default constructor, must be called in children classes!
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval object New Artisan_User object.
+	 */
 	public function __construct() {
 		// This is always built here rather than in the __set() and __get() methods
 		// because the Value Object class is such low overhead, that its not worth using
