@@ -64,12 +64,15 @@ class Artisan_Rss_Db extends Artisan_Rss {
 				$link_url = $LINK->invoke($entry);
 				
 				$item = array(
-					'title' => $entry[$m['title']],
-					'description' => $entry[$m['description']],
-					'author' => $entry[$m['author']]
+					'title' => htmlentities($entry[$m['title']]),
+					'description' => htmlentities($entry[$m['description']]),
+					'author' => $entry[$m['author']],
+					'pubDate' => $entry[$m['pubDate']]
 				);
+				$this->addItem(new Artisan_Vo($item));
 			}
 		}
+		return true;
 	}
 	
 	/**
