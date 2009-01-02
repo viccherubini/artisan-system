@@ -13,6 +13,7 @@ class Artisan_Rss_Db extends Artisan_Rss {
 	///< The Database instance, must have an active connection.
 	protected $DB = NULL;
 	
+	///< The name of the table to load data from.
 	private $_table = NULL;
 	
 	/**

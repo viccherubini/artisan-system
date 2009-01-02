@@ -72,7 +72,6 @@ abstract class Artisan_Rss {
 		if ( false === $ITEM->exists('title', 'link', 'description', 'pubDate', 'author') ) {
 			return false;
 		}
-		
 		$this->_item_list[] = $ITEM->toArray();
 	}
 	
@@ -120,13 +119,10 @@ abstract class Artisan_Rss {
 			)
 		);
 		
-		
 		$rss_xml  = '<?xml version="1.0"?>';
 		$rss_xml .= '<rss version="2.0">';
 		$rss_xml .= Artisan_Xml::toXml($rss);
 		$rss_xml .= '</rss>';
-
-
 		return $rss_xml;
 	}
 	
