@@ -127,8 +127,8 @@ abstract class Artisan_Rss {
 	/**
 	 * Loads up the data from the specified source.
 	 * @author vmc <vmc@leftnode.com>
-	 * @param $urlizer A callback method to generate the URL for each item, should take the item data array as the parameter.
+	 * @param $hook A callback method to operate on the data to add custom keys or anything else that might be needed.
 	 * @retval boolean Returns true if successful load, false otherwise.
 	 */
-	abstract public function load($urlizer);
+	abstract public function load($hook);
 }
