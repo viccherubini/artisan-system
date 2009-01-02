@@ -13,6 +13,8 @@ class Artisan_Rss_Db extends Artisan_Rss {
 	///< The Database instance, must have an active connection.
 	protected $DB = NULL;
 	
+	private $_table = NULL;
+	
 	/**
 	 * Builds a new object to load in RSS data from a database.
 	 * @author vmc <vmc@leftnode.com>
@@ -23,18 +25,27 @@ class Artisan_Rss_Db extends Artisan_Rss {
 		$this->DB = &$DB;
 	}
 	
-	
+	/**
+	 * Sets the name of the table to build the feed from.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $table The name of the table.
+	 * @retval boolean Returns true.
+	 */
+	public function setTable($table) {
+		$this->_table = trim($table);
+		return true;
+	}
 	
 	/**
 	 * Loads up the RSS data from the database.
 	 * @author vmc <vmc@leftnode.com>
 	 * @retval boolean Returns true.
 	 */
-	public function load($urlizer) {
-		$this->_checkDb();
+	public function load($hook) {
+		$this->_checkDb(__FUNCTION__);
 		
-		if ( false === function_exists($urlizer) ) {
-			throw new Artisan_Rss_Exception(ARTISAN_WARNING, 'The method ' . $urlizer . '() does not exist.', __CLASS__, __FUNCTION__);
+		if ( false === function_exists($hook) ) {
+			throw new Artisan_Rss_Exception(ARTISAN_WARNING, 'The method ' . $hook . '() does not exist.', __CLASS__, __FUNCTION__);
 		}
 		
 		if ( false === $this->_map_set ) {
@@ -57,18 +68,24 @@ class Artisan_Rss_Db extends Artisan_Rss {
 			throw $e;
 		}
 		
-		$LINK = new ReflectionFunction($urlizer);
+		$LINK = new ReflectionFunction($hook);
 		if ( $result_entry->numRows() > 0 ) {
-			$m = $this->_map;
+			$map_values = array_values($this->_map);
+			$map_keys = array_keys($this->_map);
 			while ( $entry = $result_entry->fetch() ) {
-				$link_url = $LINK->invoke($entry);
+				// First run the entry through the hook to add any additional keys or
+				// operate on the data itself.
+				$entry = $LINK->invoke($entry);
 				
-				$item = array(
-					'title' => htmlentities($entry[$m['title']]),
-					'description' => htmlentities($entry[$m['description']]),
-					'author' => $entry[$m['author']],
-					'pubDate' => $entry[$m['pubDate']]
-				);
+				// Next, create an array only of the data from the database that we need,
+				// in other words, only the fields specified in the $_map.
+				$entry = asfw_array_slice_keys($map_values, $entry);
+
+				// Finally, build the $item array with the keys of the map as the keys
+				// and the values of the entry as the values. This *only* works as a result
+				// of the array built in asfw_array_slice_keys() is in the same order (keywise)
+				// as the keys of the map!
+				$item = array_combine($map_keys, $entry);
 				$this->addItem(new Artisan_Vo($item));
 			}
 		}
