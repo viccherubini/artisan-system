@@ -6,15 +6,16 @@
 require_once 'Artisan/Validate.php';
 
 /**
- * @see Artisan_Validate_Exception
- */
-require_once 'Artisan/Validate/Exception.php';
-
-/**
  * Static class that contains methods to validate credit cart numbers.
  * @author rafshar <rafshar@gmail.com>
  */
 class Artisan_Validate_Cc extends Artisan_Validate {
+	private $_number = NULL;
+
+	public function __construct($s = NULL) {
+		$this->_number = trim($number);
+	}
+
 	/**
 	 * Validates whether a submitted credit card number is valid or not using
 	 * the Luhn algorithm.
@@ -22,8 +23,17 @@ class Artisan_Validate_Cc extends Artisan_Validate {
 	 * @param $number The credit card number to test.
 	 * @retval boolean True if the value is a credit card number, false otherwise.
 	 */
-	public static function isValid($number) {
+	public function isValid($number) {
+		if ( true === empty($number) ) {
+			$number = $this->_number;
+		}
+
 		$number = preg_replace("/\D/", "", $number);
+
+		if ( true === empty($number) ) {
+			return false;
+		}
+
 		$num_length =  strlen($number);
 		$double_number = false;
 		
