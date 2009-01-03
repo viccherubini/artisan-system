@@ -2,11 +2,14 @@
 
 require_once 'Artisan/Customer.php';
 
+
 class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 	///< Database instance passed into the class. Assumes the database already has a connection.
 	private $DB = NULL;
 	
-	private $_customer_table = NULL;
+	private $_table = NULL;
+	private $_table_comment = NULL;
+	private $_table_history = NULL;
 	
 	public function __construct(Artisan_Config &$CONFIG) {
 		parent::__construct();
@@ -15,11 +18,13 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 			$this->DB = &$CONFIG->db_adapter;
 		}
 		
+		$this->_table = trim($CONFIG->table);
+		$this->_table_comment = trim($CONFIG->table_comment);
+		$this->_table_history = trim($CONFIG->table_history);
+		
 		if ( $CONFIG->customer_id > 0 ) {
 			$this->load($CONFIG->customer_id);
 		}
-		
-		$this->_customer_table = trim($CONFIG->table);
 	}
 	
 	/**
@@ -47,10 +52,10 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 	 * @throw Artisan_User_Exception If the user can not be found.
 	 * @retval boolean Returns true.
 	 */
-	public function load($user_id) {
+	public function load($customer_id) {
 		try {
-			$this->_load($user_id);
-		} catch ( Artisan_User_Exception $e ) {
+			$this->_load($customer_id);
+		} catch ( Artisan_Customer_Exception $e ) {
 			throw $e;
 		}
 		return true;
@@ -64,8 +69,8 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 	 * @throw Artisan_User_Exception If the user can not be found in the database.
 	 * @retval boolean Returns true.
 	 */
-	protected function _load($user_id) {
-		
+	protected function _load($customer_id) {
+		$this->_checkDb(__FUNCTION__);
 	}
 	
 	/**
