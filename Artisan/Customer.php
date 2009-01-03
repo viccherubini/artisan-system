@@ -5,6 +5,8 @@
  */
 require_once 'Artisan/User.php';
 
+require_once 'Artisan/Customer/Exception.php';
+
 /**
  * This class allows for the management of customers as through an e-commerce
  * or other type of customer management interface.
