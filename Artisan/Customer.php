@@ -10,18 +10,17 @@ require_once 'Artisan/User.php';
  * or other type of customer management interface.
  * @author <vmc@leftnode.com>
  */
-class Artisan_Customer extends Artisan_User {
-	private $OP;
+abstract class Artisan_Customer extends Artisan_User {
+	//protected $_customer_id = 0;
+	//protected $_customer = NULL;
 	
-	
-	private $_customer_id = 0;
-	
-	
-	public function __construct($customer_id = 0) {
-		
+	public function __construct() {
+		parent::__construct();
 	}
 	
-	//public function setOperator(Aritsan_Operator 
+	
+	
+	
 	/*
 	public function write() { }
 	
