@@ -4,14 +4,15 @@
  * @see Artisan_Customer
  */
 //require_once 'Artisan/Customer.php';
-require_once 'Artisan/User/Db.php';
+require_once 'Artisan/Customer/Operator.php';
 
-require_once 'Artisan/Customer/Interface.php';
-
-class Artisan_Customer_Operator_Db extends Artisan_User_Db {
-	// no constructor, use default
+class Artisan_Customer_Operator_Db extends Artisan_Operator {
+	private $DB = NULL;
 	
-	// overwrite _update() and _insert() to take history into account
-	// comment_history management
+	public function __construct(Artisan_Db &$DB) {
+		$this->DB = &$DB;
+	}
 	
+	
+	//public 
 }

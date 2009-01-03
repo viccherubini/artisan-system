@@ -7,31 +7,26 @@ require_once 'Artisan/User.php';
 
 /**
  * This class allows for the management of customers as through an e-commerce
- * or other type of customer management interface. This class will be built and 
- * extends nothing. After it's built, an operator needs to be built and added to this
- * class. Because each operator extends an Artisan_User class, they all have 
- * overridden methods for writing the user data.
+ * or other type of customer management interface.
  * @author <vmc@leftnode.com>
  */
-class Artisan_Customer {
+class Artisan_Customer extends Artisan_User {
 	private $OP;
 	
 	
 	private $_customer_id = 0;
 	
 	
-	//public function __construct($customer_id = 0) {
-	//	
-	//}
-	
-	public function setOperator(Artisan_Customer_Operator &$OP) {
-	
+	public function __construct($customer_id = 0) {
+		
 	}
 	
-	public function getCustomerId() {
-		return $this->_user_id;
-	}
+	//public function setOperator(Aritsan_Operator 
+	/*
+	public function write() { }
 	
-	// all we need here are write();
-	// and load();
+	protected function _insert();
+	protected function _update();
+	protected function _load($customer_id);
+	*/
 }
