@@ -15,34 +15,24 @@ define('ARTISAN_NOTICE', 300, false);
  * @author vmc <vmc@leftnode.com>
  */
 class Artisan_Exception extends Exception {
-	///< The line number the error occured on.
+	///< The line number that the exception was thrown from.
 	private $_line_number;
-	
+
 	///< The file name the error occured in.
 	private $_file_name;
-	
-	///< The class name the error occured in.
-	private $_class_name;
-	
-	///< The method name the error occured in.
-	private $_function_name;
 	
 	/**
 	 * Default constructor.
 	 * @author vmc <vmc@leftnode.com>
 	 * @param $error_code A custom numeric error code defined above.
 	 * @param $error_message The specific error message.
-	 * @param $class_name The optional name of the class the error occurred in.
-	 * @param $function_name The optional name of the method the error occurred in.
 	 * @retval Object Returns new Artisan_Exception object.
 	 */
-	public function __construct($error_code, $error_message, $class_name = NULL, $function_name = NULL) {
+	public function __construct($error_code, $error_message) {
 		parent::__construct($error_message, $error_code);
 		
 		$this->_line_number = parent::getLine();
 		$this->_file_name = parent::getFile();
-		$this->_class_name = $class_name;
-		$this->_function_name = $function_name;
 	}
 	
 	/**
@@ -53,7 +43,7 @@ class Artisan_Exception extends Exception {
 	public function toString() {
 		$trace = parent::getTrace();
 		$trace = current($trace);
-		
+
 		$error_class = NULL;
 		if ( true === asfw_exists('class', $trace) ) {
 			$error_class = $trace['class'] . $trace['type'];
@@ -61,14 +51,6 @@ class Artisan_Exception extends Exception {
 		
 		if ( true === asfw_exists('function', $trace) ) {
 			$error_class .= $trace['function'] . '() > ';
-			//$argv = $trace['args'];
-			//$argc = count($argv);
-			//for ( $i=0; $i<$argc; $i++ ) {
-			//	if ( false === is_numeric($argv[$i]) ) {
-			//		$argv[$i] = "'" . addslashes($argv[$i]) . "'";
-			//	}
-			//}
-			//$error_class .= '(' . implode(',', $argv) . ') > ';
 		}
 		
 		$error_file = $this->_file_name . ' +' . $this->_line_number;
