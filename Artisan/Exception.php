@@ -1,5 +1,7 @@
 <?php
 
+require_once 'Artisan/Functions/Array.php';
+
 define('ARTISAN_ERROR', 100, false);
 define('ARTISAN_WARNING', 200, false);
 define('ARTISAN_NOTICE', 300, false);
@@ -49,13 +51,24 @@ class Artisan_Exception extends Exception {
 	 * @retval string Returns the string with exception data.
 	 */
 	public function toString() {
+		$trace = parent::getTrace();
+		$trace = current($trace);
+		
 		$error_class = NULL;
-		if ( false === empty($this->_class_name) ) {
-			$error_class = $this->_class_name . '::';
+		if ( true === asfw_exists('class', $trace) ) {
+			$error_class = $trace['class'] . $trace['type'];
 		}
 		
-		if ( false === empty($this->_function_name) ) {
-			$error_class .= $this->_function_name . '() > ';
+		if ( true === asfw_exists('function', $trace) ) {
+			$error_class .= $trace['function'] . '() > ';
+			//$argv = $trace['args'];
+			//$argc = count($argv);
+			//for ( $i=0; $i<$argc; $i++ ) {
+			//	if ( false === is_numeric($argv[$i]) ) {
+			//		$argv[$i] = "'" . addslashes($argv[$i]) . "'";
+			//	}
+			//}
+			//$error_class .= '(' . implode(',', $argv) . ') > ';
 		}
 		
 		$error_file = $this->_file_name . ' +' . $this->_line_number;
