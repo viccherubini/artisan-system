@@ -81,7 +81,7 @@ class Artisan_User_Db extends Artisan_User {
 		$user_id = intval($user_id);
 		
 		if ( $user_id < 1 ) {
-			throw new Artisan_User_Exception(ARTISAN_WARNING, 'The user ID specified must be numeric and greater than 0', __CLASS__, __FUNCTION__);
+			throw new Artisan_User_Exception(ARTISAN_WARNING, 'The user ID specified must be numeric and greater than 0.', __CLASS__, __FUNCTION__);
 		}
 		
 		$result_user = $this->DB->select()
