@@ -6,7 +6,7 @@
 require_once 'Artisan/Validate.php';
 
 /**
- * Static class that contains methods to validate credit cart numbers.
+ * Static class that contains methods to validate credit card numbers.
  * @author rafshar <rafshar@gmail.com>
  */
 class Artisan_Validate_Cc extends Artisan_Validate {
