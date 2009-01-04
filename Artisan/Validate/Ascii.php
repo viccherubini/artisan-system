@@ -19,6 +19,7 @@ class Artisan_Validate_Ascii extends Artisan_Validate {
 	/**
 	 * Test if a value is composed entirely of ASCII values.
 	 * @author vmc <vmc@leftnode.com>
+	 * @author rafshar <rafshar@gmail.com>
 	 * @param $val The value to test.
 	 * @retval boolean True if $val is all ASCII text, false otherwise.
 	 */
@@ -42,5 +43,5 @@ class Artisan_Validate_Ascii extends Artisan_Validate {
 			}
 		}
 		return $is_ascii;
-	}	
+	}
 }

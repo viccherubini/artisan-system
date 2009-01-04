@@ -7,7 +7,8 @@ require_once 'Artisan/Validate.php';
 
 /**
  * Static class that contains methods to validate a Uri.
-  * @author vmc <vmc@leftnode.com>
+ * @author vmc <vmc@leftnode.com>
+ * @author rafshar <rafshar@gmail.com>
  */
 class Artisan_Validate_Uri extends Artisan_Validate {
 	private $_u = NULL;
@@ -19,6 +20,7 @@ class Artisan_Validate_Uri extends Artisan_Validate {
 	/**
 	 * Test if a value is a valid URI or not.
 	 * @author vmc <vmc@leftnode.com>
+	 * @author rafshar <rafshar@gmail.com>
 	 * @param $u The URI to test.
 	 * @retval boolean Returns true if value is an array, false otherwise.
 	 * @todo Finish implementing this method.

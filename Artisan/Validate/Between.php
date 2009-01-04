@@ -20,13 +20,13 @@ class Artisan_Validate_Between extends Artisan_Validate {
 	}
 
 	/**
-	 * 	Validates if a number or character is between a range of numbers or characters.
+	 * Validates if a number or character is between a range of numbers or characters.
 	 * @author rafshar <rafshar@gmail.com>
 	 * @param $var The value to test.
 	 * @param $low The low end of the range to match.
 	 * @param $high The high end of the range to match.
 	 * @param $inclusive Boolean to include or exclude $low/$high in range.
-	 * @retval boolean True if the value is a credit card number, false otherwise.
+	 * @retval boolean True if the value is between the low and high numbers, false otherwise.
 	 */
 	public function isValid($var = NULL, $low = NULL, $high = NULL, $inclusive = true) {
 		if ( true === empty($var) ) {
