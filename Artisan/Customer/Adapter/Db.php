@@ -7,9 +7,10 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 	///< Database instance passed into the class. Assumes the database already has a connection.
 	private $DB = NULL;
 	
-	private $_table = NULL;
-	private $_table_comment = NULL;
-	private $_table_history = NULL;
+	private $_table_list = NULL;
+	
+	///< Ignore the customer_field* tables if true, avoiding the extra queries. Use the CONFIG to set this to false.
+	private $_ignore_field_tables = true;
 	
 	public function __construct(Artisan_Config &$CONFIG) {
 		parent::__construct();
@@ -18,9 +19,10 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 			$this->DB = &$CONFIG->db_adapter;
 		}
 		
-		$this->_table = trim($CONFIG->table);
-		$this->_table_comment = trim($CONFIG->table_comment);
-		$this->_table_history = trim($CONFIG->table_history);
+		$this->_table_list = $CONFIG->table_list;
+		if ( true === $CONFIG->exists('ignore_field_tables') ) {
+			$this->_ignore_field_tables = $CONFIG->ignore_field_tables;
+		}
 		
 		if ( $CONFIG->customer_id > 0 ) {
 			$this->load($CONFIG->customer_id);
@@ -71,6 +73,31 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 	 */
 	protected function _load($customer_id) {
 		$this->_checkDb(__FUNCTION__);
+		
+		// Because the queries can be quite intensive, if the ignore_fields 
+		// is set to true, don't bother looking in them, simply load the customer,
+		// comment_history.
+		$customer_id = intval($customer_id);
+		
+		if ( $customer_id < 1 ) {
+			throw new Artisan_Customer_Exception(ARTISAN_WARNING, 'The Customer ID specified must be numeric and greater than 0.', __CLASS__, __FUNCTION__);
+		}
+		
+		$result_customer = $this->DB->select()
+			->from($this->_table_list->customer)
+			->where('customer_id = ?', $customer_id)
+			->query();
+		$row_count = $result_customer->numRows();
+		if ( 1 != $row_count ) {
+			
+		}
+
+		$c_vo = $result_customer->fetchVo();
+		unset($c_vo->user_id);
+		
+		// $_user and $_user_id are a part of Artisan_User
+		$this->_user = $c_vo;
+		$this->_user_id = $customer_id;
 	}
 	
 	/**
