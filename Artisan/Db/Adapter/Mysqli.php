@@ -127,7 +127,7 @@ class Artisan_Db_Adapter_Mysqli extends Artisan_Db {
 		
 		if ( false === $result ) {
 			$error_string = $this->CONN->error;
-			throw new Artisan_Db_Exception(ARTISAN_WARNING, 'Failed to execute query: "' . $sql . '", MySQL said: ' . $error_string, __CLASS__, __FUNCTION__);
+			throw new Artisan_Db_Exception(ARTISAN_WARNING, 'Failed to execute query: "' . $sql . '", MySQL said: ' . $error_string);
 		}
 		return $result;
 	}

@@ -83,13 +83,17 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 			throw new Artisan_Customer_Exception(ARTISAN_WARNING, 'The Customer ID specified must be numeric and greater than 0.', __CLASS__, __FUNCTION__);
 		}
 		
-		$result_customer = $this->DB->select()
-			->from($this->_table_list->customer)
-			->where('customer_id = ?', $customer_id)
-			->query();
-		$row_count = $result_customer->numRows();
-		if ( 1 != $row_count ) {
-			
+		try {
+			$result_customer = $this->DB->select()
+				->from($this->_table_list->customer)
+				->where('customer_id = ?', $customer_id)
+				->query();
+			$row_count = $result_customer->numRows();
+			if ( 1 != $row_count ) {
+				throw new Artisan_Customer_Exception(ARTISAN_WARNING, 'No customer with .');
+			}
+		} catch ( Artisan_Db_Exception $e ) {
+			throw $e;
 		}
 
 		$c_vo = $result_customer->fetchVo();
