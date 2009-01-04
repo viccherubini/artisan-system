@@ -41,7 +41,7 @@ class Artisan_User_Db extends Artisan_User {
 	 * @retval int Returns the user ID of the newly created user or updated user.
 	 */
 	public function write() {
-		$this->_checkDb(__FUNCTION__);
+		$this->_checkDb();
 		
 		if ( $this->_user_id > 0 ) {
 			$this->_update();
@@ -77,11 +77,11 @@ class Artisan_User_Db extends Artisan_User {
 	 * @retval boolean Returns true.
 	 */
 	protected function _load($user_id) {
-		$this->_checkDb(__FUNCTION__);
+		$this->_checkDb();
 		$user_id = intval($user_id);
 		
 		if ( $user_id < 1 ) {
-			throw new Artisan_User_Exception(ARTISAN_WARNING, 'The user ID specified must be numeric and greater than 0.', __CLASS__, __FUNCTION__);
+			throw new Artisan_User_Exception(ARTISAN_WARNING, 'The user ID specified must be numeric and greater than 0.');
 		}
 		
 		$result_user = $this->DB->select()
@@ -91,7 +91,7 @@ class Artisan_User_Db extends Artisan_User {
 		$row_count = $result_user->numRows();
 		
 		if ( 1 !== $row_count ) {
-			throw new Artisan_User_Exception(ARTISAN_WARNING, 'No user found with ID ' . $user_id . '.', __CLASS__, __FUNCTION__);
+			throw new Artisan_User_Exception(ARTISAN_WARNING, 'No user found with ID ' . $user_id . '.');
 		}
 		
 		// Now that we have a user, load up their data
@@ -154,9 +154,9 @@ class Artisan_User_Db extends Artisan_User {
 	 * @throw Artisan_User_Exception If the database connection does not exist.
 	 * @retval boolean Returns true.
 	 */
-	private function _checkDb($method) {
+	private function _checkDb() {
 		if ( false === $this->DB->isConnected() ) {
-			throw new Artisan_User_Exception(ARTISAN_WARNING, 'The database does not have an active connection.', __CLASS__, $method);
+			throw new Artisan_User_Exception(ARTISAN_WARNING, 'The database does not have an active connection.');
 		}
 		return true;
 	}

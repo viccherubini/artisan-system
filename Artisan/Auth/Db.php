@@ -44,13 +44,13 @@ class Artisan_Auth_Db extends Artisan_Auth {
 	 * @retval boolean True if fully authenticated, false otherwise.
 	 */
 	public function authenticate($validation_hook = NULL) {
-		$this->_checkDb(__FUNCTION__);
+		$this->_checkDb();
 		
 		$authenticated = false;
 		
 		// See if a user has been set, if not, throw an exception
 		if ( false === $this->USER instanceof Artisan_User ) {
-			throw new Artisan_Auth_Exception(ARTISAN_ERROR, 'Failed to authenticate, the user object has not been set.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Auth_Exception(ARTISAN_ERROR, 'Failed to authenticate, the user object has not been set.');
 		}
 		
 		// Get the username and password from the user object
@@ -67,12 +67,12 @@ class Artisan_Auth_Db extends Artisan_Auth {
 			
 		// First, ensure at least one row was found.
 		if ( 0 === $result_user->numRows() ) {
-			throw new Artisan_Auth_Exception(ARTISAN_WARNING, 'Failed to authenticate, no matching records found.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Auth_Exception(ARTISAN_WARNING, 'Failed to authenticate, no matching records found.');
 		}
 		
 		// Next, ensure not more than one row was found.
 		if ( $result_user->numRows() > 1 ) {
-			throw new Artisan_Auth_Exception(ARTISAN_WARNING, 'Failed to authenticate, more than one matching record found. ' . $row_count . ' records found.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Auth_Exception(ARTISAN_WARNING, 'Failed to authenticate, more than one matching record found. ' . $row_count . ' records found.');
 		}
 		
 		$user_data = $result_user->fetch();
@@ -112,9 +112,9 @@ class Artisan_Auth_Db extends Artisan_Auth {
 	 * @throw Artisan_User_Exception If the database connection does not exist.
 	 * @retval boolean Returns true.
 	 */
-	private function _checkDb($method) {
+	private function _checkDb() {
 		if ( false === $this->DB->isConnected() ) {
-			throw new Artisan_Auth_Exception(ARTISAN_WARNING, 'The database does not have an active connection.', __CLASS__, $method);
+			throw new Artisan_Auth_Exception(ARTISAN_WARNING, 'The database does not have an active connection.');
 		}
 		return true;
 	}

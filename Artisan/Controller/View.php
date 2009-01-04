@@ -113,7 +113,7 @@ abstract class Artisan_Controller_View {
 		$view = asfw_rename_controller_method($view);
 
 		if ( true === empty($this->_layout) ) {
-			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The layout name is empty.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The layout name is empty.');
 		}
 
 		// See if Controllers/$controller/Views/$view.phtml exists, if not, 
@@ -125,7 +125,7 @@ abstract class Artisan_Controller_View {
 		}
 		
 		if ( false === is_file($view_file) ) {
-			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The view file ' . $view_file . ' does not exist.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The view file ' . $view_file . ' does not exist.');
 		}
 		
 		// See if Controllers/$controller/Layout/$layout.phtml exists, if not, 
@@ -136,7 +136,7 @@ abstract class Artisan_Controller_View {
 		}
 
 		if ( false === is_file($layout_file) ) {
-			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The layout file ' . $layout_file . ' does not exist.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The layout file ' . $layout_file . ' does not exist.');
 		}
 		
 		$this->_controller = $controller;

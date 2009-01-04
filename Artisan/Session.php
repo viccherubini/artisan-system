@@ -71,7 +71,7 @@ class Artisan_Session {
 	 */
 	public function setConfig(Artisan_Config &$C) {
 		if ( false === asfw_exists('save_handler', $C) ) {
-			throw new Artisan_Session_Exception(ARTISAN_WARNING, 'save_handler is not present in the configuration.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Session_Exception(ARTISAN_WARNING, 'save_handler is not present in the configuration.');
 		}
 		
 		try {
@@ -91,11 +91,11 @@ class Artisan_Session {
 	 */
 	public function setSaveHandler(&$S) {
 		if ( false === is_object($S) ) {
-			throw new Artisan_Session_Exception(ARTISAN_WARNING, 'The save_handler sent in $S is not an object.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Session_Exception(ARTISAN_WARNING, 'The save_handler sent in $S is not an object.');
 		}
 	
 		if ( false === in_array('Artisan_Session_Interface', class_implements($S)) ) {
-			throw new Artisan_Session_Exception(ARTISAN_WARNING, 'The save_handler instance passed is an object, but does not implement Artisan_Session_Interface.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Session_Exception(ARTISAN_WARNING, 'The save_handler instance passed is an object, but does not implement Artisan_Session_Interface.');
 		}
 		
 		$this->SH = &$S;
@@ -124,7 +124,7 @@ class Artisan_Session {
 
 		// Set up all of the save handlers
 		if ( false === is_object($this->SH) ) {
-			throw new Artisan_Session_Exception(ARTISAN_WARNING, 'The save_handler is not yet configured, please run setSaveHandler() first.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Session_Exception(ARTISAN_WARNING, 'The save_handler is not yet configured, please run setSaveHandler() first.');
 		}
 
 		// Let PHP know we're using our own save handlers

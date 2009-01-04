@@ -4,12 +4,13 @@ require_once 'Artisan/Customer.php';
 
 
 class Artisan_Customer_Adapter_Db extends Artisan_Customer {
-	///< Database instance passed into the class. Assumes the database already has a connection.
+	/// Database instance passed into the class. Assumes the database already has a connection.
 	private $DB = NULL;
 	
+	/// An Artisan_Vo object that contains a list of tables to use.
 	private $_table_list = NULL;
 	
-	///< Ignore the customer_field* tables if true, avoiding the extra queries. Use the CONFIG to set this to false.
+	/// Ignore the customer_field* tables if true, avoiding the extra queries. Use the CONFIG to set this to false.
 	private $_ignore_field_tables = true;
 	
 	public function __construct(Artisan_Config &$CONFIG) {
@@ -36,7 +37,7 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 	 * @retval int Returns the user ID of the newly created user or updated user.
 	 */
 	public function write() {
-		$this->_checkDb(__FUNCTION__);
+		$this->_checkDb();
 		
 		if ( $this->_user_id > 0 ) {
 			$this->_update();
@@ -80,7 +81,7 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 		$customer_id = intval($customer_id);
 		
 		if ( $customer_id < 1 ) {
-			throw new Artisan_Customer_Exception(ARTISAN_WARNING, 'The Customer ID specified must be numeric and greater than 0.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Customer_Exception(ARTISAN_WARNING, 'The Customer ID specified must be numeric and greater than 0.');
 		}
 		
 		try {
@@ -133,9 +134,9 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 	 * @throw Artisan_User_Exception If the database connection does not exist.
 	 * @retval boolean Returns true.
 	 */
-	private function _checkDb($method) {
+	private function _checkDb() {
 		if ( false === $this->DB->isConnected() ) {
-			throw new Artisan_Customer_Exception(ARTISAN_WARNING, 'The database does not have an active connection.', __CLASS__, $method);
+			throw new Artisan_Customer_Exception(ARTISAN_WARNING, 'The database does not have an active connection.');
 		}
 		return true;
 	}

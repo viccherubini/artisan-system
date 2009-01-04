@@ -43,18 +43,18 @@ class Artisan_Rss_Db extends Artisan_Rss {
 	 * @retval boolean Returns true.
 	 */
 	public function load($hook) {
-		$this->_checkDb(__FUNCTION__);
+		$this->_checkDb();
 		
 		if ( false === function_exists($hook) ) {
-			throw new Artisan_Rss_Exception(ARTISAN_WARNING, 'The method ' . $hook . '() does not exist.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Rss_Exception(ARTISAN_WARNING, 'The method ' . $hook . '() does not exist.');
 		}
 		
 		if ( false === $this->_map_set ) {
-			throw new Artisan_Rss_Exception(ARTISAN_WARNING, 'The mapping has not been set up properly.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Rss_Exception(ARTISAN_WARNING, 'The mapping has not been set up properly.');
 		}
 		
 		if ( true === empty($this->_table) ) {
-			throw new Artisan_Rss_Exception(ARTISAN_WARNING, 'The table to select data from is empty.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Rss_Exception(ARTISAN_WARNING, 'The table to select data from is empty.');
 		}
 		
 		// Grab the date field
@@ -100,9 +100,9 @@ class Artisan_Rss_Db extends Artisan_Rss {
 	 * @throw Artisan_User_Exception If the database connection does not exist.
 	 * @retval boolean Returns true.
 	 */
-	private function _checkDb($method) {
+	private function _checkDb() {
 		if ( false === $this->DB->isConnected() ) {
-			throw new Artisan_Auth_Exception(ARTISAN_WARNING, 'The database does not have an active connection.', __CLASS__, $method);
+			throw new Artisan_Auth_Exception(ARTISAN_WARNING, 'The database does not have an active connection.');
 		}
 		return true;
 	}

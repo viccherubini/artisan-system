@@ -59,7 +59,7 @@ class Artisan_Template_Database extends Artisan_Template {
 		$theme = trim($theme);
 		
 		if ( true === empty($theme) ) {
-			throw new Artisan_Template_Exception(ARTISAN_ERROR, 'The theme name is empty.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Template_Exception(ARTISAN_ERROR, 'The theme name is empty.');
 		}
 		
 		$tt = self::TABLE_THEME;		
@@ -72,7 +72,7 @@ class Artisan_Template_Database extends Artisan_Template {
 		}
 	
 		if ( $theme_id < 1 ) {
-			throw new Artisan_Template_Exception(ARTISAN_ERROR, 'Theme ' . $theme . ' specified was not found in the table `' . $ttc . '`.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Template_Exception(ARTISAN_ERROR, 'Theme ' . $theme . ' specified was not found in the table `' . $ttc . '`.');
 		}
 		
 		$this->_theme = $theme;

@@ -67,7 +67,7 @@ class Artisan_System {
 		echo $obj_name;
 		// See if this object exists in the object_list
 		if ( true === asfw_exists($obj_name, self::$_object_list) ) {
-			throw new Artisan_Exception(ARTISAN_ERROR, 'The key ' . $obj_name . ' already exists on the stack, please rename it.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Exception(ARTISAN_ERROR, 'The key ' . $obj_name . ' already exists on the stack, please rename it.');
 		}
 		
 		$this->$obj_name = $obj;

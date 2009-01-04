@@ -46,7 +46,7 @@ abstract class Artisan_Rss {
 	 */
 	public function setConfig(Artisan_Config &$CONFIG) {
 		if ( false === $CONFIG->exists('title', 'link', 'description') ) {
-			throw new Artisan_Rss_Exception(ARTISAN_WARNING, 'The config does not require the necessary properties (title, link, and description).', __CLASS__, __FUNCTION__);
+			throw new Artisan_Rss_Exception(ARTISAN_WARNING, 'The config does not require the necessary properties (title, link, and description).');
 		}
 		
 		$this->_channel_title = htmlentities($CONFIG->title);
@@ -95,7 +95,7 @@ abstract class Artisan_Rss {
 	 */
 	public function setMap($map) {
 		if ( false === asfw_array_keys_exist(array('title', 'description', 'author', 'pubDate'), $map) ) {
-			throw new Artisan_Rss_Exception(ARTISAN_WARNING, 'One of the title, description, author, or pubDates are missing in the $map.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Rss_Exception(ARTISAN_WARNING, 'One of the title, description, author, or pubDates are missing in the $map.');
 		}
 		$this->_map = $map;
 		$this->_map_set = true;

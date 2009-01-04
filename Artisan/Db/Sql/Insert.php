@@ -40,7 +40,8 @@ abstract class Artisan_Db_Sql_Insert extends Artisan_Db_Sql {
 	 * Sets up what table and fields to insert into.
 	 * @author vmc <vmc@leftnode.com>
 	 * @param $table The name of the table to insert into.
-	 * @param $insert_fields An optional array of fields to insert into. This is built based on the number of parameters. If not specified, class assumes all fields will have an insert value.
+	 * @param $insert_fields An optional array of fields to insert into.
+	 *  This is built based on the number of parameters. If not specified, class assumes all fields will have an insert value.
 	 * @retval Object Returns an instance of itself to allow chaining.
 	 */
 	public function into($table) {
@@ -76,7 +77,7 @@ abstract class Artisan_Db_Sql_Insert extends Artisan_Db_Sql {
 	public function values() {
 		$argc = func_num_args();
 		if ( 0 === $argc ) {
-			throw new Artisan_Db_Sql_Exception(ARTISAN_WARNING, 'The no values were passed into the method to insert.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Db_Sql_Exception(ARTISAN_WARNING, 'The no values were passed into the method to insert.');
 		}
 
 		// See if only one argument was set and it's an array, if so
@@ -93,10 +94,8 @@ abstract class Artisan_Db_Sql_Insert extends Artisan_Db_Sql {
 		} else {
 			$ifl_len = count($this->_insert_field_list);
 			if ( $argc != $ifl_len && $ifl_len > 0 ) {
-				throw new Artisan_Db_Sql_Exception(ARTISAN_WARNING, 
-					'The number of values to insert does not match the column count: ' . $argc . ' value(s) and ' . $ifl_len . ' column(s).',
-					__CLASS__, __FUNCTION__
-				);
+				$exception = 'The number of values to insert does not match the column count: ' . $argc . ' value(s) and ' . $ifl_len . ' column(s).';
+				throw new Artisan_Db_Sql_Exception(ARTISAN_WARNING, $exception);
 			}
 			$this->_insert_field_value_list = func_get_args();
 		}

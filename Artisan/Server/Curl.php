@@ -55,13 +55,13 @@ class Artisan_Server_Curl extends Artisan_Server {
 	public function connect() {
 		$server = trim($this->_server_address);
 		if ( true === empty($server) ) {
-			throw new Artisan_Server_Exception(ARTISAN_WARNING, 'No server was specified to connect to.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Server_Exception(ARTISAN_WARNING, 'No server was specified to connect to.');
 		}
 		
 		$this->_server = curl_init($server);
 		
 		if ( false === $this->_server ) {
-			throw new Artisan_Server_Exception(ARTISAN_WARNING, 'Failed to connect to specified server: ' . $server, __CLASS__, __FUNCTION__);
+			throw new Artisan_Server_Exception(ARTISAN_WARNING, 'Failed to connect to specified server: ' . $server);
 		}
 		
 		$this->_is_connected = true;

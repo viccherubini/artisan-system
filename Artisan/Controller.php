@@ -125,7 +125,7 @@ class Artisan_Controller {
 	 */
 	public function execute() {
 		if ( false === $this->_config_set ) {
-			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The ' . __CLASS__ . ' Configuration was not set.', __CLASS__, __METHOD__);
+			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The ' . __CLASS__ . ' Configuration was not set.');
 		}
 		
 		try {
@@ -139,7 +139,7 @@ class Artisan_Controller {
 		// See if that file exists in the directory
 		$controller_file = $this->_directory . DIRECTORY_SEPARATOR . $controller . '.php';
 		if ( false === is_file($controller_file) ) {
-			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'Controller file ' . $controller_file . ' was not found.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'Controller file ' . $controller_file . ' was not found.');
 		}
 
 		// File exists, load it up
@@ -147,7 +147,7 @@ class Artisan_Controller {
 
 		// Ensure the class exists
 		if ( false === class_exists($controller) ) {
-			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'Class ' . $this->_controller_name . ' not found in file ' . $controller_file . '.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'Class ' . $this->_controller_name . ' not found in file ' . $controller_file . '.');
 		}
 		
 		// Create a new instance of the controller to work with
@@ -158,12 +158,12 @@ class Artisan_Controller {
 		}
 
 		if ( false === $this->CONTROLLER instanceof Artisan_Controller_View ) {
-			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The controller is not of inherited type Artisan_Controller_View.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The controller is not of inherited type Artisan_Controller_View.');
 		}
 		
 		$method = $this->_controller_method;
 		if ( false === method_exists($this->CONTROLLER, $method) ) {
-			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The method ' . $method . ' does not exist in the controller ' . $controller . '.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The method ' . $method . ' does not exist in the controller ' . $controller . '.');
 		}
 		
 		$M = new ReflectionMethod($this->CONTROLLER, $method);
@@ -216,7 +216,7 @@ class Artisan_Controller {
 		$request_uri = asfw_exists_return('REQUEST_URI', $_SERVER);
 
 		if ( true === empty($script_name) || true === empty($request_uri) ) {
-			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The SCRIPT_NAME or REQUEST_URI is empty.', __CLASS__, __METHOD__);
+			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The SCRIPT_NAME or REQUEST_URI is empty.');
 		}
 
 		$script_name = asfw_strip_end_slashes($script_name);

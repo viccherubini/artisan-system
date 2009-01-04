@@ -80,7 +80,7 @@ class Artisan_Db_Adapter_Mysqli extends Artisan_Db {
 
 		if ( 0 != mysqli_connect_errno() || false === $this->CONN ) {
 			$this->_is_connected = false;
-			throw new Artisan_Db_Exception(ARTISAN_WARNING, mysqli_connect_error(), __CLASS__, __FUNCTION__);
+			throw new Artisan_Db_Exception(ARTISAN_WARNING, mysqli_connect_error());
 		}
 
 		$this->_is_connected = true;
@@ -114,7 +114,7 @@ class Artisan_Db_Adapter_Mysqli extends Artisan_Db {
 		$sql = trim($sql);
 		
 		if ( true === empty($sql) ) {
-			throw new Artisan_Db_Exception(ARTISAN_WARNING, 'The SQL statement is empty.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Db_Exception(ARTISAN_WARNING, 'The SQL statement is empty.');
 		}
 		
 		if ( true === is_object($this->CONN) ) {

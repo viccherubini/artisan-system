@@ -59,7 +59,7 @@ class Artisan_Template_Filesystem extends Artisan_Template {
 		$theme = trim($theme);
 		
 		if ( true === empty($theme) ) {
-			throw new Artisan_Template_Exception(ARTISAN_ERROR, 'The theme name is empty.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Template_Exception(ARTISAN_ERROR, 'The theme name is empty.');
 		}
 		
 		$theme = str_replace(array('/', '\\\\'), NULL, $theme);
@@ -69,7 +69,7 @@ class Artisan_Template_Filesystem extends Artisan_Template {
 		$theme_location = $this->_theme_directory . $theme;
 		
 		if ( false === is_dir($theme_location) ) {
-			throw new Artisan_Template_Exception(ARTISAN_ERROR, 'The theme location ' . $theme_location . ' is not a directory on the filesystem.', __CLASS__, __FUNCTION__);
+			throw new Artisan_Template_Exception(ARTISAN_ERROR, 'The theme location ' . $theme_location . ' is not a directory on the filesystem.');
 		}
 		
 		$this->_theme = $theme;
@@ -98,7 +98,7 @@ class Artisan_Template_Filesystem extends Artisan_Template {
 		if ( false === is_file($template_location) ) {
 			// If the template sent in isn't in the theme directory, perhaps its global
 			// in which case it resides in the self::THEME_DIRECTORY_GLOBAL const.
-			$template_location = $this->_theme_directory . self::THEME_DIRECTORY_GLOBAL . $template;// . self::TEMPLATE_EXT;
+			$template_location = $this->_theme_directory . self::THEME_DIRECTORY_GLOBAL . $template;
 			
 			if ( false === is_file($template_location) ) {
 				return false;
