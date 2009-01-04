@@ -12,8 +12,11 @@ require_once 'Artisan/Validate.php';
 class Artisan_Validate_Between extends Artisan_Validate {
 	private $_var = NULL;
 
-	public function __construct($var = NULL) {
+	public function __construct($var = NULL, $low = NULL, $high = NULL, $inclusive = true) {
 		$this->_var = trim($var);
+		$this->_low = trim($low);
+		$this->_high = trim($high);
+		$this->_inclusive = trim($inclusive);
 	}
 
 	/**
@@ -25,7 +28,7 @@ class Artisan_Validate_Between extends Artisan_Validate {
 	 * @param $inclusive Boolean to include or exclude $low/$high in range.
 	 * @retval boolean True if the value is a credit card number, false otherwise.
 	 */
-	public function isValid($var, $low, $high, $inclusive = true) {
+	public function isValid($var = NULL, $low = NULL, $high = NULL, $inclusive = true) {
 		if ( true === empty($var) ) {
 			$var = $this->_var;
 		}
