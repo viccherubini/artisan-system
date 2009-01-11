@@ -10,8 +10,49 @@
 // to hardcode the path.
 set_include_path('.:..');
 
-
 require_once 'Artisan/Config/Array.php';
+require_once 'Artisan/Functions/System.php';
+require_once 'Artisan/Db/Adapter/Mysqli.php';
+require_once 'Artisan/Customer/Adapter/Db.php';
+
+$config_db = new Artisan_Config_Array(array(
+	'server' => '192.168.2.101',
+	'username' => 'asfw_blog',
+	'password' => 'DSpuE2p6MjTZZrpJ',
+	'database' => 'artisan_blog'
+	)
+);
+
+$db = new Artisan_Db_Adapter_Mysqli($config_db);
+try {
+	$db->connect();
+} catch ( Artisan_Db_Exception $e ) {
+	exit($e);
+}
+
+$config_cust = new Artisan_Config_Array(array(
+	'table_list' => array(
+		'customer' => 'customer',
+		'comment' => 'customer_comment_history',
+		'history' => 'customer_history',
+		'field' => 'customer_field',
+		'field_type' => 'customer_field_type',
+		'field_value' => 'customer_field_value',
+	),
+	'db_adapter' => $db
+	)
+);
+try {
+	//$C = new Artisan_Customer_Adapter_Db($config_cust);
+	//$C->load(5);
+	//$db->query("SELECT '*' FROM some query");
+	
+} catch ( Artisan_Db_Exception $e ) {
+	echo $e;
+}
+
+$db->disconnect();
+/*
 require_once 'Artisan/Controller.php';
 
 // Create a new configuration instance for managing the controller. The
@@ -36,3 +77,6 @@ try {
 }
 
 exit;
+*/
+
+echo '<br><br><hr>' . asfw_peak_memory();
