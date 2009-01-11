@@ -15,8 +15,18 @@ require_once 'Artisan/Customer/Exception.php';
 abstract class Artisan_Customer extends Artisan_User {
 	protected $_initial = NULL;
 
-	protected $_revision = 1;
+	///< Current revision number
+	protected $_revision = 0;
+	
+	///< Revision number to load
+	protected $_rev_load = NULL;
 
+	const REV_ADDED = 'A';
+	const REV_MODIFIED = 'M';
+	const REV_DELETED = 'D';
+
+	const REV_HEAD = 'head';
+	
 	public function __construct() {
 		parent::__construct();
 		
