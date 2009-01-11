@@ -95,7 +95,7 @@ class Artisan_Vo {
 		
 		$found = true;
 		foreach ( $argv as $e ) {
-			if ( false === isset($this->$e) ) {
+			if ( false === property_exists($this, $e) ) {
 				$found = false;
 			}
 		}
