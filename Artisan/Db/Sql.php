@@ -226,7 +226,6 @@ abstract class Artisan_Db_Sql {
 	 * @retval string The built SQL.
 	 */
 	public function __toString() {
-		//$this->build();
 		return $this->_sql;
 	}
 }
