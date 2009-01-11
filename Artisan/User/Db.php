@@ -13,7 +13,7 @@ require_once 'Artisan/Functions/Database.php';
  */
 class Artisan_User_Db extends Artisan_User {
 	///< Database instance passed into the class. Assumes the database already has a connection.
-	private $DB = NULL;
+	protected $DB = NULL;
 	
 	///< The name of the table that holds user data, this is also defined in Artisan/Auth/Database.php!
 	const TABLE_USER = 'artisan_user';
