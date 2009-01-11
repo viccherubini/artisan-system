@@ -21,7 +21,7 @@ abstract class Artisan_User {
 	
 	///< The use Value Object for storing dynamic user data.
 	protected $_user = NULL;
-
+	
 	///< The status of the user, integer value.
 	protected $_user_status;
 

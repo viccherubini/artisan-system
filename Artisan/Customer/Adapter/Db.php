@@ -91,7 +91,20 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 				->query();
 			$row_count = $result_customer->numRows();
 			if ( 1 != $row_count ) {
-				throw new Artisan_Customer_Exception(ARTISAN_WARNING, 'No customer with .');
+				throw new Artisan_Customer_Exception(ARTISAN_WARNING, 'No customer with ID ' . $customer_id . ' found.');
+			}
+			
+			// Update the revision number if necessary
+			$result_revision = $this->DB->select()
+				->from($this->_table_list->history)
+				->where('customer_id = ?', $customer_id)
+				->groupBy('revision')
+				->orderBy('revision', 'DESC')
+				->query();
+			$row_count = $result_customer->numRows();
+			if ( $row_count > 0 ) {
+				$rev = $result_customer->fetchVo();
+				$this->_revision = $rev->revision;
 			}
 		} catch ( Artisan_Db_Exception $e ) {
 			throw $e;
@@ -101,7 +114,7 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 		unset($c_vo->user_id);
 		
 		// $_user and $_user_id are a part of Artisan_User
-		$this->_user = $c_vo;
+		$this->_user = $this->_initial = $c_vo;
 		$this->_user_id = $customer_id;
 	}
 	
@@ -124,7 +137,13 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 	 * @retval boolean Returns true.
 	 */
 	protected function _update() {
-		echo __FUNCTION__;
+		//echo __FUNCTION__;
+		// First, get the latest reivison number
+		//$revision = 1;
+		
+		// First see which fields have changed from their current values
+		
+		
 	}
 	
 	/**

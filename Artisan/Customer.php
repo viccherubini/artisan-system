@@ -13,11 +13,14 @@ require_once 'Artisan/Customer/Exception.php';
  * @author <vmc@leftnode.com>
  */
 abstract class Artisan_Customer extends Artisan_User {
-	//protected $_customer_id = 0;
-	//protected $_customer = NULL;
-	
+	protected $_initial = NULL;
+
+	protected $_revision = 1;
+
 	public function __construct() {
 		parent::__construct();
+		
+		$this->_initial = new Artisan_Vo();
 	}
 	
 	
