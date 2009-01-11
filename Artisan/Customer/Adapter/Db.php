@@ -55,8 +55,9 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 	 * @throw Artisan_User_Exception If the user can not be found.
 	 * @retval boolean Returns true.
 	 */
-	public function load($customer_id) {
+	public function load($customer_id, $revision = self::REV_HEAD) {
 		try {
+			$this->_rev_load = $revision;
 			$this->_load($customer_id);
 		} catch ( Artisan_Customer_Exception $e ) {
 			throw $e;
@@ -94,6 +95,32 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 				throw new Artisan_Customer_Exception(ARTISAN_WARNING, 'No customer with ID ' . $customer_id . ' found.');
 			}
 			
+			$c_vo = $result_customer->fetchVo();
+			echo $c_vo;
+			unset($c_vo->user_id);
+			
+			// This is cloned so that way $c_vo is not copied by reference.
+			// That way, new values to $_user will not show up here and $_initial
+			// will be pristine for updating.
+			$this->_initial = clone $c_vo;
+
+			// If the revision isn't head, then, load up those values
+			if ( $this->_rev_load != self::REV_HEAD && true === is_int($this->_rev_load) ) {
+				$result_revision = $this->DB->select()
+					->from($this->_table_list->history, 'ch', 'field', 'value')
+					->where('customer_id = ?', $customer_id)
+					->where('revision = ?', $this->_rev_load)
+					->query();
+				$row_count = $result_revision->numRows();
+				if ( $row_count > 0 ) {
+					while ( $rev = $result_revision->fetchVo() ) {
+						if ( true === $c_vo->exists($rev->field) ) {
+							$c_vo->{$rev->field} = $rev->value;
+						}
+					}
+				}
+			}
+			
 			// Update the revision number if necessary
 			$result_revision = $this->DB->select()
 				->from($this->_table_list->history)
@@ -101,20 +128,17 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 				->groupBy('revision')
 				->orderBy('revision', 'DESC')
 				->query();
-			$row_count = $result_customer->numRows();
+			$row_count = $result_revision->numRows();
 			if ( $row_count > 0 ) {
-				$rev = $result_customer->fetchVo();
+				$rev = $result_revision->fetchVo();
 				$this->_revision = $rev->revision;
 			}
 		} catch ( Artisan_Db_Exception $e ) {
 			throw $e;
 		}
 
-		$c_vo = $result_customer->fetchVo();
-		unset($c_vo->user_id);
-		
 		// $_user and $_user_id are a part of Artisan_User
-		$this->_user = $this->_initial = $c_vo;
+		$this->_user = $c_vo;
 		$this->_user_id = $customer_id;
 	}
 	
@@ -137,13 +161,49 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 	 * @retval boolean Returns true.
 	 */
 	protected function _update() {
-		//echo __FUNCTION__;
-		// First, get the latest reivison number
-		//$revision = 1;
+		// We have the revision, update it and insert the changed rows into
+		// the history table
+		// Essentially, do a diff between $_initial and $_user
+		$rev = ++$this->_revision;
+		$history = array(
+			'customer_id' => $this->_user_id,
+			'date_create' => time(),
+			'revision' => $rev,
+			'type' => NULL,
+			'field' => NULL,
+			'value' => NULL
+		);
 		
-		// First see which fields have changed from their current values
+		foreach ( $this->_user as $k => $v ) {
+			$history['field'] = $k;
+			$history['value'] = $v;
+			$history['type'] = NULL;
+			if ( false === $this->_initial->exists($k) ) {
+				$history['type'] = self::REV_ADDED;
+				
+				// These need to be added to the customer_field and customer_field_value tables
+			} else {
+				if ( $this->_initial->$k != $v ) {
+					$history['value'] = $this->_initial->$k;	
+					$history['type'] = self::REV_MODIFIED;
+				}
+			}
+			
+			if ( false === empty($history['type']) ) {
+				$this->DB->insert()
+					->into($this->_table_list->history)
+					->values($history)
+					->query();
+			}
+		}
 		
-		
+		// Now do the updates
+		$this->_user->date_modify = time();
+		$this->DB->update()
+			->table($this->_table_list->customer)
+			->set($this->_user->toArray())
+			->where('customer_id = ?', $this->_user_id)
+			->query();
 	}
 	
 	/**
