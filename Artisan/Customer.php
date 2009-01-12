@@ -12,19 +12,19 @@ require_once 'Artisan/Customer/Exception.php';
  * or other type of customer management interface.
  * @author <vmc@leftnode.com>
  */
-abstract class Artisan_Customer extends Artisan_User {
+abstract class Artisan_Customer {
 	protected $_customer = NULL;
-	protected $_customer_initial = NULL;
-	protected $_customer_additional = NULL;
+	protected $_customerOriginal = NULL;
+	
+	protected $_customerField = NULL;
+	
+
 
 	///< Current revision number
-	protected $_revision_current = 0;
+	protected $_revision = 0;
 	
-	///< Revision number to load
-	protected $_revision_load = NULL;
-
 	///< Primary key
-	protected $_customer_id = 0;
+	protected $_customerId = 0;
 
 
 
@@ -38,8 +38,9 @@ abstract class Artisan_Customer extends Artisan_User {
 	
 	public function __construct() {
 		$this->_customer = new Artisan_Vo();
-		$this->_customer_initial = new Artisan_Vo();
-		$this->_customer_additional = new Artisan_Vo();
+		$this->_customerField = new Artisan_Vo();
+		//$this->_customer_initial = new Artisan_Vo();
+		//$this->_customer_additional = new Artisan_Vo();
 	}
 	
 	/**
@@ -53,8 +54,8 @@ abstract class Artisan_Customer extends Artisan_User {
 		if ( true === $this->_customer->exists($name) ) {
 			return $this->_customer->$name;
 		}
-		if ( true === $this->_customer_additional->exists($name) ) {
-			return $this->_customer_additional->$name;
+		if ( true === $this->_customerField->exists($name) ) {
+			return $this->_customerField->$name;
 		}
 		return NULL;
 	}
@@ -64,5 +65,9 @@ abstract class Artisan_Customer extends Artisan_User {
 		// If a new field is added, it should always go to the
 		// $_customer_additional variable
 		
+	}
+	
+	public function getRevision() {
+		return $this->_revision;
 	}
 }
