@@ -57,7 +57,7 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 	 */
 	public function load($customer_id, $revision = self::REV_HEAD) {
 		try {
-			$this->_rev_load = $revision;
+			$this->_revision_load = $revision;
 			$this->_load($customer_id);
 		} catch ( Artisan_Customer_Exception $e ) {
 			throw $e;
@@ -96,20 +96,37 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 			}
 			
 			$c_vo = $result_customer->fetchVo();
-			echo $c_vo;
 			unset($c_vo->user_id);
 			
+			// See if there are any data to load up in the additional fields
+			$cfv_table = $this->_table_list->field_value;
+			$cf_table = $this->_table_list->field;
+			$cfv = asfw_create_table_alias($cfv_table);
+			$cf = asfw_create_table_alias($cf_table);
+			
+			$result_field = $this->DB->select()
+				->from($cfv_table, $cfv, $cf.'.name', $cfv.'.value')
+				->innerJoin($cf_table, $cfv.'.field_id', $cf.'.field_id')
+				->where($cfv.'.customer_id = ?', $customer_id)
+				->query();
+			$row_count = $result_field->numRows();
+			if ( $row_count > 0 ) {
+				while ( $f = $result_field->fetchVo() ) {
+					$this->_customer_additional->{$f->name} = $f->value;
+				}
+			}
+			
 			// This is cloned so that way $c_vo is not copied by reference.
-			// That way, new values to $_user will not show up here and $_initial
+			// That way, new values to $_user will not show up here and $_user_original
 			// will be pristine for updating.
-			$this->_initial = clone $c_vo;
+			$this->_user_original = clone $c_vo;
 
 			// If the revision isn't head, then, load up those values
 			if ( $this->_rev_load != self::REV_HEAD && true === is_int($this->_rev_load) ) {
 				$result_revision = $this->DB->select()
 					->from($this->_table_list->history, 'ch', 'field', 'value')
 					->where('customer_id = ?', $customer_id)
-					->where('revision = ?', $this->_rev_load)
+					->where('revision = ?', $this->_revision_load)
 					->query();
 				$row_count = $result_revision->numRows();
 				if ( $row_count > 0 ) {
@@ -121,7 +138,7 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 				}
 			}
 			
-			// Update the revision number if necessary
+			// Get the reivison number
 			$result_revision = $this->DB->select()
 				->from($this->_table_list->history)
 				->where('customer_id = ?', $customer_id)
@@ -131,7 +148,7 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 			$row_count = $result_revision->numRows();
 			if ( $row_count > 0 ) {
 				$rev = $result_revision->fetchVo();
-				$this->_revision = $rev->revision;
+				$this->_revision_current = $rev->revision;
 			}
 		} catch ( Artisan_Db_Exception $e ) {
 			throw $e;
@@ -161,30 +178,33 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 	 * @retval boolean Returns true.
 	 */
 	protected function _update() {
-		// We have the revision, update it and insert the changed rows into
-		// the history table
-		// Essentially, do a diff between $_initial and $_user
-		$rev = ++$this->_revision;
+		/*
+		$curr_rev = ++$this->_revision_current;
 		$history = array(
 			'customer_id' => $this->_user_id,
 			'date_create' => time(),
-			'revision' => $rev,
+			'revision' => $curr_rev,
 			'type' => NULL,
 			'field' => NULL,
 			'value' => NULL
 		);
 		
+		
+		// A diff needs to be done between the initial user data and the updated user data
+		// A diff then needs to be done between the initial user_field data and the updated user_field data
+		
+		
 		foreach ( $this->_user as $k => $v ) {
 			$history['field'] = $k;
 			$history['value'] = $v;
 			$history['type'] = NULL;
-			if ( false === $this->_initial->exists($k) ) {
+			if ( false === $this->_user_original->exists($k) ) {
 				$history['type'] = self::REV_ADDED;
 				
 				// These need to be added to the customer_field and customer_field_value tables
 			} else {
-				if ( $this->_initial->$k != $v ) {
-					$history['value'] = $this->_initial->$k;	
+				if ( $this->_user_original->$k != $v ) {
+					$history['value'] = $this->_user_original->$k;	
 					$history['type'] = self::REV_MODIFIED;
 				}
 			}
@@ -204,6 +224,14 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 			->set($this->_user->toArray())
 			->where('customer_id = ?', $this->_user_id)
 			->query();
+		*/
+		
+		
+		
+		
+		
+		
+		
 	}
 	
 	/**
@@ -221,6 +249,8 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 	}
 	
 	
+	private function _insertDiff($new_list, $orig_list) {
 	
+	}
 	
 }
