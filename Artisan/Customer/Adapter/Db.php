@@ -139,7 +139,6 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 			// will be pristine for updating.
 			$this->_customerOriginal = clone $c_vo;
 			
-			
 			// See if there are any data to load up in the additional fields
 			$cfv = asfw_create_table_alias($this->_fieldValueTable);
 			$cf = asfw_create_table_alias($this->_fieldTable);
@@ -157,9 +156,12 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 			}
 
 			// If the revision isn't head, then, load up those values to overwrite the original values
-			if ( $revision != self::REV_HEAD && true === is_int($revision) ) {
+			if ( $revision != self::REV_HEAD && true === is_int(abs($revision)) ) {
+				$revision = abs($revision);
+				$hTable = $this->_historyTable;
+				$hAlias = asfw_create_table_alias($this->_historyTable);
 				$result_revision = $this->_dbConn->select()
-					->from($this->_historyTable, asfw_create_table_alias($this->_historyTable), 'field', 'value', 'revision')
+					->from($hTable, $hAlias, 'field', 'value', 'revision')
 					->where('customer_id = ?', $customer_id)
 					->where('revision = ?', $revision)
 					->orderBy('history_id', 'ASC')
@@ -175,26 +177,14 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 				}
 			}
 			
-			// Get the reivison number
-			/*
-			$result_revision = $this->_dbConn->select()
-				->from($this->_table_list->history)
-				->where('customer_id = ?', $customer_id)
-				->groupBy('revision')
-				->orderBy('revision', 'DESC')
-				->query();
-			$row_count = $result_revision->numRows();
-			if ( $row_count > 0 ) {
-				$rev = $result_revision->fetchVo();
-				$this->_rev = $rev->revision;
-			}
-			*/
+			// Finally set up all of these values
+			$this->_customer = $c_vo;
+			$this->_customerId = $customer_id;
 		} catch ( Artisan_Db_Exception $e ) {
 			throw $e;
 		}
-
-		$this->_customer = $c_vo;
-		$this->_customerId = $customer_id;
+		
+		return true;
 	}
 	
 	/**
