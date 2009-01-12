@@ -42,6 +42,9 @@ abstract class Artisan_Db_Sql_Select extends Artisan_Db_Sql {
 	///< Or descending.
 	protected $_desc = NULL;
 	
+	///< The limit of number of rows that should be returned.
+	protected $_limit = 0;
+	
 	///< An INNER JOIN clause element.
 	const SQL_JOIN_INNER = 'INNER JOIN';
 	
@@ -159,7 +162,6 @@ abstract class Artisan_Db_Sql_Select extends Artisan_Db_Sql {
 	/**
 	 * Starts building a SELECT FROM clause.
 	 * @author vmc <vmc@leftnode.com>
-	 * @todo Finish implementing this!
 	 * @retval Object Returns itself for chaining.
 	 */
 	public function orderBy($field, $method = 'ASC') {
@@ -167,6 +169,20 @@ abstract class Artisan_Db_Sql_Select extends Artisan_Db_Sql {
 		if ( func_num_args() > 0 ) {
 			$this->_order_field = $field;
 			$this->_order_method = $method;
+		}
+		return $this;
+	}
+
+	/**
+	 * Adds a LIMIT clause, but only for the max rows returned, not the page they are returned from.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $length The number of rows to return.
+	 * @retval Object Returns itself for chaining.
+	 */
+	public function limit($length) {
+		$length = abs($length);
+		if ( $length > 0 ) {
+			$this->_limit = $length;
 		}
 		return $this;
 	}
@@ -212,7 +228,12 @@ abstract class Artisan_Db_Sql_Select extends Artisan_Db_Sql {
 			$group_sql = " GROUP BY " . implode(", ", $this->_group_field_list);
 		}
 		
-		$this->_sql = $select_sql . $join_sql . $where_sql . $group_sql . $order_sql;
+		$limit_sql = NULL;
+		if ( $this->_limit > 0 ) {
+			$limit_sql = " LIMIT " . $this->_limit;
+		}
+		
+		$this->_sql = $select_sql . $join_sql . $where_sql . $group_sql . $order_sql . $limit_sql;
 		$this->_where_field_list = $this->_group_field_list = array();
 		$this->_order_field = $this->_order_method = NULL;
 		$this->_join_table_list = array();
