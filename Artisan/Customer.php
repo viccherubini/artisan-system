@@ -13,9 +13,8 @@ require_once 'Artisan/Customer/Exception.php';
  * @author <vmc@leftnode.com>
  */
 abstract class Artisan_Customer extends Artisan_User {
-	protected $_user_original = NULL;
-
-
+	protected $_customer = NULL;
+	protected $_customer_initial = NULL;
 	protected $_customer_additional = NULL;
 
 	///< Current revision number
@@ -23,9 +22,6 @@ abstract class Artisan_Customer extends Artisan_User {
 	
 	///< Revision number to load
 	protected $_revision_load = NULL;
-
-	protected $_customer_field = NULL;
-
 
 	///< Primary key
 	protected $_customer_id = 0;
@@ -41,25 +37,21 @@ abstract class Artisan_Customer extends Artisan_User {
 	const REV_HEAD = 'head';
 	
 	public function __construct() {
-		parent::__construct();
-		
-		$this->_initial = new Artisan_Vo();
+		$this->_customer = new Artisan_Vo();
+		$this->_customer_initial = new Artisan_Vo();
 		$this->_customer_additional = new Artisan_Vo();
 	}
 	
 	/**
-	 * Magic method to get extra values from the field_value table.
-	 * Thus, if the value doesn't exist in the base $_user variable,
-	 * the $_customer_additional variable is checked for a value.
+	 * Checks to see if a value exists in the $_customer field. If not, then
+	 * checks the $_customer_additional field. If not there, then returns NULL.
 	 * @author vmc <vmc@leftnode.com>
 	 * @param $name The name of the variable to return from $_customer_additional.
-	 * @retval string The initial value from Artisan_User::$_user, the value from $_customer_additional,
-	 *                or NULL if it can not be found.
+	 * @retval string The specified value in $name or NULL if it's not found anywhere.
 	 */
 	public function __get($name) {
-		$v = parent::__get($name);
-		if ( false === empty($v) ) {
-			return $v;
+		if ( true === $this->_customer->exists($name) ) {
+			return $this->_customer->$name;
 		}
 		if ( true === $this->_customer_additional->exists($name) ) {
 			return $this->_customer_additional->$name;

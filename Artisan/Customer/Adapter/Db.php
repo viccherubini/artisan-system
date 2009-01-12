@@ -5,7 +5,7 @@ require_once 'Artisan/Customer.php';
 
 class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 	/// Database instance passed into the class. Assumes the database already has a connection.
-	private $DB = NULL;
+	private $_db = NULL;
 	
 	/// An Artisan_Vo object that contains a list of tables to use.
 	private $_table_list = NULL;
@@ -13,7 +13,7 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 	/// Ignore the customer_field* tables if true, avoiding the extra queries. Use the CONFIG to set this to false.
 	private $_ignore_field_tables = true;
 	
-	public function __construct(Artisan_Config &$CONFIG) {
+	public function __construct(Artisan_Db $db) {
 		parent::__construct();
 		
 		if ( true === $CONFIG->exists('db_adapter') ) {
@@ -57,8 +57,7 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 	 */
 	public function load($customer_id, $revision = self::REV_HEAD) {
 		try {
-			$this->_revision_load = $revision;
-			$this->_load($customer_id);
+			$this->_load($customer_id, $revision);
 		} catch ( Artisan_Customer_Exception $e ) {
 			throw $e;
 		}
@@ -73,7 +72,7 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 	 * @throw Artisan_User_Exception If the user can not be found in the database.
 	 * @retval boolean Returns true.
 	 */
-	protected function _load($customer_id) {
+	protected function _load($customer_id, $revision) {
 		$this->_checkDb(__FUNCTION__);
 		
 		// Because the queries can be quite intensive, if the ignore_fields 
@@ -96,7 +95,7 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 			}
 			
 			$c_vo = $result_customer->fetchVo();
-			unset($c_vo->user_id);
+			unset($c_vo->customer_id);
 			
 			// See if there are any data to load up in the additional fields
 			$cfv_table = $this->_table_list->field_value;
@@ -119,7 +118,7 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 			// This is cloned so that way $c_vo is not copied by reference.
 			// That way, new values to $_user will not show up here and $_user_original
 			// will be pristine for updating.
-			$this->_user_original = clone $c_vo;
+			$this->_customer_initial = clone $c_vo;
 
 			// If the revision isn't head, then, load up those values
 			if ( $this->_rev_load != self::REV_HEAD && true === is_int($this->_rev_load) ) {
