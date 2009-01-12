@@ -156,10 +156,10 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 			}
 
 			// If the revision isn't head, then, load up those values to overwrite the original values
+			$hTable = $this->_historyTable;
+			$hAlias = asfw_create_table_alias($this->_historyTable);
 			if ( $revision != self::REV_HEAD && true === is_int(abs($revision)) ) {
 				$revision = abs($revision);
-				$hTable = $this->_historyTable;
-				$hAlias = asfw_create_table_alias($this->_historyTable);
 				$result_revision = $this->_dbConn->select()
 					->from($hTable, $hAlias, 'field', 'value', 'revision')
 					->where('customer_id = ?', $customer_id)
@@ -172,9 +172,20 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 						if ( true === $c_vo->exists($rev->field) ) {
 							$c_vo->{$rev->field} = $rev->value;
 						}
-						$this->_revision = $rev->revision;
+						//$this->_revision = $rev->revision;
 					}
 				}
+			}
+			
+			$result_revision = $this->_dbConn->select()
+				->from($hTable, $hAlias, 'revision')
+				->where('customer_id = ?', $customer_id)
+				->groupBy('revision')
+				->orderBy('revision', 'DESC')
+				->limit(1)
+				->query();
+			if ( 1 == $result_revision->numRows() ) {
+				$this->_revision = $result_revision->fetch('revision');
 			}
 			
 			// Finally set up all of these values
