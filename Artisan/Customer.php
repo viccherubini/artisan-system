@@ -64,7 +64,12 @@ abstract class Artisan_Customer {
 		$name = trim($name);
 		// If a new field is added, it should always go to the
 		// $_customer_additional variable
-		
+		if ( true === $this->_customer->exists($name) ) {
+			$this->_customer->$name = $value;
+		} else {
+			$this->_customerField->$name = $value;
+		}
+		return true;
 	}
 	
 	public function getRevision() {
