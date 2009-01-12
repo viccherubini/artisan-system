@@ -161,7 +161,7 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 			if ( $revision != self::REV_HEAD && true === is_int(abs($revision)) ) {
 				$revision = abs($revision);
 				$result_revision = $this->_dbConn->select()
-					->from($hTable, $hAlias, 'field', 'value', 'revision')
+					->from($hTable, $hAlias, 'field', 'value')
 					->where('customer_id = ?', $customer_id)
 					->where('revision = ?', $revision)
 					->orderBy('history_id', 'ASC')
@@ -172,11 +172,11 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 						if ( true === $c_vo->exists($rev->field) ) {
 							$c_vo->{$rev->field} = $rev->value;
 						}
-						//$this->_revision = $rev->revision;
 					}
 				}
 			}
 			
+			// Find the latest revision for when the customer is updated.
 			$result_revision = $this->_dbConn->select()
 				->from($hTable, $hAlias, 'revision')
 				->where('customer_id = ?', $customer_id)
@@ -217,10 +217,9 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 	 * @retval boolean Returns true.
 	 */
 	protected function _update() {
-		/*
-		$curr_rev = ++$this->_revision_current;
+		$curr_rev = ++$this->_revision;
 		$history = array(
-			'customer_id' => $this->_user_id,
+			'customer_id' => $this->_customerId,
 			'date_create' => time(),
 			'revision' => $curr_rev,
 			'type' => NULL,
@@ -228,47 +227,36 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 			'value' => NULL
 		);
 		
-		
 		// A diff needs to be done between the initial user data and the updated user data
 		// A diff then needs to be done between the initial user_field data and the updated user_field data
-		foreach ( $this->_user as $k => $v ) {
+		foreach ( $this->_customer as $k => $v ) {
 			$history['field'] = $k;
 			$history['value'] = $v;
 			$history['type'] = NULL;
-			if ( false === $this->_user_original->exists($k) ) {
+			if ( false === $this->_customerOriginal->exists($k) ) {
 				$history['type'] = self::REV_ADDED;
-				
-				// These need to be added to the customer_field and customer_field_value tables
 			} else {
-				if ( $this->_user_original->$k != $v ) {
-					$history['value'] = $this->_user_original->$k;	
+				if ( $this->_customerOriginal->$k != $v ) {
+					$history['value'] = $this->_customerOriginal->$k;	
 					$history['type'] = self::REV_MODIFIED;
 				}
 			}
 			
 			if ( false === empty($history['type']) ) {
 				$this->_dbConn->insert()
-					->into($this->_table_list->history)
+					->into($this->_historyTable)
 					->values($history)
 					->query();
 			}
 		}
 		
 		// Now do the updates
-		$this->_user->date_modify = time();
+		$this->_customer->date_modify = time();
 		$this->_dbConn->update()
-			->table($this->_table_list->customer)
-			->set($this->_user->toArray())
-			->where('customer_id = ?', $this->_user_id)
+			->table($this->_customerTable)
+			->set($this->_customer->toArray())
+			->where('customer_id = ?', $this->_customerId)
 			->query();
-		*/
-		
-		
-		
-		
-		
-		
-		
 	}
 	
 	/**
