@@ -5,30 +5,69 @@ require_once 'Artisan/Customer.php';
 
 class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 	/// Database instance passed into the class. Assumes the database already has a connection.
-	private $_db = NULL;
+	private $_dbConn = NULL;
 	
 	/// An Artisan_Vo object that contains a list of tables to use.
-	private $_table_list = NULL;
+	//private $_table_list = NULL;
+	
+	private $_customerTable = NULL;
+	private $_commentHistoryTable = NULL;
+	private $_fieldTable = NULL;
+	private $_fieldTypeTable = NULL;
+	private $_fieldValueTable = NULL;
+	private $_historyTable = NULL;
 	
 	/// Ignore the customer_field* tables if true, avoiding the extra queries. Use the CONFIG to set this to false.
-	private $_ignore_field_tables = true;
+	//private $_ignore_field_tables = true;
 	
-	public function __construct(Artisan_Db $db) {
+	public function __construct(Artisan_Db $db, Artisan_Vo $tableList = NULL) {
 		parent::__construct();
 		
-		if ( true === $CONFIG->exists('db_adapter') ) {
-			$this->DB = &$CONFIG->db_adapter;
-		}
+		$this->_dbConn = $db;
 		
-		$this->_table_list = $CONFIG->table_list;
-		if ( true === $CONFIG->exists('ignore_field_tables') ) {
-			$this->_ignore_field_tables = $CONFIG->ignore_field_tables;
-		}
-		
-		if ( $CONFIG->customer_id > 0 ) {
-			$this->load($CONFIG->customer_id);
+		if ( false === empty($tableList) ) {
+			$this->setCustomerTable($tableList->customer);
+			$this->setCommentHistoryTable($tableList->comment_history);
+			$this->setFieldTable($tableList->field);
+			$this->setFieldTypeTable($tableList->field_type);
+			$this->setFieldValueTable($tableList->field_value);
+			$this->setHistoryTable($tableList->history);
 		}
 	}
+	
+	
+	public function setCustomerTable($table) {
+		$this->_customerTable = trim($table);
+		return $this;
+	}
+	
+	public function setCommentHistoryTable($table) {
+		$this->_commentHistoryTable = trim($table);
+		return $this;
+	}
+	
+	public function setFieldTable($table) {
+		$this->_fieldTable = trim($table);
+		return $this;
+	}
+	
+	public function setFieldTypeTable($table) {
+		$this->_fieldTypeTable = trim($table);
+		return $this;
+	}
+	
+	public function setFieldValueTable($table) {
+		$this->_fieldValueTable = trim($table);
+		return $this;
+	}
+	
+	public function setHistoryTable($table) {
+		$this->_historyTable = trim($table);
+		return $this;
+	}
+	
+	
+	
 	
 	/**
 	 * Writes a user to the database. If the user exists, their data is updated,
@@ -38,14 +77,12 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 	 */
 	public function write() {
 		$this->_checkDb();
-		
-		if ( $this->_user_id > 0 ) {
+		if ( $this->_customerId > 0 ) {
 			$this->_update();
 		} else {
 			$this->_insert();
 		}
-		
-		return $this->_user_id;
+		return $this->_customerId;
 	}
 	
 	/**
@@ -85,8 +122,8 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 		}
 		
 		try {
-			$result_customer = $this->DB->select()
-				->from($this->_table_list->customer)
+			$result_customer = $this->_dbConn->select()
+				->from($this->_customerTable)
 				->where('customer_id = ?', $customer_id)
 				->query();
 			$row_count = $result_customer->numRows();
@@ -97,35 +134,35 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 			$c_vo = $result_customer->fetchVo();
 			unset($c_vo->customer_id);
 			
-			// See if there are any data to load up in the additional fields
-			$cfv_table = $this->_table_list->field_value;
-			$cf_table = $this->_table_list->field;
-			$cfv = asfw_create_table_alias($cfv_table);
-			$cf = asfw_create_table_alias($cf_table);
+			// This is cloned so that way $c_vo is not copied by reference.
+			// That way, new values to $_user will not show up here and $_user_original
+			// will be pristine for updating.
+			$this->_customerOriginal = clone $c_vo;
 			
-			$result_field = $this->DB->select()
-				->from($cfv_table, $cfv, $cf.'.name', $cfv.'.value')
-				->innerJoin($cf_table, $cfv.'.field_id', $cf.'.field_id')
+			
+			// See if there are any data to load up in the additional fields
+			$cfv = asfw_create_table_alias($this->_fieldValueTable);
+			$cf = asfw_create_table_alias($this->_fieldTable);
+			
+			$result_field = $this->_dbConn->select()
+				->from($this->_fieldValueTable, $cfv, $cf.'.name', $cfv.'.value')
+				->innerJoin($this->_fieldTable, $cfv.'.field_id', $cf.'.field_id')
 				->where($cfv.'.customer_id = ?', $customer_id)
 				->query();
 			$row_count = $result_field->numRows();
 			if ( $row_count > 0 ) {
 				while ( $f = $result_field->fetchVo() ) {
-					$this->_customer_additional->{$f->name} = $f->value;
+					$this->_customerField->{$f->name} = $f->value;
 				}
 			}
-			
-			// This is cloned so that way $c_vo is not copied by reference.
-			// That way, new values to $_user will not show up here and $_user_original
-			// will be pristine for updating.
-			$this->_customer_initial = clone $c_vo;
 
-			// If the revision isn't head, then, load up those values
-			if ( $this->_rev_load != self::REV_HEAD && true === is_int($this->_rev_load) ) {
-				$result_revision = $this->DB->select()
-					->from($this->_table_list->history, 'ch', 'field', 'value')
+			// If the revision isn't head, then, load up those values to overwrite the original values
+			if ( $revision != self::REV_HEAD && true === is_int($revision) ) {
+				$result_revision = $this->_dbConn->select()
+					->from($this->_historyTable, asfw_create_table_alias($this->_historyTable), 'field', 'value', 'revision')
 					->where('customer_id = ?', $customer_id)
-					->where('revision = ?', $this->_revision_load)
+					->where('revision = ?', $revision)
+					->orderBy('history_id', 'ASC')
 					->query();
 				$row_count = $result_revision->numRows();
 				if ( $row_count > 0 ) {
@@ -133,12 +170,14 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 						if ( true === $c_vo->exists($rev->field) ) {
 							$c_vo->{$rev->field} = $rev->value;
 						}
+						$this->_revision = $rev->revision;
 					}
 				}
 			}
 			
 			// Get the reivison number
-			$result_revision = $this->DB->select()
+			/*
+			$result_revision = $this->_dbConn->select()
 				->from($this->_table_list->history)
 				->where('customer_id = ?', $customer_id)
 				->groupBy('revision')
@@ -147,15 +186,15 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 			$row_count = $result_revision->numRows();
 			if ( $row_count > 0 ) {
 				$rev = $result_revision->fetchVo();
-				$this->_revision_current = $rev->revision;
+				$this->_rev = $rev->revision;
 			}
+			*/
 		} catch ( Artisan_Db_Exception $e ) {
 			throw $e;
 		}
 
-		// $_user and $_user_id are a part of Artisan_User
-		$this->_user = $c_vo;
-		$this->_user_id = $customer_id;
+		$this->_customer = $c_vo;
+		$this->_customerId = $customer_id;
 	}
 	
 	/**
@@ -191,8 +230,6 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 		
 		// A diff needs to be done between the initial user data and the updated user data
 		// A diff then needs to be done between the initial user_field data and the updated user_field data
-		
-		
 		foreach ( $this->_user as $k => $v ) {
 			$history['field'] = $k;
 			$history['value'] = $v;
@@ -209,7 +246,7 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 			}
 			
 			if ( false === empty($history['type']) ) {
-				$this->DB->insert()
+				$this->_dbConn->insert()
 					->into($this->_table_list->history)
 					->values($history)
 					->query();
@@ -218,7 +255,7 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 		
 		// Now do the updates
 		$this->_user->date_modify = time();
-		$this->DB->update()
+		$this->_dbConn->update()
 			->table($this->_table_list->customer)
 			->set($this->_user->toArray())
 			->where('customer_id = ?', $this->_user_id)
@@ -241,7 +278,7 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 	 * @retval boolean Returns true.
 	 */
 	private function _checkDb() {
-		if ( false === $this->DB->isConnected() ) {
+		if ( false === $this->_dbConn->isConnected() ) {
 			throw new Artisan_Customer_Exception(ARTISAN_WARNING, 'The database does not have an active connection.');
 		}
 		return true;
