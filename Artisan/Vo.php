@@ -102,6 +102,10 @@ class Artisan_Vo {
 		return $found;
 	}
 	
+	public function length() {
+		return count(get_object_vars($this));
+	}
+	
 	/**
 	 * Converts a Value Object back to the initial array that it was built from.
 	 * @author vmc <vmc@leftnode.com>
