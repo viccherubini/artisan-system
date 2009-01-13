@@ -7,9 +7,6 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 	/// Database instance passed into the class. Assumes the database already has a connection.
 	private $_dbConn = NULL;
 	
-	/// An Artisan_Vo object that contains a list of tables to use.
-	//private $_table_list = NULL;
-	
 	private $_customerTable = NULL;
 	private $_commentHistoryTable = NULL;
 	private $_fieldTable = NULL;
@@ -217,6 +214,9 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 	 * @retval boolean Returns true.
 	 */
 	protected function _update() {
+		
+		
+		/*
 		$curr_rev = ++$this->_revision;
 		$history = array(
 			'customer_id' => $this->_customerId,
@@ -257,6 +257,7 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 			->set($this->_customer->toArray())
 			->where('customer_id = ?', $this->_customerId)
 			->query();
+		*/
 	}
 	
 	/**
