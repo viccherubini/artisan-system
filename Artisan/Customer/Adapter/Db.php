@@ -129,29 +129,39 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 			}
 			
 			$c_vo = $result_customer->fetchVo();
+			
+			// Unset the original customer_id so it can't be manipulated directly
 			unset($c_vo->customer_id);
 			
-			// This is cloned so that way $c_vo is not copied by reference.
-			// That way, new values to $_user will not show up here and $_user_original
-			// will be pristine for updating.
-			$this->_customerOriginal = clone $c_vo;
 			
-			// See if there are any data to load up in the additional fields
-			$cfv = asfw_create_table_alias($this->_fieldValueTable);
-			$cf = asfw_create_table_alias($this->_fieldTable);
-			
+			// Now load up any additional fields
+			$c_addl_vo = new Artisan_Vo();
 			$result_field = $this->_dbConn->select()
-				->from($this->_fieldValueTable, $cfv, $cf.'.name', $cfv.'.value')
-				->innerJoin($this->_fieldTable, $cfv.'.field_id', $cf.'.field_id')
-				->where($cfv.'.customer_id = ?', $customer_id)
+				->from($this->_fieldValueTable, 'cfv', 'cf.name', 'cfv.value')
+				->innerJoin($this->_fieldTable, 'cfv.field_id', 'cf.field_id')
+				->where('cfv.customer_id = ?', $customer_id)
+				->where('cf.status = 1')
 				->query();
-			$row_count = $result_field->numRows();
-			if ( $row_count > 0 ) {
-				while ( $f = $result_field->fetchVo() ) {
-					$this->_customerField->{$f->name} = $f->value;
+			if ( $result_field->numRows() > 0 ) {
+				while ( $addl = $result_field->fetchVo() ) {
+					$c_addl_vo->{$addl->name} = $addl->value;
 				}
 			}
+			
+			// The original values use cloned versions of the value objects 
+			// because the initial values are passed by reference, so if this customer
+			// is having a specific revision loaded, we want to maintain the original
+			// values, or, if the initial values are overwritten, we need to be able to
+			// tell that when the customer is written. It is easier to load these now
+			// and just ignore them until the write than load them up during the write.
+			$this->_custAddl = $c_addl_vo;
+			$this->_custAddlOrig = clone $c_addl_vo;
 
+			$this->_cust = $c_vo;
+			$this->_custOrig = clone $c_vo;
+			
+			
+			
 			// If the revision isn't head, then, load up those values to overwrite the original values
 			$hTable = $this->_historyTable;
 			$hAlias = asfw_create_table_alias($this->_historyTable);
@@ -163,11 +173,13 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 					->where('revision = ?', $revision)
 					->orderBy('history_id', 'ASC')
 					->query();
-				$row_count = $result_revision->numRows();
-				if ( $row_count > 0 ) {
+				if ( $result_revision->numRows() > 0 ) {
 					while ( $rev = $result_revision->fetchVo() ) {
-						if ( true === $c_vo->exists($rev->field) ) {
-							$c_vo->{$rev->field} = $rev->value;
+						// See if the field is in the $_cust object, if not, then it's part of the $_custAddl
+						if ( true === $this->_cust->exists($rev->field) ) {
+							$this->_cust->{$rev->field} = $rev->value;
+						} else {
+							$this->_custAddl->{$rev->field} = $rev->value;
 						}
 					}
 				}
@@ -184,14 +196,11 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 			if ( 1 == $result_revision->numRows() ) {
 				$this->_revision = $result_revision->fetch('revision');
 			}
-			
-			// Finally set up all of these values
-			$this->_customer = $c_vo;
-			$this->_customerId = $customer_id;
 		} catch ( Artisan_Db_Exception $e ) {
 			throw $e;
 		}
 		
+		$this->_customerId = $customer_id;
 		return true;
 	}
 	
@@ -214,9 +223,15 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 	 * @retval boolean Returns true.
 	 */
 	protected function _update() {
-		
-		
 		/*
+		// Do an insert diff with the customer field
+		
+		
+		
+		
+		// Do the in
+		
+		
 		$curr_rev = ++$this->_revision;
 		$history = array(
 			'customer_id' => $this->_customerId,
@@ -250,7 +265,7 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 			}
 		}
 		
-		// Now do the updates
+		// Now do the updates for the actual customer data
 		$this->_customer->date_modify = time();
 		$this->_dbConn->update()
 			->table($this->_customerTable)
@@ -276,7 +291,9 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 	
 	
 	private function _insertDiff($new_list, $orig_list) {
-	
+		$rev = $this->_revision;
+		$rev++;
+		
 	}
 	
 }
