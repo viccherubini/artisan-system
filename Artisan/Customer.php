@@ -13,11 +13,11 @@ require_once 'Artisan/Customer/Exception.php';
  * @author <vmc@leftnode.com>
  */
 abstract class Artisan_Customer {
-	protected $_customer = NULL;
-	protected $_customerOriginal = NULL;
+	protected $_cust = NULL;
+	protected $_custOrig = NULL;
 	
-	protected $_customerField = NULL;
-	
+	protected $_custAddl = NULL;
+	protected $_custAddlOrig = NULL;
 
 
 	///< Current revision number
@@ -29,7 +29,7 @@ abstract class Artisan_Customer {
 
 
 
-
+	
 	const REV_ADDED = 'A';
 	const REV_MODIFIED = 'M';
 	const REV_DELETED = 'D';
@@ -37,10 +37,10 @@ abstract class Artisan_Customer {
 	const REV_HEAD = 'head';
 	
 	public function __construct() {
-		$this->_customer = new Artisan_Vo();
-		$this->_customerField = new Artisan_Vo();
-		//$this->_customer_initial = new Artisan_Vo();
-		//$this->_customer_additional = new Artisan_Vo();
+		$this->_cust = new Artisan_Vo();
+		$this->_custOrig = new Artisan_Vo;
+		$this->_custAddl = new Artisan_Vo();
+		$this->_custAddlOrig = new Artisan_Vo();
 	}
 	
 	/**
@@ -51,11 +51,11 @@ abstract class Artisan_Customer {
 	 * @retval string The specified value in $name or NULL if it's not found anywhere.
 	 */
 	public function __get($name) {
-		if ( true === $this->_customer->exists($name) ) {
-			return $this->_customer->$name;
+		if ( true === $this->_cust->exists($name) ) {
+			return $this->_cust->$name;
 		}
-		if ( true === $this->_customerField->exists($name) ) {
-			return $this->_customerField->$name;
+		if ( true === $this->_custAddl->exists($name) ) {
+			return $this->_custAddl->$name;
 		}
 		return NULL;
 	}
@@ -64,10 +64,10 @@ abstract class Artisan_Customer {
 		$name = trim($name);
 		// If a new field is added, it should always go to the
 		// $_customer_additional variable
-		if ( true === $this->_customer->exists($name) ) {
-			$this->_customer->$name = $value;
+		if ( true === $this->_cust->exists($name) ) {
+			$this->_cust->$name = $value;
 		} else {
-			$this->_customerField->$name = $value;
+			$this->_custAddl->$name = $value;
 		}
 		return true;
 	}
