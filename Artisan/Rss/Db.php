@@ -11,7 +11,7 @@ require_once 'Artisan/Rss.php';
  */
 class Artisan_Rss_Db extends Artisan_Rss {
 	///< The Database instance, must have an active connection.
-	protected $DB = NULL;
+	protected $_dbConn = NULL;
 	
 	///< The name of the table to load data from.
 	private $_table = NULL;
@@ -23,7 +23,7 @@ class Artisan_Rss_Db extends Artisan_Rss {
 	 * @retval Object A new Artisan_Rss_Db object.
 	 */
 	public function __construct(Artisan_Db &$DB) {
-		$this->DB = &$DB;
+		$this->_dbConn = &$DB;
 	}
 	
 	/**
@@ -61,7 +61,7 @@ class Artisan_Rss_Db extends Artisan_Rss {
 		$date_field = $this->_map['pubDate'];
 		
 		try {
-			$result_entry = $this->DB->select()
+			$result_entry = $this->_dbConn->select()
 				->from($this->_table)
 				->orderBy($date_field, 'DESC')
 				->query();
@@ -101,7 +101,7 @@ class Artisan_Rss_Db extends Artisan_Rss {
 	 * @retval boolean Returns true.
 	 */
 	private function _checkDb() {
-		if ( false === $this->DB->isConnected() ) {
+		if ( false === $this->_dbConn->isConnected() ) {
 			throw new Artisan_Auth_Exception(ARTISAN_WARNING, 'The database does not have an active connection.');
 		}
 		return true;

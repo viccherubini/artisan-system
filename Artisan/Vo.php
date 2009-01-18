@@ -74,6 +74,12 @@ class Artisan_Vo {
 		return asfw_print_r($this, true);
 	}
 	
+	public function __unset($name) {
+		if ( true === $this->key($name) ) {
+			unset($this->$name);
+		}
+	}
+	
 	/**
 	 * Determines if one or more elements exists in this value object. This method
 	 * can be used by passing a variable number of arguments, or a single array:
@@ -102,8 +108,23 @@ class Artisan_Vo {
 		return $found;
 	}
 	
+	/**
+	 * Returns the number of keys in this value object.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval int The number of keys.
+	 */
 	public function length() {
 		return count(get_object_vars($this));
+	}
+	
+	/**
+	 * Determines of a specific key exists in the value object.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $k The key to search for.
+	 * @retval boolean True if the key exists, false otherwise.
+	 */
+	public function key($k) {
+		return property_exists($this, $k);
 	}
 	
 	/**

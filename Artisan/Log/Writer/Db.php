@@ -11,7 +11,7 @@ require_once 'Artisan/Log/Writer.php';
  */
 class Artisan_Log_Writer_Db extends Artisan_Log_Writer {
 	///< Instance of a database to write the log data to.
-	private $DB = NULL;
+	private $_dbConn = NULL;
 	
 	///< The name of the table to write to.
 	private $_log_table = 'artisan_log';
@@ -23,7 +23,7 @@ class Artisan_Log_Writer_Db extends Artisan_Log_Writer {
 	 * @retval Object Returns new Artisan_Log_Writer_Db class instance.
 	 */
 	public function __construct(Artisan_Db &$DB) {
-		$this->DB = &$DB;
+		$this->_dbConn = &$DB;
 	}
 	
 	/**
@@ -53,7 +53,7 @@ class Artisan_Log_Writer_Db extends Artisan_Log_Writer {
 
 		foreach ( $log as $l ) {
 			try {
-				$this->DB->insert()
+				$this->_dbConn->insert()
 					->into($this->_log_table)
 					->values($l)
 					->query();

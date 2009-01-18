@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @see Artisan_Customer
+ */
 require_once 'Artisan/Customer.php';
 
 
@@ -13,10 +16,7 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 	private $_fieldTypeTable = NULL;
 	private $_fieldValueTable = NULL;
 	private $_historyTable = NULL;
-	
-	/// Ignore the customer_field* tables if true, avoiding the extra queries. Use the CONFIG to set this to false.
-	//private $_ignore_field_tables = true;
-	
+
 	public function __construct(Artisan_Db $db, Artisan_Vo $tableList = NULL) {
 		parent::__construct();
 		
@@ -30,6 +30,8 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 			$this->setFieldValueTable($tableList->field_value);
 			$this->setHistoryTable($tableList->history);
 		}
+		
+		$this->_loadFieldList();
 	}
 	
 	
@@ -62,10 +64,7 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 		$this->_historyTable = trim($table);
 		return $this;
 	}
-	
-	
-	
-	
+
 	/**
 	 * Writes a user to the database. If the user exists, their data is updated,
 	 * if they are new, their data is inserted.
@@ -118,89 +117,44 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 			throw new Artisan_Customer_Exception(ARTISAN_WARNING, 'The Customer ID specified must be numeric and greater than 0.');
 		}
 		
-		try {
-			$result_customer = $this->_dbConn->select()
-				->from($this->_customerTable)
-				->where('customer_id = ?', $customer_id)
-				->query();
-			$row_count = $result_customer->numRows();
-			if ( 1 != $row_count ) {
-				throw new Artisan_Customer_Exception(ARTISAN_WARNING, 'No customer with ID ' . $customer_id . ' found.');
-			}
-			
-			$c_vo = $result_customer->fetchVo();
-			
-			// Unset the original customer_id so it can't be manipulated directly
-			unset($c_vo->customer_id);
-			
-			
-			// Now load up any additional fields
-			$c_addl_vo = new Artisan_Vo();
-			$result_field = $this->_dbConn->select()
-				->from($this->_fieldValueTable, 'cfv', 'cf.name', 'cfv.value')
-				->innerJoin($this->_fieldTable, 'cfv.field_id', 'cf.field_id')
-				->where('cfv.customer_id = ?', $customer_id)
-				->where('cf.status = 1')
-				->query();
-			if ( $result_field->numRows() > 0 ) {
-				while ( $addl = $result_field->fetchVo() ) {
-					$c_addl_vo->{$addl->name} = $addl->value;
-				}
-			}
-			
-			// The original values use cloned versions of the value objects 
-			// because the initial values are passed by reference, so if this customer
-			// is having a specific revision loaded, we want to maintain the original
-			// values, or, if the initial values are overwritten, we need to be able to
-			// tell that when the customer is written. It is easier to load these now
-			// and just ignore them until the write than load them up during the write.
-			$this->_custAddl = $c_addl_vo;
-			$this->_custAddlOrig = clone $c_addl_vo;
-
-			$this->_cust = $c_vo;
-			$this->_custOrig = clone $c_vo;
-			
-			
-			
-			// If the revision isn't head, then, load up those values to overwrite the original values
-			$hTable = $this->_historyTable;
-			$hAlias = asfw_create_table_alias($this->_historyTable);
-			if ( $revision != self::REV_HEAD && true === is_int(abs($revision)) ) {
-				$revision = abs($revision);
-				$result_revision = $this->_dbConn->select()
-					->from($hTable, $hAlias, 'field', 'value')
-					->where('customer_id = ?', $customer_id)
-					->where('revision = ?', $revision)
-					->orderBy('history_id', 'ASC')
-					->query();
-				if ( $result_revision->numRows() > 0 ) {
-					while ( $rev = $result_revision->fetchVo() ) {
-						// See if the field is in the $_cust object, if not, then it's part of the $_custAddl
-						if ( true === $this->_cust->exists($rev->field) ) {
-							$this->_cust->{$rev->field} = $rev->value;
-						} else {
-							$this->_custAddl->{$rev->field} = $rev->value;
-						}
-					}
-				}
-			}
-			
-			// Find the latest revision for when the customer is updated.
-			$result_revision = $this->_dbConn->select()
-				->from($hTable, $hAlias, 'revision')
-				->where('customer_id = ?', $customer_id)
-				->groupBy('revision')
-				->orderBy('revision', 'DESC')
-				->limit(1)
-				->query();
-			if ( 1 == $result_revision->numRows() ) {
-				$this->_revision = $result_revision->fetch('revision');
-			}
-		} catch ( Artisan_Db_Exception $e ) {
-			throw $e;
+		// Find the latest revision if $revision is the head
+		$head = $this->_findHead($customer_id);
+		if ( self::REV_HEAD === $revision ) {
+			$revision = $head;
 		}
 		
+		$cust = array();
+		$result_rev = $this->_dbConn->select()
+			->from($this->_historyTable)
+			->where('customer_id = ?', $customer_id)
+			->where('revision <= ?', $revision)
+			->orderBy('history_id', 'ASC')
+			->query();
+		while ( $rev = $result_rev->fetch() ) {
+			$cust[$rev['field']] = $rev['value'];
+			if ( $rev['type'] == self::REV_DELETED ) {
+				unset($cust[$rev['field']]);
+			}
+		}
+
+		$this->_cust = $cust;
+		$this->_custOrig = $cust;
 		$this->_customerId = $customer_id;
+		return true;
+	}
+	
+	private function _loadFieldList() {
+		$field_list = array();
+		$result_field = $this->_dbConn->select()
+				->from($this->_fieldTable, 'cf', 'cf.name', 'cft.maxlength', 'cft.valid_regex', 'cft.hook')
+				->innerJoin($this->_fieldTypeTable, 'cf.type_id', 'cft.type_id')
+				->where('status = 1')
+				->query();
+		while ( $f = $result_field->fetch() ) {
+			$name = $f['name']; unset($f['name']);
+			$field_list[$name] = $f;
+		}
+		$this->_fieldList = $field_list;
 		return true;
 	}
 	
@@ -212,7 +166,37 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 	 * @retval boolean Returns true.
 	 */
 	protected function _insert() {
-		echo __FUNCTION__;
+		// Create the initial customer record
+		$time = time();
+		$cust = array(
+			'customer_id' => NULL,
+			'date_create' => $time,
+			'date_modify' => NULL,
+			'status' => 1
+		);
+		
+		$this->_dbConn->insert()->into($this->_customerTable)->values($cust)->query();
+		$customer_id = $this->_dbConn->insertId();
+		
+		if ( $customer_id > 0 ) {
+			$c = $this->_cust;
+			$rev = array(
+				'customer_id' => $customer_id,
+				'date_create' => $time,
+				'revision' => 1,
+				'type' => self::REV_ADDED
+			);
+			foreach ( $c as $f => $v ) {
+				$rev['field'] = $f;
+				$rev['value'] = $v;
+				$this->_dbConn->insert()->into($this->_historyTable)->values($rev)->query();
+			}
+			$this->_customerId = $customer_id;
+			$this->_head = 1;
+			$this->_custOrig = $this->_cust;
+		}
+		
+		return $customer_id;
 	}
 	
 	/**
@@ -223,56 +207,18 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 	 * @retval boolean Returns true.
 	 */
 	protected function _update() {
-		/*
-		// Do an insert diff with the customer field
+		$rev = ++$this->_head;
+		$added = array_diff_key($this->_cust, $this->_custOrig);
+		$deleted = array_diff_key($this->_custOrig, $this->_cust);
 		
+		$modified = array_diff_assoc($this->_cust, $this->_custOrig);
+		$modified = array_diff_assoc($modified, $added);
+
+		$this->_insertDiff($added, self::REV_ADDED, $rev);
+		$this->_insertDiff($modified, self::REV_MODIFIED, $rev);
+		$this->_insertDiff($deleted, self::REV_DELETED, $rev);
 		
-		
-		
-		// Do the in
-		
-		
-		$curr_rev = ++$this->_revision;
-		$history = array(
-			'customer_id' => $this->_customerId,
-			'date_create' => time(),
-			'revision' => $curr_rev,
-			'type' => NULL,
-			'field' => NULL,
-			'value' => NULL
-		);
-		
-		// A diff needs to be done between the initial user data and the updated user data
-		// A diff then needs to be done between the initial user_field data and the updated user_field data
-		foreach ( $this->_customer as $k => $v ) {
-			$history['field'] = $k;
-			$history['value'] = $v;
-			$history['type'] = NULL;
-			if ( false === $this->_customerOriginal->exists($k) ) {
-				$history['type'] = self::REV_ADDED;
-			} else {
-				if ( $this->_customerOriginal->$k != $v ) {
-					$history['value'] = $this->_customerOriginal->$k;	
-					$history['type'] = self::REV_MODIFIED;
-				}
-			}
-			
-			if ( false === empty($history['type']) ) {
-				$this->_dbConn->insert()
-					->into($this->_historyTable)
-					->values($history)
-					->query();
-			}
-		}
-		
-		// Now do the updates for the actual customer data
-		$this->_customer->date_modify = time();
-		$this->_dbConn->update()
-			->table($this->_customerTable)
-			->set($this->_customer->toArray())
-			->where('customer_id = ?', $this->_customerId)
-			->query();
-		*/
+		$this->_dbConn->update()->table($this->_customerTable)->set(array('date_modify' => time()))->query();
 	}
 	
 	/**
@@ -290,10 +236,41 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 	}
 	
 	
-	private function _insertDiff($new_list, $orig_list) {
-		$rev = $this->_revision;
-		$rev++;
+	private function _insertDiff($list, $type, $revision) {
+		if ( false === is_array($list) || count($list) < 1 ) {
+			return false;
+		}
+		if ( $revision < 1 ) {
+			return false;
+		}
 		
+		$history = array(
+			'customer_id' => $this->_customerId,
+			'date_create' => time(),
+			'revision' => $revision,
+			'type' => $type
+		);
+		foreach ( $list as $k => $v ) {
+			$history['field'] = $k;
+			$history['value'] = $v;
+			$this->_dbConn->insert()->into($this->_historyTable)->values($history)->query();
+		}
+		return true;
 	}
 	
+	
+	private function _findHead($customer_id) {
+		$result_revision = $this->_dbConn->select()
+			->from($this->_historyTable)
+			->where('customer_id = ?', $customer_id)
+			->groupBy('revision')
+			->orderBy('revision', 'DESC')
+			->limit(1)
+			->query();
+		if ( 1 == $result_revision->numRows() ) {
+			$revision = $result_revision->fetch('revision');
+			$this->_head = $revision;
+		}
+		return $this->_head;
+	}
 }

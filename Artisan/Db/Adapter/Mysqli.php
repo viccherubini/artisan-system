@@ -231,7 +231,7 @@ class Artisan_Db_Adapter_Mysqli extends Artisan_Db {
 	 */
 	public function insertId() {
 		if ( true === $this->CONN instanceof mysqli ) {
-			return $this->CONN->insertId;
+			return mysqli_insert_id($this->CONN);
 		}
 		return 0;
 	}

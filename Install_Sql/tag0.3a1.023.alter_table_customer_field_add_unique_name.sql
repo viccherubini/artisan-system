@@ -1,0 +1,1 @@
+ALTER TABLE `customer_field` ADD UNIQUE (`name`) ;

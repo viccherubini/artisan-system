@@ -11,5 +11,5 @@ require_once 'Artisan/Artisan_System.php';
  * @retval Object Returns the only instance of the Artisan_System class.
  */
 function &getAsfw() {
-	return &Artisan_System::getInstance();
+	//return &Artisan_System::getInstance();
 }

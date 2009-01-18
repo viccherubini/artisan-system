@@ -1,11 +1,11 @@
 <?php
 
 /**
- * @see Artisan_User
+ * @see Artisan_Customer_Exception
  */
-require_once 'Artisan/User.php';
-
 require_once 'Artisan/Customer/Exception.php';
+
+require_once 'Artisan/Customer/Address.php';
 
 /**
  * This class allows for the management of customers as through an e-commerce
@@ -13,34 +13,38 @@ require_once 'Artisan/Customer/Exception.php';
  * @author <vmc@leftnode.com>
  */
 abstract class Artisan_Customer {
-	protected $_cust = NULL;
-	protected $_custOrig = NULL;
+	protected $_cust = array();
+	protected $_custOrig = array();
 	
-	protected $_custAddl = NULL;
-	protected $_custAddlOrig = NULL;
-
-
-	///< Current revision number
-	protected $_revision = 0;
+	protected $_head = 0;
+	
+	
+	protected $_addrList = array();
 	
 	///< Primary key
 	protected $_customerId = 0;
 
+	protected $_fieldList = array();
 
-
-
-	
 	const REV_ADDED = 'A';
 	const REV_MODIFIED = 'M';
 	const REV_DELETED = 'D';
-
 	const REV_HEAD = 'head';
 	
 	public function __construct() {
-		$this->_cust = new Artisan_Vo();
-		$this->_custOrig = new Artisan_Vo;
-		$this->_custAddl = new Artisan_Vo();
-		$this->_custAddlOrig = new Artisan_Vo();
+		$this->_cust = $this->_custOrig = array();
+		//$this->_addr = new Artisan_Customer_Address();
+	}
+	
+	
+	public function fromArray($cust) {
+		if ( false === is_array($cust) ) {
+			return false;
+		}
+		
+		foreach ( $cust as $k => $v ) {
+			$this->__set($k, $v);
+		}
 	}
 	
 	/**
@@ -51,34 +55,61 @@ abstract class Artisan_Customer {
 	 * @retval string The specified value in $name or NULL if it's not found anywhere.
 	 */
 	public function __get($name) {
-		if ( true === $this->_cust->exists($name) ) {
-			return $this->_cust->$name;
-		}
-		if ( true === $this->_custAddl->exists($name) ) {
-			return $this->_custAddl->$name;
+		if ( true === asfw_exists($name, $this->_cust) ) {
+			return $this->_cust[$name];
 		}
 		return NULL;
 	}
 	
 	public function __set($name, $value) {
 		$name = trim($name);
-		// If a new field is added, it should always go to the
-		// $_customer_additional variable
-		
+
 		// Do not allow the direct manipulation of the customer_id
 		if ( 'customer_id' == $name ) {
 			return false;
 		}
-		
-		if ( true === $this->_cust->exists($name) ) {
-			$this->_cust->$name = $value;
-		} else {
-			$this->_custAddl->$name = $value;
+	
+		if ( true === isset($this->_fieldList[$name]) ) {
+			$hook = $this->_fieldList[$name]['hook'];
+			$regex = $this->_fieldList[$name]['valid_regex'];
+			$maxlen = $this->_fieldList[$name]['maxlength'];
+			
+			if ( $maxlen > 0 ) {
+				$value = substr($value, 0, $maxlen);
+			}
+			
+			// Validate it against a regex
+			$pass_regex = true;
+			if ( false === empty($regex) ) {
+				if ( 0 == preg_match($regex, $value) ) {
+					$pass_regex = false;
+				}
+			}
+			
+			$pass_hook = true;
+			if ( false === empty($hook) ) {
+				$pass_hook = $hook($value);
+			}
+			
+			if ( $pass_hook && $pass_regex ) {
+				$this->_cust[$name] = $value;
+			}
 		}
 		return true;
 	}
 	
-	public function getRevision() {
-		return $this->_revision;
+	public function __unset($name) {
+		if ( true === asfw_exists($name, $this->_cust) ) {
+			unset($this->_cust[$name]);
+		}
+	}
+	
+	public function getHead() {
+		return $this->_head;
+	}
+	
+	public function reset() {
+		$this->_cust = $this->_custOrig = array();
+		$this->_customerId = 0;
 	}
 }

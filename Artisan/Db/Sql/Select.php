@@ -237,6 +237,7 @@ abstract class Artisan_Db_Sql_Select extends Artisan_Db_Sql {
 		$this->_where_field_list = $this->_group_field_list = array();
 		$this->_order_field = $this->_order_method = NULL;
 		$this->_join_table_list = array();
+		$this->_limit = 0;
 		
 		return $this->_sql;
 	}
