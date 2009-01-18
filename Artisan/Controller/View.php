@@ -248,4 +248,28 @@ abstract class Artisan_Controller_View {
 		}
 		return $img_tag;
 	}
+	
+	public function link($ext_url, $link_text, $argv = array(), $view = NULL) {
+		$ds = $this->_ds;
+
+		if ( true === empty($ext_url) ) {
+			if ( true === empty($view) ) {
+				$view = $this->_view;
+			}
+
+			$url = '/' . strtolower($this->_controller);
+			if ( false === empty($view) ) {
+				$url .= $ds . $view . $ds;
+			}
+
+			if ( count($argv) > 0 ) {
+				$url .= implode('/', $argv);
+			}
+		} else {
+			$url = $ext_url;
+		}
+
+		$a_tag = '<a href="' . $url . '">' . $link_text . '</a>';
+		return $a_tag;
+	}
 }
