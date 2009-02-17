@@ -1,15 +1,10 @@
 <?php
 
 /**
- * @see Artisan_Validate
- */
-require_once 'Artisan/Validate.php';
-
-/**
  * Static class that contains methods to validate alphanumeric strings.
  * @author rafshar <rafshar@gmail.com>
  */
-class Artisan_Validate_Alphanum extends Artisan_Validate {
+class Artisan_Validate_Alphanum {
 	private $_s = NULL;
 
 	public function __construct($s = NULL) {
@@ -31,6 +26,7 @@ class Artisan_Validate_Alphanum extends Artisan_Validate {
 			return false;
 		}
 
+		$s = trim($s);
 		if ( 1 === preg_match("/[^a-z0-9]/i", $s) ) {
 			return false;
 		}

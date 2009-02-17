@@ -6,17 +6,12 @@
 require_once 'Artisan/Template.php';
 
 /**
- * @see Artisan_Template_Exception
- */
-require_once 'Artisan/Template/Exception.php';
-
-/**
  * Loads up a template from the filesystem.
  * @author vmc <vmc@leftnode.com>
  */
 class Artisan_Template_Filesystem extends Artisan_Template {
 	///< The extension of all template files.
-	const TEMPLATE_EXT = '.thm';
+	const TEMPLATE_EXT = '.tpl';
 	
 	///< The name of the directory that holds global templates.
 	const THEME_DIRECTORY_GLOBAL = 'global/';
@@ -83,10 +78,6 @@ class Artisan_Template_Filesystem extends Artisan_Template {
 	 * @retval The unparsed code from the filesystem.
 	 */
 	protected function _load($template) {
-		if ( true === empty($this->_theme) ) {
-			return false;
-		}
-		
 		$template = trim($template);
 		if ( true === empty($template) ) {
 			return false;
@@ -94,7 +85,7 @@ class Artisan_Template_Filesystem extends Artisan_Template {
 
 		$template .= self::TEMPLATE_EXT;
 		$template_location = $this->_theme_directory . $this->_theme . $template;
-		
+
 		if ( false === is_file($template_location) ) {
 			// If the template sent in isn't in the theme directory, perhaps its global
 			// in which case it resides in the self::THEME_DIRECTORY_GLOBAL const.

@@ -15,7 +15,7 @@ require_once 'Artisan/User/Exception.php';
  * one containing common values amongst just about any User class.
  * @author vmc <vmc@leftnode.com>
  */
-abstract class Artisan_User {
+class Artisan_User {
 	///< The ID of the user.
 	protected $_user_id;
 	
@@ -89,7 +89,9 @@ abstract class Artisan_User {
 	 * @author vmc <vmc@leftnode.com>
 	 * @retval boolean Returns true.
 	 */
-	abstract public function write();
+	public function write() {
+		return true;
+	}
 
 	/**
 	 * Loads the user from a specified source.
@@ -97,19 +99,25 @@ abstract class Artisan_User {
 	 * @param $user_id The ID to load the user from.
 	 * @retval boolean Returns true.
 	 */
-	abstract protected function _load($user_id);
+	protected function _load($user_id) {
+		return true;
+	}
 
 	/**
 	 * Inserts the user into the specified source.
 	 * @author vmc <vmc@leftnode.com>
 	 * @retval boolean Returns true on successful insertion, false otherwise.
 	 */
-	abstract protected function _insert();
+	protected function _insert() {
+		return true;
+	}
 
 	/**
 	 * Updates the user into the specified source..
 	 * @author vmc <vmc@leftnode.com>
 	 * @retval boolean Returns true on successful insertion, false otherwise.
 	 */
-	abstract protected function _update();
+	protected function _update() {
+		return true;
+	}
 }

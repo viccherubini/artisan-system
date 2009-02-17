@@ -122,36 +122,39 @@ class Artisan_Session {
 			session_name($session_name);
 		}
 
-		// Set up all of the save handlers
-		if ( false === is_object($this->SH) ) {
-			throw new Artisan_Session_Exception(ARTISAN_WARNING, 'The save_handler is not yet configured, please run setSaveHandler() first.');
+		// Only use the save handler if its set, otherwise, use default PHP sessions.
+		if ( false === is_null($this->SH) ) {
+			// Set up all of the save handlers
+			if ( false === is_object($this->SH) ) {
+				throw new Artisan_Session_Exception(ARTISAN_WARNING, 'The save_handler is not yet configured, please run setSaveHandler() first.');
+			}
+
+			// Let PHP know we're using our own save handlers
+			ini_set('session.save_handler', 'user');
+
+			/**
+			 * IMPORTANT! This must be here: the write() method of the save_handler
+			 * is called at the end of the program execution, meaning the destructor
+			 * for class instances are called. The database class instance's destructor
+			 * will be called by the time write() is run, which the destructor disconnects
+			 * from the database and kills the configuration data. By putting this here,
+			 * the shutdown method session_write_close() will be called before that
+			 * occurs, allowing the data to be written properly.
+			*/
+			register_shutdown_function("session_write_close");
+
+			// $this->SH is guaranteed to have these methods because it has
+			// to implement the interface Artisan_Session_Interface.
+			session_set_save_handler(
+				array(&$this->SH, 'open'),
+				array(&$this->SH, 'close'),
+				array(&$this->SH, 'read'),
+				array(&$this->SH, 'write'),
+				array(&$this->SH, 'destroy'),
+				array(&$this->SH, 'gc')
+			);
 		}
-
-		// Let PHP know we're using our own save handlers
-		ini_set('session.save_handler', 'user');
-
-		/**
-		 * IMPORTANT! This must be here: the write() method of the save_handler
-		 * is called at the end of the program execution, meaning the destructor
-		 * for class instances are called. The database class instance's destructor
-		 * will be called by the time write() is run, which the destructor disconnects
-		 * from the database and kills the configuration data. By putting this here,
-		 * the shutdown method session_write_close() will be called before that
-		 * occurs, allowing the data to be written properly.
-		*/
-		register_shutdown_function("session_write_close");
-
-		// $this->SH is guaranteed to have these methods because it has
-		// to implement the interface Artisan_Session_Interface.
-		session_set_save_handler(
-			array(&$this->SH, 'open'),
-			array(&$this->SH, 'close'),
-			array(&$this->SH, 'read'),
-			array(&$this->SH, 'write'),
-			array(&$this->SH, 'destroy'),
-			array(&$this->SH, 'gc')
-		);
-
+		
 		$started = session_start();
 		$this->_session_id = session_id();
 
@@ -224,5 +227,18 @@ class Artisan_Session {
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * Determines if an element in the session exists, and if it does, it is returned.
+	 * @author <vmc@leftnode.com>
+	 * @param $name The name of the element to return.
+	 * @retval mixed Returns the value of $name if found, NULL otherwise.
+	 */
+	public function from($name) {
+		if ( true  == $this->exists($name) ) {
+			return $_SESSION[$name];
+		}
+		return NULL;
 	}
 }

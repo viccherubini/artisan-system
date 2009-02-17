@@ -46,11 +46,13 @@ class Artisan_Exception extends Exception {
 
 		$error_class = NULL;
 		if ( true === asfw_exists('class', $trace) ) {
-			$error_class = $trace['class'] . $trace['type'];
+			$this->_class_name = $trace['class'];
+			$error_class = $this->_class_name . $trace['type'];
 		}
 		
 		if ( true === asfw_exists('function', $trace) ) {
-			$error_class .= $trace['function'] . '() > ';
+			$this->_function_name = $trace['function'];
+			$error_class .= $this->_function_name . '() > ';
 		}
 		
 		$error_file = $this->_file_name . ' +' . $this->_line_number;

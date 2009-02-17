@@ -31,6 +31,7 @@ class Artisan_Validate_Alpha extends Artisan_Validate {
 			return false;
 		}
 
+		$s = trim($s);
 		if ( 1 === preg_match("/[^a-z]/i", $s) ) {
 			return false;
 		}

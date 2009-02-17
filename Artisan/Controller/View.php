@@ -27,7 +27,7 @@ abstract class Artisan_Controller_View {
 	protected $_view = NULL;
 
 	///< The directory separator native to the host operating system.
-	private $_ds = NULL;
+	private $_ds = DIRECTORY_SEPARATOR;
 
 	///< The directory that JavaScript files are stored, this can't be changed with a method.
 	private $_js_dir = 'javascript';
@@ -112,10 +112,12 @@ abstract class Artisan_Controller_View {
 		$controller = asfw_rename_controller($controller);
 		$view = asfw_rename_controller_method($view);
 
-		if ( true === empty($this->_layout) ) {
-			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The layout name is empty.');
+		if ( false === empty($this->_layout) ) {
+			if ( true === empty($this->_layout) ) {
+				throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The layout name is empty.');
+			}
 		}
-
+		
 		// See if Controllers/$controller/Views/$view.phtml exists, if not, 
 		// look in Controllers/Views/$view.phtml. If that doesn't exist, throw an error.
 		$this->_root_dir = $this->_controller_dir . $ds;
@@ -127,16 +129,21 @@ abstract class Artisan_Controller_View {
 		if ( false === is_file($view_file) ) {
 			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The view file ' . $view_file . ' does not exist.');
 		}
-		
-		// See if Controllers/$controller/Layout/$layout.phtml exists, if not, 
-		// look in Controllers/Layout/$layout.phtml. If that doesn't exist, throw an error.
-		$layout_file = $this->_root_dir . $controller . $ds . $this->_layout_dir . $ds . $this->_layout . $this->_ext;
-		if ( false === is_file($layout_file) ) {
-			$layout_file = $this->_root_dir . $this->_layout_dir . $ds . $this->_layout . $this->_ext;
-		}
 
-		if ( false === is_file($layout_file) ) {
-			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The layout file ' . $layout_file . ' does not exist.');
+		$layout_file = NULL;
+		if ( false === empty($this->_layout) ) {		
+			// See if Controllers/$controller/Layout/$layout.phtml exists, if not, 
+			// look in Controllers/Layout/$layout.phtml. If that doesn't exist, throw an error.
+			$layout_file = $this->_root_dir . $controller . $ds . $this->_layout_dir . $ds . $this->_layout . $this->_ext;
+			if ( false === is_file($layout_file) ) {
+				$layout_file = $this->_root_dir . $this->_layout_dir . $ds . $this->_layout . $this->_ext;
+			}
+		}
+		
+		if ( false === empty($layout_file) ) {
+			if ( false === is_file($layout_file) ) {
+				throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The layout file ' . $layout_file . ' does not exist.');
+			}
 		}
 		
 		$this->_controller = $controller;
@@ -144,11 +151,15 @@ abstract class Artisan_Controller_View {
 		// First load up the view
 		ob_start();
 		require_once $view_file;
-		$this->__content = ob_get_clean();
 		
-		// Now load up the layout
-		ob_start();
-		require_once $layout_file;
+		// If the layout is not empty, then load that up and parse it too.
+		// It would be empty in the case of an AJAX view that only returns a very specific piece of data.
+		if ( false === empty($layout_file) ) {
+			$this->__content = ob_get_clean();
+			ob_start();
+			require_once $layout_file;
+		}
+		
 		return ob_get_clean();
 	}
 	
@@ -193,7 +204,7 @@ abstract class Artisan_Controller_View {
 			$css_file .= '.css';
 		}
 		
-		$css_tag = NULL;
+		$css_tag = $link_tag = NULL;
 		$stylesheet_file = $this->_root_dir . $this->_controller . $ds . $this->_css_dir . $ds . $css_file;
 		if ( false === is_file($stylesheet_file) ) {
 			$stylesheet_file = $this->_root_dir . $this->_css_dir . $ds . $css_file;
@@ -249,7 +260,17 @@ abstract class Artisan_Controller_View {
 		return $img_tag;
 	}
 	
-	public function link($ext_url, $link_text, $argv = array(), $view = NULL) {
+	/**
+	 * Creates an internal or external link easily in a view.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $ext_url If set, simply goes to that URL, set to NULL if you wish to use an internal URL.
+	 * @param $link_text The text of the link to use. Can be HTML.
+	 * @param $argv An array of arguments to send to the link, will be imploded to look like arg1/arg2/arg3/argN
+	 * @param $view The specific view to use. Will use the view currently loaded in the view method ($this->_view) unless specified here.
+	 * @retval string Returns a new link.
+	 * @todo Add ability to have additional parameters.
+	 */
+	public function link($ext_url, $link_text, $argv = array(), $controller = NULL, $view = NULL) {
 		$ds = $this->_ds;
 
 		if ( true === empty($ext_url) ) {
@@ -257,19 +278,56 @@ abstract class Artisan_Controller_View {
 				$view = $this->_view;
 			}
 
-			$url = '/' . strtolower($this->_controller);
+			$url_controller = $this->_controller;
+			if ( false === empty($controller) ) {
+				$url_controller = $controller;
+			}
+			
+			$url = '/' . strtolower($url_controller);
 			if ( false === empty($view) ) {
-				$url .= $ds . $view . $ds;
+				$url .= $ds . $view;
 			}
 
-			if ( count($argv) > 0 ) {
-				$url .= implode('/', $argv);
+			if ( true === is_array($argv) ) {
+				if ( count($argv) > 0 ) {
+					$url .= $ds;
+					$url .= implode('/', $argv);
+				}
 			}
+			
+			$url = '/index.php' . $url;
 		} else {
 			$url = $ext_url;
 		}
 
 		$a_tag = '<a href="' . $url . '">' . $link_text . '</a>';
 		return $a_tag;
+	}
+	
+	public function url($controller = NULL, $view = NULL, $argv = array()) {
+		$ds = $this->_ds;
+		if ( true === empty($view) ) {
+			$view = $this->_view;
+		}
+
+		if ( true === empty($controller) ) {
+			$controller = $this->_controller;
+		}
+		
+		$url = '/' . strtolower($controller);
+		if ( false === empty($view) ) {
+			$url .= $ds . $view;
+		}
+
+		if ( true === is_array($argv) ) {
+			if ( count($argv) > 0 ) {
+				$url .= $ds;
+				$url .= implode('/', $argv);
+			}
+		}
+		
+		$url = '/index.php' . $url;
+		
+		return $url;
 	}
 }

@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<title><?=$this->title; ?></title>
+	<?=$this->css('default', 'screen', false); ?>
+</head>
+<body>
+	<div class="header">
+		<h1>Artisan System PHP Framework</h1>
+		<?=$this->image('artisan_system_logo.png', 'Artisan System Logo', true); ?>
+	</div>
+	
+	<ul class="menu">
+		<li class="first"><?=$this->link('/', 'Home'); ?></li>
+		<li class="first"><?=$this->link('/admin/configuration', 'Configuration'); ?></li>
+		<li class="first"><?=$this->link('/admin/users', 'Users'); ?></li>
+		<li class="first"><?=$this->link('/admin/controllers', 'Controllers'); ?></li>
+	</ul>
+	
+	<div id="content">
+		<?=$this->__content; ?>
+	</div>
+</body>
+</html>

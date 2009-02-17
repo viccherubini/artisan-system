@@ -35,7 +35,7 @@ abstract class Artisan_Auth {
 	protected $CONFIG = NULL;
 	
 	///< The user object to authenticate against.
-	protected $USER = NULL;
+	protected $_artisanUser = NULL;
 
 	/**
 	 * Default constructor, this class is abstract.
@@ -51,7 +51,7 @@ abstract class Artisan_Auth {
 	 */
 	public function __destruct() {
 		unset($this->CONFIG);
-		unset($this->USER);
+		unset($this->_artisanUser);
 	}
 	
 	/**
@@ -70,7 +70,7 @@ abstract class Artisan_Auth {
 	 * @retval boolean Returns true.
 	 */
 	public function setUser(Artisan_User &$U) {
-		$this->USER = $U;
+		$this->_artisanUser = $U;
 		return true;
 	}
 	
@@ -89,7 +89,7 @@ abstract class Artisan_Auth {
 	 * @retval Object Returns the user object.
 	 */
 	public function &getUser() {
-		return $this->USER;
+		return $this->_artisanUser;
 	}
 	
 	/**

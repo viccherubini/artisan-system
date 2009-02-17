@@ -6,11 +6,6 @@
 require_once 'Artisan/Template.php';
 
 /**
- * @see Artisan_Template_Exception
- */
-require_once 'Artisan/Template/Exception.php';
-
-/**
  * Loads up a template from the database.
  * @author vmc <vmc@leftnode.com>
  */

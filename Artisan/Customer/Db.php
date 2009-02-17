@@ -5,17 +5,18 @@
  */
 require_once 'Artisan/Customer.php';
 
+require_once 'Artisan/Customer/Address/Db.php';
 
-class Artisan_Customer_Adapter_Db extends Artisan_Customer {
+class Artisan_Customer_Db extends Artisan_Customer {
 	/// Database instance passed into the class. Assumes the database already has a connection.
 	private $_dbConn = NULL;
 	
-	private $_customerTable = NULL;
-	private $_commentHistoryTable = NULL;
-	private $_fieldTable = NULL;
-	private $_fieldTypeTable = NULL;
-	private $_fieldValueTable = NULL;
-	private $_historyTable = NULL;
+	private $_customerTable = 'customer';
+	private $_commentHistoryTable = 'customer_comment_history';
+	private $_fieldTable = 'customer_field';
+	private $_fieldTypeTable = 'customer_field_type';
+	private $_historyTable = 'customer_history';
+	private $_addressTable = 'customer_address';
 
 	public function __construct(Artisan_Db $db, Artisan_Vo $tableList = NULL) {
 		parent::__construct();
@@ -27,8 +28,8 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 			$this->setCommentHistoryTable($tableList->comment_history);
 			$this->setFieldTable($tableList->field);
 			$this->setFieldTypeTable($tableList->field_type);
-			$this->setFieldValueTable($tableList->field_value);
 			$this->setHistoryTable($tableList->history);
+			$this->setAddressTable($tableList->address);
 		}
 		
 		$this->_loadFieldList();
@@ -54,14 +55,14 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 		$this->_fieldTypeTable = trim($table);
 		return $this;
 	}
-	
-	public function setFieldValueTable($table) {
-		$this->_fieldValueTable = trim($table);
+
+	public function setHistoryTable($table) {
+		$this->_historyTable = trim($table);
 		return $this;
 	}
 	
-	public function setHistoryTable($table) {
-		$this->_historyTable = trim($table);
+	public function setAddressTable($table) {
+		$this->_addressTable = trim($table);
 		return $this;
 	}
 
@@ -91,10 +92,24 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 	public function load($customer_id, $revision = self::REV_HEAD) {
 		try {
 			$this->_load($customer_id, $revision);
+			$this->_loadAddressList();
 		} catch ( Artisan_Customer_Exception $e ) {
 			throw $e;
 		}
 		return true;
+	}
+	
+	private function _loadAddressList() {
+		if ( $this->_customerId < 1 ) {
+			throw new Artisan_Customer_Exception(ARTISAN_WARNING, 'The customer has not been loaded yet.');
+		}
+		
+		$result_address = $this->_dbConn->select()
+			->from($this->_addressTable)
+			->where('customer_id = ?', $this->_customerId)
+			->where('status = 1')
+			->query();
+		$this->address = new Artisan_Db_Iterator($result_address, new Artisan_Customer_Address_Db($this->_dbConn));
 	}
 	
 	/**
@@ -107,15 +122,24 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 	 */
 	protected function _load($customer_id, $revision) {
 		$this->_checkDb(__FUNCTION__);
-		
-		// Because the queries can be quite intensive, if the ignore_fields 
-		// is set to true, don't bother looking in them, simply load the customer,
-		// comment_history.
 		$customer_id = intval($customer_id);
 		
 		if ( $customer_id < 1 ) {
 			throw new Artisan_Customer_Exception(ARTISAN_WARNING, 'The Customer ID specified must be numeric and greater than 0.');
 		}
+		
+		// See if there is a parent_id to load up
+		$result_cust = $this->_dbConn->select()
+			->from($this->_customerTable)
+			->where('customer_id = ?', $customer_id)
+			->query();
+		if ( $result_cust->numRows() < 1) {
+			throw new Artisan_Customer_Exception(ARTISAN_WARNING, 'The Customer with ID #' . $customer_id . ' does not exist.');
+		}
+		
+		$customer = $result_cust->fetch();
+		$this->_parentId = $customer['parent_id'];
+		unset($customer);
 		
 		// Find the latest revision if $revision is the head
 		$head = $this->_findHead($customer_id);
@@ -140,6 +164,7 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 		$this->_cust = $cust;
 		$this->_custOrig = $cust;
 		$this->_customerId = $customer_id;
+
 		return true;
 	}
 	
@@ -170,12 +195,16 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 		$time = time();
 		$cust = array(
 			'customer_id' => NULL,
+			'parent_id' => $this->_parentId,
 			'date_create' => $time,
 			'date_modify' => NULL,
 			'status' => 1
 		);
 		
-		$this->_dbConn->insert()->into($this->_customerTable)->values($cust)->query();
+		$this->_dbConn->insert()
+			->into($this->_customerTable)
+			->values($cust)
+			->query();
 		$customer_id = $this->_dbConn->insertId();
 		
 		if ( $customer_id > 0 ) {
@@ -189,7 +218,10 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 			foreach ( $c as $f => $v ) {
 				$rev['field'] = $f;
 				$rev['value'] = $v;
-				$this->_dbConn->insert()->into($this->_historyTable)->values($rev)->query();
+				$this->_dbConn->insert()
+					->into($this->_historyTable)
+					->values($rev)
+					->query();
 			}
 			$this->_customerId = $customer_id;
 			$this->_head = 1;
@@ -218,7 +250,10 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 		$this->_insertDiff($modified, self::REV_MODIFIED, $rev);
 		$this->_insertDiff($deleted, self::REV_DELETED, $rev);
 		
-		$this->_dbConn->update()->table($this->_customerTable)->set(array('date_modify' => time()))->query();
+		$this->_dbConn->update()
+			->table($this->_customerTable)
+			->set(array('date_modify' => time()))
+			->query();
 	}
 	
 	/**
@@ -253,7 +288,10 @@ class Artisan_Customer_Adapter_Db extends Artisan_Customer {
 		foreach ( $list as $k => $v ) {
 			$history['field'] = $k;
 			$history['value'] = $v;
-			$this->_dbConn->insert()->into($this->_historyTable)->values($history)->query();
+			$this->_dbConn->insert()
+				->into($this->_historyTable)
+				->values($history)
+				->query();
 		}
 		return true;
 	}

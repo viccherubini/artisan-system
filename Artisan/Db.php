@@ -2,6 +2,8 @@
 
 require_once 'Artisan/Functions/Database.php';
 
+require_once 'Artisan/Db/Iterator.php';
+
 /**
  * The abstract Database class from which other database classes are extended.
  * Because this class is abstract and contains many abstract members, it is necessary

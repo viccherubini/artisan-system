@@ -1,11 +1,19 @@
 <?php
 
+require_once 'Artisan/Db/Result/Aggregate.php';
+
 /**
  * The abstract class for creating a result after a successful SELECT (or any other
  * query that returns data) query.
  * @author vmc <vmc@leftnode.com>
  */
 abstract class Artisan_Db_Result {
+	public $_aggResultList = array();
+	
+	private $_aggregate = NULL;
+	
+	private $_filter = NULL;
+	
 	/**
 	 * Sets the internal row pointer to $offset if $offset is less than the number of
 	 * rows returned.
@@ -62,4 +70,19 @@ abstract class Artisan_Db_Result {
 	 * @retval int Returns the number of rows from the query.
 	 */
 	abstract public function numRows();
+	
+	public function aggregate($agg, $field, $result_variable = NULL) {
+		if ( false === is_object($this->_aggregate) ) {
+			$this->_aggregate = new Artisan_Db_Result_Aggregate($this->fetchAll());
+		}
+		
+		$result_variable = ( !empty($result_variable) ? $result_variable : $field );
+		
+		$this->_aggResultList[$result_variable][$agg] = $this->_aggregate->$agg($field);
+		return $this;
+	}
+	
+	public function filter($filter, $field) {
+		
+	}
 }

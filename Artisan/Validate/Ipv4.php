@@ -9,7 +9,7 @@ require_once 'Artisan/Validate.php';
  * Static class that contains methods to validate Ipv4 addresses.
   * @author vmc <vmc@leftnode.com>
  */
-class Artisan_Validate_Ipv4 extends Artisan_Validate {
+class Artisan_Validate_Ipv4 {
 	private $_ip = NULL;
 
 	public function __construct($ip = NULL) {
@@ -31,5 +31,9 @@ class Artisan_Validate_Ipv4 extends Artisan_Validate {
 		if ( true === empty($ip) ) {
 			return false;
 		}
+
+		$ip_match = preg_match('/\b(([01]?[0-9][0-9]?|2[0-4][0-9]|25[0-5])\.){3}([01]?[0-9][0-9]?|2[0-4][0-9]|25[0-5])\b/i', $ip);
+		
+		return ( 1 == $ip_match ? true : false );
 	}
 }

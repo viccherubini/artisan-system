@@ -22,8 +22,8 @@ class Artisan_Rss_Db extends Artisan_Rss {
 	 * @param $DB The Database instance, must have an active connection.
 	 * @retval Object A new Artisan_Rss_Db object.
 	 */
-	public function __construct(Artisan_Db &$DB) {
-		$this->_dbConn = &$DB;
+	public function __construct(Artisan_Db &$dbConn) {
+		$this->_dbConn = &$dbConn;
 	}
 	
 	/**

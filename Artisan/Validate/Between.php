@@ -1,15 +1,10 @@
 <?php
 
 /**
- * @see Artisan_Validate
- */
-require_once 'Artisan/Validate.php';
-
-/**
  * Static class that contains methods to validate if a value is within a specified range.
  * @author rafshar <rafshar@gmail.com>
  */
-class Artisan_Validate_Between extends Artisan_Validate {
+class Artisan_Validate_Between {
 	private $_var = NULL;
 
 	public function __construct($var = NULL, $low = NULL, $high = NULL, $inclusive = true) {

@@ -1,68 +1,13 @@
 <?php
 
 /**
- * Artisan System Framework SDK 0.2
+ * Artisan System Framework SDK 0.3
  * This file is the entry point for the site.
  */
-
-// Set's the include path to be up a directory so that Artisan/ can be loaded in.
-// This can be updated to be: set_include_path('.:/path/to/artisan/'); if you wish
-// to hardcode the path.
-set_include_path('.:..');
-
-require_once 'Artisan/Config/Array.php';
-require_once 'Artisan/Functions/System.php';
-require_once 'Artisan/Db/Adapter/Mysqli.php';
-require_once 'Artisan/Customer/Adapter/Db.php';
-
-$config_db = new Artisan_Config_Array(array(
-	'server' => '192.168.2.101',
-	'username' => 'asfw_blog',
-	'password' => 'DSpuE2p6MjTZZrpJ',
-	'database' => 'artisan_blog'
-	)
-);
+require_once 'configure.php';
 
 $db = new Artisan_Db_Adapter_Mysqli($config_db);
-try {
-	$db->connect();
-} catch ( Artisan_Db_Exception $e ) {
-	exit($e);
-}
-
-$config_cust = new Artisan_Config_Array(array(
-	'table_list' => array(
-		'customer' => 'customer',
-		'comment' => 'customer_comment_history',
-		'history' => 'customer_history',
-		'field' => 'customer_field',
-		'field_type' => 'customer_field_type',
-		'field_value' => 'customer_field_value',
-	),
-	'db_adapter' => $db
-	)
-);
-try {
-	//$C = new Artisan_Customer_Adapter_Db($config_cust);
-	//$C->load(5);
-	//$db->query("SELECT '*' FROM some query");
-	
-} catch ( Artisan_Db_Exception $e ) {
-	echo $e;
-}
-
-$db->disconnect();
-/*
-require_once 'Artisan/Controller.php';
-
-// Create a new configuration instance for managing the controller. The
-// three keys provided are required.
-$config_controller = new Artisan_Config_Array(array(
-	'directory' => 'Controllers',
-	'default_controller' => 'Artisan',
-	'default_method' => 'index'
-	)
-);
+$db->connect();
 
 // The Artisan_Controller class is a singleton, so load it in as so.
 $C = &Artisan_Controller::get();
@@ -76,7 +21,21 @@ try {
 	echo $e;
 }
 
-exit;
-*/
+$result_agg = $db->select()
+	->from('agg', 'a', 'price', 'product')
+	->query()
+	->aggregate('Avg', 'price', 'avg_price')
+	->aggregate('Avg', 'price')
+	->aggregate('Sum', 'price')
+	->aggregate('Count', 'price');
+asfw_print_r($result_agg->_aggResultList);
 
-echo '<br><br><hr>' . asfw_peak_memory();
+$customer = new Artisan_Customer_Adapter_Db($db);
+$customer->load(1);
+foreach ( $customer->address as $idx => $addr ) {
+	echo $addr->date_create . ' ';
+}
+
+$db->disconnect();
+
+exit;

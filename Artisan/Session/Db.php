@@ -10,16 +10,7 @@ require_once 'Artisan/Session.php';
  */
 require_once 'Artisan/Session/Interface.php';
 
-/**
- * @see Artisan_Session_Exception
- */
-require_once 'Artisan/Session/Exception.php';
-
-/**
- * @see Artisan_Db_Exceptiopn
- */
-require_once 'Artisan/Db/Exception.php';
-
+require_once 'Artisan/Functions/Input.php';
 
 /**
  * This class allows the storage of sessions in a database. It is database agnostic
@@ -85,8 +76,7 @@ class Artisan_Session_Db implements Artisan_Session_Interface {
 				->from('artisan_session', asfw_create_table_alias('artisan_session'), 'session_data')
 				->where('session_id = ?', $session_id)
 				->query();
-			$session_data = $result_session->fetch();
-
+			$session_data = $result_session->fetch('session_data');
 			if ( true === empty($session_data) ) {
 				$session_data = NULL;
 			}
@@ -108,7 +98,7 @@ class Artisan_Session_Db implements Artisan_Session_Interface {
 	 */
 	public function write($session_id, $session_data) {
 		$error = false;
-				
+		
 		try {
 			$ipv4 = asfw_get_ipv4();
 			$user_agent = asfw_get_user_agent();
@@ -157,6 +147,7 @@ class Artisan_Session_Db implements Artisan_Session_Interface {
 				->from('artisan_session')
 				->where('session_expiration_time < ?', $del_time)
 				->query();
+			$this->DB->query('OPTIMIZE TABLE `artisan_session`');
 		} catch ( Artisan_Db_Exception $e ) {
 			$error = true;
 		}

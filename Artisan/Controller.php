@@ -48,6 +48,9 @@ class Artisan_Controller {
 	///< Whether or not the configuration has been set.
 	private $_config_set = true;
 	
+	/// An instance of the Artisan_Cache_Adapter_* class for caching output. This has to be manually set in setCache()
+	private $_artisanCache = NULL;
+
 	/**
 	 * Private constructor because this class is a singleton.
 	 * @author vmc <vmc@leftnode.com>
@@ -110,7 +113,20 @@ class Artisan_Controller {
 		}
 		return true;
 	}
-	
+
+	/**
+	 * Sets the caching object to use for data after it has been executed. If the
+	 * Artisan_Cache_Adapter::setTtlOverride() has been set, the execute() 
+	 * will take that into account when caching data.
+	 */
+	public function setCache(Artisan_Cache_Adapter &$cache) {
+		$this->_artisanCache = NULL;
+		if ( true === $cache->started() ) {
+			$this->_artisanCache = &$cache;
+		}
+		return false;
+	}
+
 	/**
 	 * Executes the loaded controller and method.
 	 * @author vmc <vmc@leftnode.com>
@@ -193,17 +209,37 @@ class Artisan_Controller {
 		// do not execute the view part, just allow the method to handle viewing and
 		// redirection.
 		if ( '_' != $method[0] ) {
-			$this->CONTROLLER->__setControllerDirectory($this->_directory);
-			try {
-				$content = $this->CONTROLLER->__execute($controller, $method);
-			} catch ( Artisan_Exception $e ) {
-				throw $e;
+			if ( false === is_null($this->_artisanCache) ) {
+				$cacheId = $this->_createCacheId();
+				if ( true === $this->_artisanCache->exists($cacheId) ) {
+					$content = $this->_artisanCache->fetch($cacheId);
+				} else {
+					$content = $this->_executeView();
+					$this->_artisanCache->add($cacheId, $content);
+				}
+			} else {
+				$content = $this->_executeView();
 			}
 			return $content;
 		}
 		return NULL;
 	}
 	
+	/**
+	 * Executes the actual view and returns the content.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval string The parsed content from the executed controller.
+	 */
+	private function _executeView() {
+		$this->CONTROLLER->__setControllerDirectory($this->_directory);
+		try {
+			$content = $this->CONTROLLER->__execute($this->_controller_name, $this->_controller_method);
+		} catch ( Artisan_Exception $e ) {
+			throw $e;
+		}
+		return $content;
+	}
+
 	/**
 	 * Parses the URI to extract the appropriate parameters. Sets the appropriate internal
 	 * methods with the specified Controller, Method, and arguments.
@@ -251,5 +287,20 @@ class Artisan_Controller {
 			$this->_controller_argv = array_slice($request_bits, 2);
 		}
 		return true;
+	}
+
+	/**
+	 * Creates the ID for the cache by combining the controller name and method name:
+	 * Blog::index() would becoming Blog_index which is how it would be stored in 
+	 * the override table.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $controller The name of the controller to create the first part of the cache ID.
+	 * @param $method The name of the method to create the second part of the cache ID.
+	 * @retval string Returns the concatenated values of $controller_$method.
+	 */
+	private function _createCacheId() {
+		$controller = asfw_rename_controller($this->_controller_name);
+		$method = asfw_rename_controller_method($this->_controller_method);
+		return implode('_', array($controller, $method));
 	}
 }

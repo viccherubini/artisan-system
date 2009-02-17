@@ -13,18 +13,26 @@ require_once 'Artisan/Customer/Address.php';
  * @author <vmc@leftnode.com>
  */
 abstract class Artisan_Customer {
+	/// The customer array after being loaded from the database and modified.
 	protected $_cust = array();
+	
+	/// The customer array after being loaded from the database and not modified. This is kept in memory for faster lookups.
 	protected $_custOrig = array();
+	
+	protected $_commentList = array();
 	
 	protected $_head = 0;
 	
 	
 	protected $_addrList = array();
 	
-	///< Primary key
+	/// Primary key
 	protected $_customerId = 0;
-
+	protected $_parentId = 0;
+	
 	protected $_fieldList = array();
+
+	public $address = NULL;
 
 	const REV_ADDED = 'A';
 	const REV_MODIFIED = 'M';
@@ -33,7 +41,6 @@ abstract class Artisan_Customer {
 	
 	public function __construct() {
 		$this->_cust = $this->_custOrig = array();
-		//$this->_addr = new Artisan_Customer_Address();
 	}
 	
 	
@@ -55,6 +62,10 @@ abstract class Artisan_Customer {
 	 * @retval string The specified value in $name or NULL if it's not found anywhere.
 	 */
 	public function __get($name) {
+		if ( 'address' == $name ) {
+			return false;
+		}
+		
 		if ( true === asfw_exists($name, $this->_cust) ) {
 			return $this->_cust[$name];
 		}
@@ -98,10 +109,19 @@ abstract class Artisan_Customer {
 		return true;
 	}
 	
+	public function addComment($subject, $comment, $status) {
+	
+	}
+	
 	public function __unset($name) {
 		if ( true === asfw_exists($name, $this->_cust) ) {
 			unset($this->_cust[$name]);
 		}
+	}
+	
+	public function __clone() {
+		$this->_parentId = $this->_customerId;
+		$this->_customerId = 0;
 	}
 	
 	public function getHead() {
