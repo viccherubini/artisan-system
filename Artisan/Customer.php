@@ -132,4 +132,11 @@ abstract class Artisan_Customer {
 		$this->_cust = $this->_custOrig = array();
 		$this->_customerId = 0;
 	}
+	
+	/**
+	 * Provides an interface to the Artisan_Customer_Address objects. 
+	 */
+	public function address() {
+	
+	}
 }
