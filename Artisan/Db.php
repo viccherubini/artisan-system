@@ -202,3 +202,18 @@ abstract class Artisan_Db {
 	 */
 	abstract public function escape($value);
 }
+
+/**
+ * Checks to see if a variable has an active connection to a database.
+ * Because this method should not be used publically, it is prefixed with an underscore.
+ * @author vmc <vmc@leftnode.com>
+ * @param $dbConn An Artisan_Db object.
+ * @throw Artisan_Db_Exception If the database does not have an active connection.
+ * @retval boolean Returns true.
+ */
+function _asfw_check_db(Artisan_Db $dbConn) {
+	if ( false === $dbConn->isConnected() ) {
+		throw new Artisan_Db_Exception(ARTISAN_WARNING, 'The database does not have an active connection.');
+	}
+	return true;
+}
