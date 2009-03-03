@@ -30,12 +30,6 @@ $result_agg = $db->select()
 	->aggregate('Count', 'price');
 asfw_print_r($result_agg->_aggResultList);
 
-$customer = new Artisan_Customer_Adapter_Db($db);
-$customer->load(1);
-foreach ( $customer->address as $idx => $addr ) {
-	echo $addr->date_create . ' ';
-}
-
 $db->disconnect();
 
 exit;
