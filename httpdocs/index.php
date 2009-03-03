@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Artisan System Framework SDK 0.3
+ * Artisan System Framework SDK 0.3a1
  * This file is the entry point for the site.
  */
 require_once 'configure.php';
@@ -21,6 +21,7 @@ try {
 	echo $e;
 }
 
+/*
 $result_agg = $db->select()
 	->from('agg', 'a', 'price', 'product')
 	->query()
@@ -29,6 +30,7 @@ $result_agg = $db->select()
 	->aggregate('Sum', 'price')
 	->aggregate('Count', 'price');
 asfw_print_r($result_agg->_aggResultList);
+*/
 
 $db->disconnect();
 
