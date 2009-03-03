@@ -20,7 +20,7 @@ class Artisan_User {
 	protected $_user_id;
 	
 	///< The use Value Object for storing dynamic user data.
-	protected $_user = NULL;
+	protected $_user = array();
 	
 	///< The status of the user, integer value.
 	protected $_user_status;
@@ -34,7 +34,7 @@ class Artisan_User {
 		// This is always built here rather than in the __set() and __get() methods
 		// because the Value Object class is such low overhead, that its not worth using
 		// Lazy Initialization.
-		$this->_user = new Artisan_Vo();
+		//$this->_user = new Artisan_Vo();
 	}
 
 	/**
@@ -47,6 +47,23 @@ class Artisan_User {
 	}
 
 	/**
+	 * Sets all of the user values from an array.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $user The user array to set.
+	 * @retval boolean Returns true if $user is an array and the values are set, false otherwise.
+	 */
+	public function setFromArray($user) {
+		if ( false === is_array($user) ) {
+			return false;
+		}
+		
+		foreach ( $user as $k => $v ) {
+			$this->__set($k, $v);
+		}
+		return true;
+	}
+
+	/**
 	 * Magic method overridden to set a piece of information about a user. The fields
 	 * can be set dynamically. This will not allow you to set the user_id value though
 	 * to prevent failed queries. Also, if the $name is email_address, it will be validated.
@@ -56,14 +73,12 @@ class Artisan_User {
 	 * @retval boolean Returns true.
 	 */
 	public function __set($name, $value) {
-		if ( true === $this->_user instanceof Artisan_Vo ) {
-			$name = trim($name);
-			if ( $name != 'user_id' ) {
-				if ( $name == 'email_address' ) {
-					// Validate it
-				}
-				$this->_user->{$name} = $value;
+		$name = trim($name);
+		if ( $name != 'user_id' ) {
+			if ( $name == 'email_address' ) {
+				// Validate it
 			}
+			$this->_user[$name] = $value;
 		}
 		return true;
 	}
@@ -75,11 +90,9 @@ class Artisan_User {
 	 * @retval string Returns the property's value if the property exists, otherwise returns NULL.
 	 */
 	public function __get($name) {
-		if ( true === $this->_user instanceof Artisan_Vo ) {
-			$name = trim($name);
-			if ( true === $this->_user->exists($name) ) {
-				return $this->_user->{$name};
-			}
+		$name = trim($name);
+		if ( true === asfw_exists($name, $this->_user) ) {
+			return $this->_user[$name];
 		}
 		return NULL;
 	}

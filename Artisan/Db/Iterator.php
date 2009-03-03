@@ -49,6 +49,10 @@ class Artisan_Db_Iterator implements Iterator {
 		return ( $this->_key != $this->_result->numRows() );
 	}
 	
+	public function __get($name) {
+		return $this->_object;
+	}
+	
 	/**
 	 * Returns a specific object index in the iterator, treating it as an array.
 	 * This is here because PHP can't overload the [] operator.

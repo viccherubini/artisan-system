@@ -78,7 +78,7 @@ abstract class Artisan_Db_Sql_Update extends Artisan_Db_Sql {
 		$i=0;
 		$field_list_sql = " SET ";
 		foreach ( $this->_update_field_list as $field => $value ) {
-			if ( '`' == $value[0] ) {
+			if ( false === empty($value) && '`' == $value[0] ) {
 				$field_list_sql .= $field . " = " . $this->DB->escape($value);
 			} else {
 				$field_list_sql .= $field . " = '" . $this->DB->escape($value) . "'";

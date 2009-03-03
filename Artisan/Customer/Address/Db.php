@@ -23,6 +23,13 @@ class Artisan_Customer_Address_Db extends Artisan_Customer_Address {
 		return $this;
 	}
 	
+	public function setCustomerId($customer_id) {
+		$customer_id = intval($customer_id);
+		if ( $customer_id > 0 ) {
+			$this->__set('customer_id', $customer_id);
+		}
+	}
+	
 	public function load($address_id) {
 		$this->_checkDb(__FUNCTION__);
 		
@@ -55,11 +62,7 @@ class Artisan_Customer_Address_Db extends Artisan_Customer_Address {
 		}
 		return $this->_addressId;
 	}
-	
-	private function _load($address_id) {
-		
-	}
-	
+
 	private function _insert() {
 		$addr = array(
 			'address_id' => NULL,
@@ -81,7 +84,9 @@ class Artisan_Customer_Address_Db extends Artisan_Customer_Address {
 	}
 	
 	private function _update() {
-	
+		$this->_addr['date_modify'] = time();
+		$this->_dbConn->update()->table($this->_addrTable)->set($this->_addr)->where('address_id = ?', $this->_addressId)->query();
+		
 	}
 	
 	/**

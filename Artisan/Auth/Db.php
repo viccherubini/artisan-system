@@ -24,13 +24,15 @@ class Artisan_Auth_Db extends Artisan_Auth {
 	
 	private $_passwordSaltField = 'user_password_salt';
 	
+	private $_idField = 'user_id';
+	
 	/**
 	 * Default constructor to authenticate someone against a database.
 	 * @author vmc <vmc@leftnode.com>
 	 * @param $DB A database object instance that already has a valid connection.
 	 * @retval Object New Artisan_Auth_Database instance.
 	 */
-	public function __construct(Artisan_Db &$dbConn, $tableName = NULL, $userField = NULL, $passwordField = NULL, $passwordSaltField = NULL) {
+	public function __construct(Artisan_Db &$dbConn, $tableName = NULL, $userField = NULL, $passwordField = NULL, $passwordSaltField = NULL, $idField = NULL) {
 		// We can only assume the database has a current connection
 		// as we don't want to attempt to connect.
 		$this->_dbConn = &$dbConn;
@@ -39,6 +41,7 @@ class Artisan_Auth_Db extends Artisan_Auth {
 		$this->setUserField($userField);
 		$this->setPasswordField($passwordField);
 		$this->setPasswordSaltField($passwordSaltField);
+		$this->setIdField($idField);
 	}
 	
 	/**
@@ -93,6 +96,20 @@ class Artisan_Auth_Db extends Artisan_Auth {
 		$passwordSaltField = trim($passwordSaltField);
 		if ( false === empty($passwordSaltField) ) {
 			$this->_passwordSaltField = $passwordSaltField;
+		}
+		return true;
+	}
+	
+	/**
+	 * Sets the name of the user_id field to load up the user from.
+	 * @author vmc <vmc@leftnode.com>
+	 * @param $idField The name of the user_id field to set. Will not be set if the value is empty.
+	 * @retval boolean Returns true.
+	 */
+	public function setIdField($idField) {
+		$idField = trim($idField);
+		if ( false === empty($idField) ) {
+			$this->_idField = $idField;
 		}
 		return true;
 	}
@@ -157,6 +174,8 @@ class Artisan_Auth_Db extends Artisan_Auth {
 		$user_password_hashed = asfw_compute_hash($user_password, $password_salt);
 		$user_data_password_hashed = trim($user_data[$this->_passwordField]);
 
+		$user_id = asfw_exists_return($this->_idField, $user_data);
+		
 		unset($result_user);
 		
 		if ( $user_password_hashed !== $user_data_password_hashed ) {
@@ -184,7 +203,11 @@ class Artisan_Auth_Db extends Artisan_Auth {
 			$authenticated = true;
 		}
 		
-		return $authenticated;
+		if ( true !== $authenticated ) {
+			$user_id = 0;
+		}
+		
+		return $user_id;
 	}
 	
 	/**

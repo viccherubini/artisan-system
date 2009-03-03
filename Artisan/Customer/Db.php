@@ -104,12 +104,16 @@ class Artisan_Customer_Db extends Artisan_Customer {
 			throw new Artisan_Customer_Exception(ARTISAN_WARNING, 'The customer has not been loaded yet.');
 		}
 		
+		$customer_address_db = new Artisan_Customer_Address_Db($this->_dbConn);
+		$customer_address_db->setCustomerId($this->_customerId);
+		
 		$result_address = $this->_dbConn->select()
 			->from($this->_addressTable)
 			->where('customer_id = ?', $this->_customerId)
 			->where('status = 1')
 			->query();
-		$this->address = new Artisan_Db_Iterator($result_address, new Artisan_Customer_Address_Db($this->_dbConn));
+		$this->address = new Artisan_Db_Iterator($result_address, $customer_address_db);
+		//$this->address = $this->address->obj();
 	}
 	
 	/**

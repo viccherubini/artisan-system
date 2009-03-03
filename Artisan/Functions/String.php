@@ -81,3 +81,14 @@ function asfw_strip_end_slashes($string) {
 	
 	return $string;
 }
+
+/**
+ * Returns a string to safely print out on the screen. Note,
+ * this converts all HTML entities except quotes.
+ * @author vmc <vmc@leftnode.com>
+ * @param $value The value to print.
+ * @retval string The safe to display string.
+ */
+function asfw_safe($value) {
+	return htmlentities(stripslashes($value));
+}

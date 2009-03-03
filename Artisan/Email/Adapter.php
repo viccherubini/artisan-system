@@ -1,5 +1,6 @@
 <?php
 
+require_once 'Artisan/Email/Exception.php';
 
 abstract class Artisan_Adapter_Email {
 	protected $_toEmailList = NULL;
@@ -22,20 +23,20 @@ abstract class Artisan_Adapter_Email {
 	}
 	
 	public function addTo($email, $name = NULL) {
-		$this->_toEmailList[] = $email;
-		$this->_toNameList[] = $name;
+		$this->_toEmailList[] = $this->_sanitizeHeader($email);
+		$this->_toNameList[] = $this->_sanitizeHeader($name);
 		return true;
 	}
 	
 	
 	public function setFrom($from, $name = NULL) {
-		$this->_fromEmail = $from;
-		$this->_fromName = $name;
+		$this->_fromEmail = $this->_sanitizeHeader($from);
+		$this->_fromName = $this->_sanitizeHeader($name);
 		return true;
 	}
 	
 	public function setSubject($subject) {
-		$this->_subject = trim($subject);
+		$this->_subject = $this->_sanitizeHeader($subject);
 	}
 	
 	public function setContentType($ct) {
@@ -59,4 +60,22 @@ abstract class Artisan_Adapter_Email {
 	}
 	
 	abstract public function send();
+	
+	private function _check() {
+		if ( true === empty($this->_body) ) {
+			throw new Artisan_Email_Exception(ARTISAN_WARNING, "The body of the email is empty.");
+		}
+		
+		if ( true === empty($this->_subject) ) {
+			throw new Artisan_Email_Exception(ARTISAN_WARNING, "The subject of the email is empty.");
+		}
+		
+		if ( 0 == count($this->_toEmailList) ) {
+			throw new Artisan_Email_Exception(ARTISAN_WARNING, "The list of recipients is empty.");
+		}
+		
+		if ( true === empty($this->_fromEmail) ) {
+			throw new Artisan_Email_Exception(ARTISAN_WARNING, "The from email address is empty.");
+		}
+	}
 }

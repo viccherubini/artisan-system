@@ -6,6 +6,6 @@
  * @author vmc <vmc@leftnode.com>
  * @todo Write this class.
  */
-class Artisan_Form {
+class Artisan_Html_Form {
 
 }
