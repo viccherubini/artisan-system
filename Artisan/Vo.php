@@ -156,4 +156,3 @@ class Artisan_Vo {
 		return $x;
 	}
 }
-
