@@ -1,0 +1,65 @@
+== Installation ==
+Installation of Artisan System PHP5 Framework 0.3beta has been made much simpler with this release. This tutorial is also included with the official release and assumes you are using Apache 2.2, MySQL 5+, PHP 5.2+, have mod_rewrite and mod_vhost_alias installed for Apache, and have root access.
+
+First, create a vhosts directory from where Apache serves requests (assuming /var/www/ is the DocumentRoot):
+
+cd /var/www/
+mkdir vhosts
+
+Checkout the 0.3beta release from within the /var/www/vhosts/ directory:
+
+cd vhosts
+svn co http://svn.leftnode.com/artisan_system/tags/0.3beta/ artisan.dev
+
+This will create a directory named artisan.dev with three sub-directories (not including the .svn directory):
+
+    * Artisan
+    * httpdocs
+    * Install_Sql
+
+== Create the Database ==
+
+Execute the trunk.001.create_database.sql file from within the Install_Sql to create the initial database:
+
+cd artisan.dev/Install_Sql
+mysql -uusername -p < trunk.001.create_database.sql
+
+You will be prompted for your database username password. This will create a database named `artisan_system` on your computer.
+Configure Database Connection
+
+Navigate to the httpdocs directory and copy the configure.template.php file to configure.php:
+
+cd ../httpdocs/
+cp configure.template.php configure.php
+
+Open configure.php and set the values for the database connection:
+
+vim configure.php
+
+Change the values in the variable $config_db. Set the database name as `artisan_system`, which you just created.
+
+== Create the Virtual Host ==
+
+Create a Virtual Host for Apache named artisan.dev (for the time being, this assumes you are running Ubuntu, how to set up a Virtual Host is not operating system/distro dependent, but Ubuntu makes it very easy):
+
+<VirtualHost *>
+  ServerName artisan.dev
+  DocumentRoot /var/www/vhosts/artisan.dev/httpdocs/
+</VirtualHost>
+
+Save the file and exit Vim. Enable the Virtual Host and restart Apache:
+
+sudo a2ensite artisan.dev
+sudo /etc/init.d/apache2 restart
+
+Finally, set up your hosts file so you can navigate to http://artisan.dev/ in your browser:
+
+sudo vim /etc/hosts
+
+Add the following to the end of the file:
+
+127.0.0.1	artisan.dev
+
+Restart your Internet connection. You can navigate to http://artisan.dev/ in your browser now:
+
+sudo /etc/init.d/networking restart

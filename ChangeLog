@@ -1,0 +1,1768 @@
+2009-01-11 03:55  vmc
+
+	* /trunk/httpdocs/Controllers, /trunk/httpdocs/index.php,
+	  /trunk/httpdocs/public: Renamed Controllers to public
+
+2009-01-11 05:11  vmc
+
+	* /trunk/Artisan/Db/Sql/Select.php: Fixed #33 by adding the code to
+	  clear the group_field_list and set the order_field and
+	  order_method to NULL at the end of build()
+
+2009-01-11 05:23  vmc
+
+	* /trunk/Artisan/User/Db.php: Made protected so classes derived
+	  from here can use it
+
+2009-01-11 15:16  vmc
+
+	* /trunk/Artisan/Customer.php,
+	  /trunk/Artisan/Customer/Adapter/Db.php,
+	  /trunk/Artisan/Db/Sql.php, /trunk/Artisan/Db/Sql/Select.php,
+	  /trunk/Artisan/User.php: Commented out the building of the sql
+	  during the echo to prevent reset queries being executed. Perhaps
+	  a flag for when queries are built is set, and then when executed,
+	  unset so that way building only has to happen once.
+
+2009-01-11 16:06  vmc
+
+	* /trunk/Artisan/Vo.php: Updated exists() to use property_exists
+	  rather than isset() so that way NULL values show up as true.
+
+2009-01-11 17:47  vmc
+
+	* /trunk/Artisan/Customer.php: Added the different revision
+	  constants types (A, M, D) and the head as 'head' and added the
+	  member variables for keeping track of revision data (#35)
+
+2009-01-11 17:48  vmc
+
+	* /trunk/Artisan/Customer/Adapter/Db.php: Major updates to the
+	  _load() method in that it now can load up the revision data of
+	  any customer from any point in time. Gotta admit, this is pretty
+	  slick (#35)
+
+2009-01-11 22:47  vmc
+
+	* /trunk/Artisan/Db/Sql.php: Removed the commented ->build() in
+	  __toString()
+
+2009-01-12 03:49  vmc
+
+	* /trunk/Artisan/Db/Sql/Select.php: Updated the build() method to
+	  clear out the join_table_list after building the query so it's
+	  not reused. (#33)
+
+2009-01-12 03:58  vmc
+
+	* /trunk/Artisan/Customer.php,
+	  /trunk/Artisan/Customer/Adapter/Db.php: Just going to check these
+	  in althought they're not complete because I'm going to totally
+	  restructure the Customer class and want at least one snapshot
+	  before I do
+
+2009-01-12 04:10  vmc
+
+	* /trunk/Artisan/Customer.php,
+	  /trunk/Artisan/Customer/Adapter/Db.php: Updated the classes to
+	  not extend from User so that'll stay totally separate, gonna go
+	  with constructor based load rather than configuration, maybe
+
+2009-01-12 11:21  vmc
+
+	* /trunk/Artisan/Customer.php: Rearranged a few things, added new
+	  fields _customer, _customerField, and _customerOriginal
+
+2009-01-12 11:22  vmc
+
+	* /trunk/Artisan/Customer/Adapter/Db.php: Rearranged the how the
+	  constructor works and how the _load() works
+
+2009-01-12 11:25  vmc
+
+	* /trunk/Artisan/Customer/Adapter/Db.php: Was able to remove all of
+	  the code to find the current revision since that's done when
+	  finding if a revision should be loaded
+
+2009-01-12 11:33  vmc
+
+	* /trunk/Artisan/Db/Sql/Select.php: Added the limit() method so
+	  that a limited number of fields can be returned.
+
+2009-01-12 11:33  vmc
+
+	* /trunk/Artisan/Customer/Adapter/Db.php: Nevermind, had to add the
+	  query to get the latest revision in there.
+
+2009-01-12 12:09  vmc
+
+	* /trunk/Artisan/Customer.php: Finished the __set() magic method to
+	  set a value in the or members
+
+2009-01-12 12:10  vmc
+
+	* /trunk/Artisan/Customer/Adapter/Db.php: Added the _update() code
+	  back in
+
+2009-01-13 03:21  vmc
+
+	* /trunk/Artisan/Customer/Adapter/Db.php: Removed the old variable
+	  in exchange for all of the individual tables (#35)
+
+2009-01-13 03:34  vmc
+
+	* /trunk/Artisan/Customer.php: Updated the * variables to be *, and
+	  slightly more abbreviated (#10)
+
+2009-01-13 04:24  vmc
+
+	* /trunk/Artisan/Vo.php: Added the length() method to quickly
+	  return the length of a value object
+
+2009-01-13 04:24  vmc
+
+	* /trunk/Artisan/Saveable.php: Base class for saveable objects, one
+	  of the new features of Artisan System
+
+2009-01-13 04:25  vmc
+
+	* /trunk/Artisan/Customer/Group.php: Added the Group.php which will
+	  soon have the class Artisan_Customer_Group for managing what
+	  group(s) a customer is in.
+
+2009-01-13 04:25  vmc
+
+	* /trunk/Artisan/Customer.php: Updated __set() to not allow direct
+	  manipulation of the customer_id of the value object (the value
+	  object isn't used anyway, but its best to prevent this)
+
+2009-01-13 04:26  vmc
+
+	* /trunk/Artisan/Customer/Adapter/Db.php: Updated the _load()
+	  method to work a bit more efficiently and sanely, now loads up
+	  the revisions additional fields at the same time as the default
+	  fields
+
+2009-01-13 04:28  vmc
+
+	* /tags/0.3a1: Creating 0.3a1 from the trunk, will work in here
+	  until the 0.3 release.
+
+2009-01-13 04:30  vmc
+
+	* /tags/0.3a1, /tags/v0.3a1: Renaming 0.3a1 to v0.3a1 to be
+	  consistent with the rest of the tags
+
+2009-01-13 04:32  vmc
+
+	* /tags/v0.3a1/Install_Sql/tag0.3a1.019.alter_table_customer_make_date_modify_null.sql,
+	  /tags/v0.3a1/Install_Sql/tag0.3a1.020.alter_table_customer_history_add_customer_id.sql,
+	  /tags/v0.3a1/Install_Sql/tag0.3a1.021.alter_table_customer_history_add_type.sql:
+	  Adding the new customer database files in the 0.3a1 tag
+
+2009-01-13 10:52  vmc
+
+	* /tags/v0.3a1/Artisan/Customer.php: Commented out and made a
+	  regular array, now will just store the additional fields for
+	  writing later.
+
+2009-01-13 10:52  vmc
+
+	* /tags/v0.3a1/Artisan/Customer/Adapter/Db.php: Starting to update
+	  _load() to load all of the data (default and additional) and only
+	  put additional fields in the list
+
+2009-01-13 11:31  vmc
+
+	* /tags/v0.3a1/Artisan/Customer/Adapter/Db.php: Got the updating of
+	  the additional fields working
+
+2009-01-13 11:58  vmc
+
+	* /tags/v0.3a1/Artisan/Vo.php: Added the method key() to return
+	  true if a key exists, false otherwise, and added Doxygen comments
+	  for length().
+
+2009-01-13 11:58  vmc
+
+	* /tags/v0.3a1/Artisan/Db/Sql/Select.php: Updated to be 0 at the
+	  end of building the query.
+
+2009-01-13 11:59  vmc
+
+	* /tags/v0.3a1/Install_Sql/tag0.3a1.022.remove_customer_field_type_references.sql,
+	  /tags/v0.3a1/Install_Sql/tag0.3a1.023.alter_table_customer_field_add_unique_name.sql,
+	  /tags/v0.3a1/Install_Sql/tag0.3a1.024.alter_table_customer_history_change_value_null.sql:
+	  New queries to rebuild the database
+
+2009-01-14 04:08  vmc
+
+	* /tags/v0.3a1/Artisan/Customer/Adapter/Db.php: Sweet, got the
+	  versioned code working pretty nicely now. Works more like a real
+	  revision control where it loads up the head if no revision is
+	  specified, otherwise, the most current revision.
+
+2009-01-14 13:13  vmc
+
+	* /tags/v0.3a1/Artisan/Vo.php: Added __unset() to remove elements
+
+2009-01-14 13:13  vmc
+
+	* /tags/v0.3a1/Artisan/Customer.php,
+	  /tags/v0.3a1/Artisan/Customer/Adapter/Db.php: Got most of the
+	  revision history working in a pretty nice way.
+
+2009-01-15 03:02  vmc
+
+	* /tags/v0.3a1/Artisan/Customer/Adapter/Db.php: Finally got the
+	  revisions working like I wanted them to, see updates in _load()
+	  for how it works very efficiently
+
+2009-01-15 11:43  vmc
+
+	* /tags/v0.3a1/Artisan/Db/Adapter/Mysqli.php: Updated insertId() to
+	  use LAST_INSERT_ID() because sometimes ->CONN->insertId doesn't
+	  work well
+
+2009-01-15 11:46  vmc
+
+	* /tags/v0.3a1/Artisan/Db/Adapter/Mysqli.php: Updated insertId() to
+	  use mysqli_insert_id() by passing the connection object to it as
+	  ->CONN->insert_id doesn't work well.
+
+2009-01-15 11:46  vmc
+
+	* /tags/v0.3a1/Artisan/Customer.php,
+	  /tags/v0.3a1/Artisan/Customer/Adapter/Db.php: Totally changed the
+	  way the revisions work now where everything is stored in the
+	  history table.
+
+2009-01-15 13:15  vmc
+
+	* /tags/v0.3a1/Artisan/Db/Adapter/Mysqli.php: Removed the old
+	  commented code out from insertId
+
+2009-01-16 03:13  vmc
+
+	* /tags/v0.3a1/Artisan/Customer.php: Updated __set() to match
+	  against the regex and hook methods if specified for setting a
+	  specific type
+
+2009-01-16 03:13  vmc
+
+	* /tags/v0.3a1/Artisan/Customer/Adapter/Db.php: Updated
+	  _loadFieldList() to also load in the hook and regex for
+	  validation
+
+2009-01-16 11:09  vmc
+
+	* /tags/v0.3a1/Artisan/Log/Writer/Db.php,
+	  /tags/v0.3a1/Artisan/Rss/Db.php: Updated the variable to be
+	  because it looks nicer.
+
+2009-01-16 11:52  vmc
+
+	* /tags/v0.3a1/Artisan/Customer.php: Added the method reset() to
+	  reset the data to avoid having to rebuild the class each time in
+	  a loop (#9).
+
+2009-01-16 11:55  vmc
+
+	* /tags/v0.3a1/Artisan/Customer/Group.php: Added base class for the
+	  customer management classes (#9).
+
+2009-01-16 11:57  vmc
+
+	* /tags/v0.3a1/Artisan/Customer/Adapter/Db.php: Updated write() to
+	  set the base and values so that way successive writes will work
+	  properly (#9).
+
+2009-01-18 04:30  vmc
+
+	* /tags/v0.3a1/Artisan/Customer.php: Added the base address stuff
+
+2009-01-18 04:31  vmc
+
+	* /tags/v0.3a1/Artisan/Customer/Address.php: Added the base address
+	  data
+
+2009-01-18 04:32  vmc
+
+	* /tags/v0.3a1/Install_Sql/tag0.3a1.025.alter_customer_history_index_fields.sql,
+	  /tags/v0.3a1/Install_Sql/tag0.3a1.025.delete_table_customer_field_value.sql,
+	  /tags/v0.3a1/Install_Sql/tag0.3a1.026.create_table_customer_address.sql:
+	  Latest files for managing the sql
+
+2009-01-18 04:35  vmc
+
+	* /trunk/Artisan, /trunk/Artisan/ASFW.php,
+	  /trunk/Artisan/Artisan_System.php, /trunk/Artisan/Auth,
+	  /trunk/Artisan/Auth.php, /trunk/Artisan/Auth/Db.php,
+	  /trunk/Artisan/Auth/Exception.php, /trunk/Artisan/Cache,
+	  /trunk/Artisan/Cache.php, /trunk/Artisan/Cache/Db.php,
+	  /trunk/Artisan/Cache/Exception.php, /trunk/Artisan/Config,
+	  /trunk/Artisan/Config.php, /trunk/Artisan/Config/Array.php,
+	  /trunk/Artisan/Config/Exception.php,
+	  /trunk/Artisan/Config/Xml.php, /trunk/Artisan/Controller,
+	  /trunk/Artisan/Controller.php,
+	  /trunk/Artisan/Controller/Exception.php,
+	  /trunk/Artisan/Controller/View.php, /trunk/Artisan/Customer,
+	  /trunk/Artisan/Customer.php, /trunk/Artisan/Customer/Adapter,
+	  /trunk/Artisan/Customer/Adapter/Db.php,
+	  /trunk/Artisan/Customer/Address.php,
+	  /trunk/Artisan/Customer/Exception.php,
+	  /trunk/Artisan/Customer/Group.php, /trunk/Artisan/Db,
+	  /trunk/Artisan/Db.php, /trunk/Artisan/Db/Adapter,
+	  /trunk/Artisan/Db/Adapter/Mysqli.php,
+	  /trunk/Artisan/Db/Adapter/Oracle.php,
+	  /trunk/Artisan/Db/Adapter/Pdo.php,
+	  /trunk/Artisan/Db/Adapter/Postgres.php,
+	  /trunk/Artisan/Db/Adapter/Sqlite.php,
+	  /trunk/Artisan/Db/Exception.php, /trunk/Artisan/Db/Result,
+	  /trunk/Artisan/Db/Result.php,
+	  /trunk/Artisan/Db/Result/Mysqli.php,
+	  /trunk/Artisan/Db/Result/Oracle.php,
+	  /trunk/Artisan/Db/Result/Pdo.php,
+	  /trunk/Artisan/Db/Result/Postgres.php,
+	  /trunk/Artisan/Db/Result/Sqlite.php, /trunk/Artisan/Db/Sql,
+	  /trunk/Artisan/Db/Sql.php, /trunk/Artisan/Db/Sql/Delete,
+	  /trunk/Artisan/Db/Sql/Delete.php,
+	  /trunk/Artisan/Db/Sql/Delete/Mysqli.php,
+	  /trunk/Artisan/Db/Sql/Exception.php,
+	  /trunk/Artisan/Db/Sql/Insert, /trunk/Artisan/Db/Sql/Insert.php,
+	  /trunk/Artisan/Db/Sql/Insert/Mysqli.php,
+	  /trunk/Artisan/Db/Sql/Select, /trunk/Artisan/Db/Sql/Select.php,
+	  /trunk/Artisan/Db/Sql/Select/Mysqli.php,
+	  /trunk/Artisan/Db/Sql/Select/Oracle.php,
+	  /trunk/Artisan/Db/Sql/Select/Pdo.php,
+	  /trunk/Artisan/Db/Sql/Select/Postgres.php,
+	  /trunk/Artisan/Db/Sql/Select/Sqlite.php,
+	  /trunk/Artisan/Db/Sql/Update, /trunk/Artisan/Db/Sql/Update.php,
+	  /trunk/Artisan/Db/Sql/Update/Mysqli.php, /trunk/Artisan/Email,
+	  /trunk/Artisan/Email.php, /trunk/Artisan/Email/Exception.php,
+	  /trunk/Artisan/Event, /trunk/Artisan/Event.php,
+	  /trunk/Artisan/Event/Exception.php, /trunk/Artisan/Exception.php,
+	  /trunk/Artisan/Functions, /trunk/Artisan/Functions/Array.php,
+	  /trunk/Artisan/Functions/Database.php,
+	  /trunk/Artisan/Functions/Encryption.php,
+	  /trunk/Artisan/Functions/Html.php,
+	  /trunk/Artisan/Functions/Input.php,
+	  /trunk/Artisan/Functions/String.php,
+	  /trunk/Artisan/Functions/System.php, /trunk/Artisan/Html,
+	  /trunk/Artisan/Html/Form.php, /trunk/Artisan/Json.php,
+	  /trunk/Artisan/Log, /trunk/Artisan/Log.php,
+	  /trunk/Artisan/Log/Exception.php, /trunk/Artisan/Log/Writer,
+	  /trunk/Artisan/Log/Writer.php, /trunk/Artisan/Log/Writer/Db.php,
+	  /trunk/Artisan/Log/Writer/Filesystem.php,
+	  /trunk/Artisan/Log/Writer/Xml.php, /trunk/Artisan/Registry.php,
+	  /trunk/Artisan/Rss, /trunk/Artisan/Rss.php,
+	  /trunk/Artisan/Rss/Db.php, /trunk/Artisan/Rss/Exception.php,
+	  /trunk/Artisan/Saveable.php, /trunk/Artisan/Server,
+	  /trunk/Artisan/Server.php, /trunk/Artisan/Server/Curl.php,
+	  /trunk/Artisan/Server/Exception.php,
+	  /trunk/Artisan/Server/Socket.php, /trunk/Artisan/Session,
+	  /trunk/Artisan/Session.php, /trunk/Artisan/Session/Db.php,
+	  /trunk/Artisan/Session/Exception.php,
+	  /trunk/Artisan/Session/Interface.php, /trunk/Artisan/Template,
+	  /trunk/Artisan/Template.php, /trunk/Artisan/Template/Db.php,
+	  /trunk/Artisan/Template/Exception.php,
+	  /trunk/Artisan/Template/Filesystem.php, /trunk/Artisan/User,
+	  /trunk/Artisan/User.php, /trunk/Artisan/User/Db.php,
+	  /trunk/Artisan/User/Default.php,
+	  /trunk/Artisan/User/Exception.php, /trunk/Artisan/Validate,
+	  /trunk/Artisan/Validate.php, /trunk/Artisan/Validate/Alpha.php,
+	  /trunk/Artisan/Validate/Alphanum.php,
+	  /trunk/Artisan/Validate/Ascii.php,
+	  /trunk/Artisan/Validate/Between.php,
+	  /trunk/Artisan/Validate/Cc.php, /trunk/Artisan/Validate/Date.php,
+	  /trunk/Artisan/Validate/Doxygen.php,
+	  /trunk/Artisan/Validate/Exception.php,
+	  /trunk/Artisan/Validate/Hostname.php,
+	  /trunk/Artisan/Validate/Ipv4.php,
+	  /trunk/Artisan/Validate/Ipv6.php,
+	  /trunk/Artisan/Validate/Ssn.php, /trunk/Artisan/Validate/Uri.php,
+	  /trunk/Artisan/Validate/Zipcode.php, /trunk/Artisan/Vo.php,
+	  /trunk/Artisan/Xml.php,
+	  /trunk/Install_Sql/tag0.3a1.019.alter_table_customer_make_date_modify_null.sql,
+	  /trunk/Install_Sql/tag0.3a1.020.alter_table_customer_history_add_customer_id.sql,
+	  /trunk/Install_Sql/tag0.3a1.021.alter_table_customer_history_add_type.sql,
+	  /trunk/Install_Sql/tag0.3a1.022.remove_customer_field_type_references.sql,
+	  /trunk/Install_Sql/tag0.3a1.023.alter_table_customer_field_add_unique_name.sql,
+	  /trunk/Install_Sql/tag0.3a1.024.alter_table_customer_history_change_value_null.sql,
+	  /trunk/Install_Sql/tag0.3a1.025.alter_customer_history_index_fields.sql,
+	  /trunk/Install_Sql/tag0.3a1.025.delete_table_customer_field_value.sql,
+	  /trunk/Install_Sql/tag0.3a1.026.create_table_customer_address.sql:
+	  Merged with 0.3a1 tag
+
+2009-01-18 04:38  vmc
+
+	* /tags/v0.3a1/Artisan, /tags/v0.3a1/Artisan/ASFW.php,
+	  /tags/v0.3a1/Artisan/Artisan_System.php,
+	  /tags/v0.3a1/Artisan/Auth, /tags/v0.3a1/Artisan/Auth.php,
+	  /tags/v0.3a1/Artisan/Auth/Db.php,
+	  /tags/v0.3a1/Artisan/Auth/Exception.php,
+	  /tags/v0.3a1/Artisan/Cache, /tags/v0.3a1/Artisan/Cache.php,
+	  /tags/v0.3a1/Artisan/Cache/Db.php,
+	  /tags/v0.3a1/Artisan/Cache/Exception.php,
+	  /tags/v0.3a1/Artisan/Config, /tags/v0.3a1/Artisan/Config.php,
+	  /tags/v0.3a1/Artisan/Config/Array.php,
+	  /tags/v0.3a1/Artisan/Config/Exception.php,
+	  /tags/v0.3a1/Artisan/Config/Xml.php,
+	  /tags/v0.3a1/Artisan/Controller,
+	  /tags/v0.3a1/Artisan/Controller.php,
+	  /tags/v0.3a1/Artisan/Controller/Exception.php,
+	  /tags/v0.3a1/Artisan/Controller/View.php,
+	  /tags/v0.3a1/Artisan/Customer, /tags/v0.3a1/Artisan/Customer.php,
+	  /tags/v0.3a1/Artisan/Customer/Adapter,
+	  /tags/v0.3a1/Artisan/Customer/Adapter/Db.php,
+	  /tags/v0.3a1/Artisan/Customer/Address.php,
+	  /tags/v0.3a1/Artisan/Customer/Exception.php,
+	  /tags/v0.3a1/Artisan/Customer/Group.php, /tags/v0.3a1/Artisan/Db,
+	  /tags/v0.3a1/Artisan/Db.php, /tags/v0.3a1/Artisan/Db/Adapter,
+	  /tags/v0.3a1/Artisan/Db/Adapter/Mysqli.php,
+	  /tags/v0.3a1/Artisan/Db/Adapter/Oracle.php,
+	  /tags/v0.3a1/Artisan/Db/Adapter/Pdo.php,
+	  /tags/v0.3a1/Artisan/Db/Adapter/Postgres.php,
+	  /tags/v0.3a1/Artisan/Db/Adapter/Sqlite.php,
+	  /tags/v0.3a1/Artisan/Db/Exception.php,
+	  /tags/v0.3a1/Artisan/Db/Result,
+	  /tags/v0.3a1/Artisan/Db/Result.php,
+	  /tags/v0.3a1/Artisan/Db/Result/Mysqli.php,
+	  /tags/v0.3a1/Artisan/Db/Result/Oracle.php,
+	  /tags/v0.3a1/Artisan/Db/Result/Pdo.php,
+	  /tags/v0.3a1/Artisan/Db/Result/Postgres.php,
+	  /tags/v0.3a1/Artisan/Db/Result/Sqlite.php,
+	  /tags/v0.3a1/Artisan/Db/Sql, /tags/v0.3a1/Artisan/Db/Sql.php,
+	  /tags/v0.3a1/Artisan/Db/Sql/Delete,
+	  /tags/v0.3a1/Artisan/Db/Sql/Delete.php,
+	  /tags/v0.3a1/Artisan/Db/Sql/Delete/Mysqli.php,
+	  /tags/v0.3a1/Artisan/Db/Sql/Exception.php,
+	  /tags/v0.3a1/Artisan/Db/Sql/Insert,
+	  /tags/v0.3a1/Artisan/Db/Sql/Insert.php,
+	  /tags/v0.3a1/Artisan/Db/Sql/Insert/Mysqli.php,
+	  /tags/v0.3a1/Artisan/Db/Sql/Select,
+	  /tags/v0.3a1/Artisan/Db/Sql/Select.php,
+	  /tags/v0.3a1/Artisan/Db/Sql/Select/Mysqli.php,
+	  /tags/v0.3a1/Artisan/Db/Sql/Select/Oracle.php,
+	  /tags/v0.3a1/Artisan/Db/Sql/Select/Pdo.php,
+	  /tags/v0.3a1/Artisan/Db/Sql/Select/Postgres.php,
+	  /tags/v0.3a1/Artisan/Db/Sql/Select/Sqlite.php,
+	  /tags/v0.3a1/Artisan/Db/Sql/Update,
+	  /tags/v0.3a1/Artisan/Db/Sql/Update.php,
+	  /tags/v0.3a1/Artisan/Db/Sql/Update/Mysqli.php,
+	  /tags/v0.3a1/Artisan/Email, /tags/v0.3a1/Artisan/Email.php,
+	  /tags/v0.3a1/Artisan/Email/Exception.php,
+	  /tags/v0.3a1/Artisan/Event, /tags/v0.3a1/Artisan/Event.php,
+	  /tags/v0.3a1/Artisan/Event/Exception.php,
+	  /tags/v0.3a1/Artisan/Exception.php,
+	  /tags/v0.3a1/Artisan/Functions,
+	  /tags/v0.3a1/Artisan/Functions/Array.php,
+	  /tags/v0.3a1/Artisan/Functions/Database.php,
+	  /tags/v0.3a1/Artisan/Functions/Encryption.php,
+	  /tags/v0.3a1/Artisan/Functions/Html.php,
+	  /tags/v0.3a1/Artisan/Functions/Input.php,
+	  /tags/v0.3a1/Artisan/Functions/String.php,
+	  /tags/v0.3a1/Artisan/Functions/System.php,
+	  /tags/v0.3a1/Artisan/Html, /tags/v0.3a1/Artisan/Html/Form.php,
+	  /tags/v0.3a1/Artisan/Json.php, /tags/v0.3a1/Artisan/Log,
+	  /tags/v0.3a1/Artisan/Log.php,
+	  /tags/v0.3a1/Artisan/Log/Exception.php,
+	  /tags/v0.3a1/Artisan/Log/Writer,
+	  /tags/v0.3a1/Artisan/Log/Writer.php,
+	  /tags/v0.3a1/Artisan/Log/Writer/Db.php,
+	  /tags/v0.3a1/Artisan/Log/Writer/Filesystem.php,
+	  /tags/v0.3a1/Artisan/Log/Writer/Xml.php,
+	  /tags/v0.3a1/Artisan/Registry.php, /tags/v0.3a1/Artisan/Rss,
+	  /tags/v0.3a1/Artisan/Rss.php, /tags/v0.3a1/Artisan/Rss/Db.php,
+	  /tags/v0.3a1/Artisan/Rss/Exception.php,
+	  /tags/v0.3a1/Artisan/Saveable.php, /tags/v0.3a1/Artisan/Server,
+	  /tags/v0.3a1/Artisan/Server.php,
+	  /tags/v0.3a1/Artisan/Server/Curl.php,
+	  /tags/v0.3a1/Artisan/Server/Exception.php,
+	  /tags/v0.3a1/Artisan/Server/Socket.php,
+	  /tags/v0.3a1/Artisan/Session, /tags/v0.3a1/Artisan/Session.php,
+	  /tags/v0.3a1/Artisan/Session/Db.php,
+	  /tags/v0.3a1/Artisan/Session/Exception.php,
+	  /tags/v0.3a1/Artisan/Session/Interface.php,
+	  /tags/v0.3a1/Artisan/Template, /tags/v0.3a1/Artisan/Template.php,
+	  /tags/v0.3a1/Artisan/Template/Db.php,
+	  /tags/v0.3a1/Artisan/Template/Exception.php,
+	  /tags/v0.3a1/Artisan/Template/Filesystem.php,
+	  /tags/v0.3a1/Artisan/User, /tags/v0.3a1/Artisan/User.php,
+	  /tags/v0.3a1/Artisan/User/Db.php,
+	  /tags/v0.3a1/Artisan/User/Default.php,
+	  /tags/v0.3a1/Artisan/User/Exception.php,
+	  /tags/v0.3a1/Artisan/Validate, /tags/v0.3a1/Artisan/Validate.php,
+	  /tags/v0.3a1/Artisan/Validate/Alpha.php,
+	  /tags/v0.3a1/Artisan/Validate/Alphanum.php,
+	  /tags/v0.3a1/Artisan/Validate/Ascii.php,
+	  /tags/v0.3a1/Artisan/Validate/Between.php,
+	  /tags/v0.3a1/Artisan/Validate/Cc.php,
+	  /tags/v0.3a1/Artisan/Validate/Date.php,
+	  /tags/v0.3a1/Artisan/Validate/Doxygen.php,
+	  /tags/v0.3a1/Artisan/Validate/Exception.php,
+	  /tags/v0.3a1/Artisan/Validate/Hostname.php,
+	  /tags/v0.3a1/Artisan/Validate/Ipv4.php,
+	  /tags/v0.3a1/Artisan/Validate/Ipv6.php,
+	  /tags/v0.3a1/Artisan/Validate/Ssn.php,
+	  /tags/v0.3a1/Artisan/Validate/Uri.php,
+	  /tags/v0.3a1/Artisan/Validate/Zipcode.php,
+	  /tags/v0.3a1/Artisan/Vo.php, /tags/v0.3a1/Artisan/Xml.php: Merged
+	  with trunk
+
+2009-01-18 04:42  vmc
+
+	* /branches/release_candidate/Artisan,
+	  /branches/release_candidate/Artisan/ASFW.php,
+	  /branches/release_candidate/Artisan/Artisan_System.php,
+	  /branches/release_candidate/Artisan/Auth,
+	  /branches/release_candidate/Artisan/Auth.php,
+	  /branches/release_candidate/Artisan/Auth/Db.php,
+	  /branches/release_candidate/Artisan/Auth/Exception.php,
+	  /branches/release_candidate/Artisan/Cache,
+	  /branches/release_candidate/Artisan/Cache.php,
+	  /branches/release_candidate/Artisan/Cache/Db.php,
+	  /branches/release_candidate/Artisan/Cache/Exception.php,
+	  /branches/release_candidate/Artisan/Config,
+	  /branches/release_candidate/Artisan/Config.php,
+	  /branches/release_candidate/Artisan/Config/Array.php,
+	  /branches/release_candidate/Artisan/Config/Exception.php,
+	  /branches/release_candidate/Artisan/Config/Xml.php,
+	  /branches/release_candidate/Artisan/Controller,
+	  /branches/release_candidate/Artisan/Controller.php,
+	  /branches/release_candidate/Artisan/Controller/Exception.php,
+	  /branches/release_candidate/Artisan/Controller/View.php,
+	  /branches/release_candidate/Artisan/Db,
+	  /branches/release_candidate/Artisan/Db.php,
+	  /branches/release_candidate/Artisan/Db/Adapter,
+	  /branches/release_candidate/Artisan/Db/Adapter/Mysqli.php,
+	  /branches/release_candidate/Artisan/Db/Adapter/Oracle.php,
+	  /branches/release_candidate/Artisan/Db/Adapter/Pdo.php,
+	  /branches/release_candidate/Artisan/Db/Adapter/Postgres.php,
+	  /branches/release_candidate/Artisan/Db/Adapter/Sqlite.php,
+	  /branches/release_candidate/Artisan/Db/Exception.php,
+	  /branches/release_candidate/Artisan/Db/Result,
+	  /branches/release_candidate/Artisan/Db/Result.php,
+	  /branches/release_candidate/Artisan/Db/Result/Mysqli.php,
+	  /branches/release_candidate/Artisan/Db/Result/Oracle.php,
+	  /branches/release_candidate/Artisan/Db/Result/Pdo.php,
+	  /branches/release_candidate/Artisan/Db/Result/Postgres.php,
+	  /branches/release_candidate/Artisan/Db/Result/Sqlite.php,
+	  /branches/release_candidate/Artisan/Db/Sql,
+	  /branches/release_candidate/Artisan/Db/Sql.php,
+	  /branches/release_candidate/Artisan/Db/Sql/Delete,
+	  /branches/release_candidate/Artisan/Db/Sql/Delete.php,
+	  /branches/release_candidate/Artisan/Db/Sql/Delete/Mysqli.php,
+	  /branches/release_candidate/Artisan/Db/Sql/Exception.php,
+	  /branches/release_candidate/Artisan/Db/Sql/Insert,
+	  /branches/release_candidate/Artisan/Db/Sql/Insert.php,
+	  /branches/release_candidate/Artisan/Db/Sql/Insert/Mysqli.php,
+	  /branches/release_candidate/Artisan/Db/Sql/Select,
+	  /branches/release_candidate/Artisan/Db/Sql/Select.php,
+	  /branches/release_candidate/Artisan/Db/Sql/Select/Mysqli.php,
+	  /branches/release_candidate/Artisan/Db/Sql/Select/Oracle.php,
+	  /branches/release_candidate/Artisan/Db/Sql/Select/Pdo.php,
+	  /branches/release_candidate/Artisan/Db/Sql/Select/Postgres.php,
+	  /branches/release_candidate/Artisan/Db/Sql/Select/Sqlite.php,
+	  /branches/release_candidate/Artisan/Db/Sql/Update,
+	  /branches/release_candidate/Artisan/Db/Sql/Update.php,
+	  /branches/release_candidate/Artisan/Db/Sql/Update/Mysqli.php,
+	  /branches/release_candidate/Artisan/Email,
+	  /branches/release_candidate/Artisan/Email.php,
+	  /branches/release_candidate/Artisan/Email/Exception.php,
+	  /branches/release_candidate/Artisan/Exception.php,
+	  /branches/release_candidate/Artisan/Functions,
+	  /branches/release_candidate/Artisan/Functions/Array.php,
+	  /branches/release_candidate/Artisan/Functions/Database.php,
+	  /branches/release_candidate/Artisan/Functions/Encryption.php,
+	  /branches/release_candidate/Artisan/Functions/Html.php,
+	  /branches/release_candidate/Artisan/Functions/Input.php,
+	  /branches/release_candidate/Artisan/Functions/String.php,
+	  /branches/release_candidate/Artisan/Functions/System.php,
+	  /branches/release_candidate/Artisan/Html,
+	  /branches/release_candidate/Artisan/Html/Form.php,
+	  /branches/release_candidate/Artisan/Json.php,
+	  /branches/release_candidate/Artisan/Log,
+	  /branches/release_candidate/Artisan/Log.php,
+	  /branches/release_candidate/Artisan/Log/Exception.php,
+	  /branches/release_candidate/Artisan/Log/Writer,
+	  /branches/release_candidate/Artisan/Log/Writer.php,
+	  /branches/release_candidate/Artisan/Log/Writer/Db.php,
+	  /branches/release_candidate/Artisan/Log/Writer/Filesystem.php,
+	  /branches/release_candidate/Artisan/Log/Writer/Xml.php,
+	  /branches/release_candidate/Artisan/Registry.php,
+	  /branches/release_candidate/Artisan/Rss,
+	  /branches/release_candidate/Artisan/Rss.php,
+	  /branches/release_candidate/Artisan/Rss/Db.php,
+	  /branches/release_candidate/Artisan/Rss/Exception.php,
+	  /branches/release_candidate/Artisan/Server,
+	  /branches/release_candidate/Artisan/Server.php,
+	  /branches/release_candidate/Artisan/Server/Curl.php,
+	  /branches/release_candidate/Artisan/Server/Exception.php,
+	  /branches/release_candidate/Artisan/Server/Socket.php,
+	  /branches/release_candidate/Artisan/Session,
+	  /branches/release_candidate/Artisan/Session.php,
+	  /branches/release_candidate/Artisan/Session/Db.php,
+	  /branches/release_candidate/Artisan/Session/Exception.php,
+	  /branches/release_candidate/Artisan/Session/Interface.php,
+	  /branches/release_candidate/Artisan/Template,
+	  /branches/release_candidate/Artisan/Template.php,
+	  /branches/release_candidate/Artisan/Template/Db.php,
+	  /branches/release_candidate/Artisan/Template/Exception.php,
+	  /branches/release_candidate/Artisan/Template/Filesystem.php,
+	  /branches/release_candidate/Artisan/User,
+	  /branches/release_candidate/Artisan/User.php,
+	  /branches/release_candidate/Artisan/User/Db.php,
+	  /branches/release_candidate/Artisan/User/Default.php,
+	  /branches/release_candidate/Artisan/User/Exception.php,
+	  /branches/release_candidate/Artisan/Validate.php,
+	  /branches/release_candidate/Artisan/Vo.php,
+	  /branches/release_candidate/Artisan/Xml.php,
+	  /branches/release_candidate/Install_Sql/tag0.3a1.019.alter_table_customer_make_date_modify_null.sql,
+	  /branches/release_candidate/Install_Sql/tag0.3a1.020.alter_table_customer_history_add_customer_id.sql,
+	  /branches/release_candidate/Install_Sql/tag0.3a1.021.alter_table_customer_history_add_type.sql,
+	  /branches/release_candidate/Install_Sql/tag0.3a1.022.remove_customer_field_type_references.sql,
+	  /branches/release_candidate/Install_Sql/tag0.3a1.023.alter_table_customer_field_add_unique_name.sql,
+	  /branches/release_candidate/Install_Sql/tag0.3a1.024.alter_table_customer_history_change_value_null.sql,
+	  /branches/release_candidate/Install_Sql/tag0.3a1.025.alter_customer_history_index_fields.sql,
+	  /branches/release_candidate/Install_Sql/tag0.3a1.025.delete_table_customer_field_value.sql,
+	  /branches/release_candidate/Install_Sql/tag0.3a1.026.create_table_customer_address.sql,
+	  /branches/release_candidate/Install_Sql/trunk.012.alter_artisan_user_rename_fields.sql,
+	  /branches/release_candidate/Install_Sql/trunk.013.create_table_customer.sql,
+	  /branches/release_candidate/Install_Sql/trunk.014.create_table_customer_comment_history.sql,
+	  /branches/release_candidate/Install_Sql/trunk.015.create_table_customer_history.sql,
+	  /branches/release_candidate/Install_Sql/trunk.016.create_table_customer_field.sql,
+	  /branches/release_candidate/Install_Sql/trunk.017.create_table_customer_field_type.sql,
+	  /branches/release_candidate/Install_Sql/trunk.018.create_table_customer_field_value.sql,
+	  /branches/release_candidate/httpdocs/public: Merged with trunk
+
+2009-01-18 04:45  vmc
+
+	* /branches/release/Artisan, /branches/release/Artisan/ASFW.php,
+	  /branches/release/Artisan/Artisan_System.php,
+	  /branches/release/Artisan/Auth,
+	  /branches/release/Artisan/Auth.php,
+	  /branches/release/Artisan/Auth/Db.php,
+	  /branches/release/Artisan/Auth/Exception.php,
+	  /branches/release/Artisan/Cache,
+	  /branches/release/Artisan/Cache.php,
+	  /branches/release/Artisan/Cache/Db.php,
+	  /branches/release/Artisan/Cache/Exception.php,
+	  /branches/release/Artisan/Config,
+	  /branches/release/Artisan/Config.php,
+	  /branches/release/Artisan/Config/Array.php,
+	  /branches/release/Artisan/Config/Exception.php,
+	  /branches/release/Artisan/Config/Xml.php,
+	  /branches/release/Artisan/Controller,
+	  /branches/release/Artisan/Controller.php,
+	  /branches/release/Artisan/Controller/Exception.php,
+	  /branches/release/Artisan/Controller/View.php,
+	  /branches/release/Artisan/Db, /branches/release/Artisan/Db.php,
+	  /branches/release/Artisan/Db/Adapter,
+	  /branches/release/Artisan/Db/Adapter/Mysqli.php,
+	  /branches/release/Artisan/Db/Adapter/Oracle.php,
+	  /branches/release/Artisan/Db/Adapter/Pdo.php,
+	  /branches/release/Artisan/Db/Adapter/Postgres.php,
+	  /branches/release/Artisan/Db/Adapter/Sqlite.php,
+	  /branches/release/Artisan/Db/Exception.php,
+	  /branches/release/Artisan/Db/Result,
+	  /branches/release/Artisan/Db/Result.php,
+	  /branches/release/Artisan/Db/Result/Mysqli.php,
+	  /branches/release/Artisan/Db/Result/Oracle.php,
+	  /branches/release/Artisan/Db/Result/Pdo.php,
+	  /branches/release/Artisan/Db/Result/Postgres.php,
+	  /branches/release/Artisan/Db/Result/Sqlite.php,
+	  /branches/release/Artisan/Db/Sql,
+	  /branches/release/Artisan/Db/Sql.php,
+	  /branches/release/Artisan/Db/Sql/Delete,
+	  /branches/release/Artisan/Db/Sql/Delete.php,
+	  /branches/release/Artisan/Db/Sql/Delete/Mysqli.php,
+	  /branches/release/Artisan/Db/Sql/Exception.php,
+	  /branches/release/Artisan/Db/Sql/Insert,
+	  /branches/release/Artisan/Db/Sql/Insert.php,
+	  /branches/release/Artisan/Db/Sql/Insert/Mysqli.php,
+	  /branches/release/Artisan/Db/Sql/Select,
+	  /branches/release/Artisan/Db/Sql/Select.php,
+	  /branches/release/Artisan/Db/Sql/Select/Mysqli.php,
+	  /branches/release/Artisan/Db/Sql/Select/Oracle.php,
+	  /branches/release/Artisan/Db/Sql/Select/Pdo.php,
+	  /branches/release/Artisan/Db/Sql/Select/Postgres.php,
+	  /branches/release/Artisan/Db/Sql/Select/Sqlite.php,
+	  /branches/release/Artisan/Db/Sql/Update,
+	  /branches/release/Artisan/Db/Sql/Update.php,
+	  /branches/release/Artisan/Db/Sql/Update/Mysqli.php,
+	  /branches/release/Artisan/Email,
+	  /branches/release/Artisan/Email.php,
+	  /branches/release/Artisan/Email/Exception.php,
+	  /branches/release/Artisan/Exception.php,
+	  /branches/release/Artisan/Functions,
+	  /branches/release/Artisan/Functions/Array.php,
+	  /branches/release/Artisan/Functions/Database.php,
+	  /branches/release/Artisan/Functions/Encryption.php,
+	  /branches/release/Artisan/Functions/Html.php,
+	  /branches/release/Artisan/Functions/Input.php,
+	  /branches/release/Artisan/Functions/String.php,
+	  /branches/release/Artisan/Functions/System.php,
+	  /branches/release/Artisan/Html,
+	  /branches/release/Artisan/Html/Form.php,
+	  /branches/release/Artisan/Json.php,
+	  /branches/release/Artisan/Log, /branches/release/Artisan/Log.php,
+	  /branches/release/Artisan/Log/Exception.php,
+	  /branches/release/Artisan/Log/Writer,
+	  /branches/release/Artisan/Log/Writer.php,
+	  /branches/release/Artisan/Log/Writer/Db.php,
+	  /branches/release/Artisan/Log/Writer/Filesystem.php,
+	  /branches/release/Artisan/Log/Writer/Xml.php,
+	  /branches/release/Artisan/Registry.php,
+	  /branches/release/Artisan/Rss, /branches/release/Artisan/Rss.php,
+	  /branches/release/Artisan/Rss/Db.php,
+	  /branches/release/Artisan/Rss/Exception.php,
+	  /branches/release/Artisan/Server,
+	  /branches/release/Artisan/Server.php,
+	  /branches/release/Artisan/Server/Curl.php,
+	  /branches/release/Artisan/Server/Exception.php,
+	  /branches/release/Artisan/Server/Socket.php,
+	  /branches/release/Artisan/Session,
+	  /branches/release/Artisan/Session.php,
+	  /branches/release/Artisan/Session/Db.php,
+	  /branches/release/Artisan/Session/Exception.php,
+	  /branches/release/Artisan/Session/Interface.php,
+	  /branches/release/Artisan/Template,
+	  /branches/release/Artisan/Template.php,
+	  /branches/release/Artisan/Template/Db.php,
+	  /branches/release/Artisan/Template/Exception.php,
+	  /branches/release/Artisan/Template/Filesystem.php,
+	  /branches/release/Artisan/User,
+	  /branches/release/Artisan/User.php,
+	  /branches/release/Artisan/User/Db.php,
+	  /branches/release/Artisan/User/Default.php,
+	  /branches/release/Artisan/User/Exception.php,
+	  /branches/release/Artisan/Validate.php,
+	  /branches/release/Artisan/Vo.php,
+	  /branches/release/Artisan/Xml.php, /branches/release/Auth,
+	  /branches/release/Auth.php, /branches/release/Cache,
+	  /branches/release/Cache.php, /branches/release/Config,
+	  /branches/release/Config.php, /branches/release/Controller,
+	  /branches/release/Controller.php, /branches/release/Database,
+	  /branches/release/Database.php, /branches/release/Email,
+	  /branches/release/Email.php, /branches/release/Exception.php,
+	  /branches/release/Functions, /branches/release/Html,
+	  /branches/release/Install_Sql/tag0.3a1.019.alter_table_customer_make_date_modify_null.sql,
+	  /branches/release/Install_Sql/tag0.3a1.020.alter_table_customer_history_add_customer_id.sql,
+	  /branches/release/Install_Sql/tag0.3a1.021.alter_table_customer_history_add_type.sql,
+	  /branches/release/Install_Sql/tag0.3a1.022.remove_customer_field_type_references.sql,
+	  /branches/release/Install_Sql/tag0.3a1.023.alter_table_customer_field_add_unique_name.sql,
+	  /branches/release/Install_Sql/tag0.3a1.024.alter_table_customer_history_change_value_null.sql,
+	  /branches/release/Install_Sql/tag0.3a1.025.alter_customer_history_index_fields.sql,
+	  /branches/release/Install_Sql/tag0.3a1.025.delete_table_customer_field_value.sql,
+	  /branches/release/Install_Sql/tag0.3a1.026.create_table_customer_address.sql,
+	  /branches/release/Install_Sql/trunk.012.alter_artisan_user_rename_fields.sql,
+	  /branches/release/Install_Sql/trunk.013.create_table_customer.sql,
+	  /branches/release/Install_Sql/trunk.014.create_table_customer_comment_history.sql,
+	  /branches/release/Install_Sql/trunk.015.create_table_customer_history.sql,
+	  /branches/release/Install_Sql/trunk.016.create_table_customer_field.sql,
+	  /branches/release/Install_Sql/trunk.017.create_table_customer_field_type.sql,
+	  /branches/release/Install_Sql/trunk.018.create_table_customer_field_value.sql,
+	  /branches/release/Json.php, /branches/release/Library.php,
+	  /branches/release/Log, /branches/release/Log.php,
+	  /branches/release/Server, /branches/release/Server.php,
+	  /branches/release/Session, /branches/release/Session.php,
+	  /branches/release/Sql, /branches/release/Sql.php,
+	  /branches/release/Template, /branches/release/Template.php,
+	  /branches/release/User, /branches/release/User.php,
+	  /branches/release/VO.php, /branches/release/Validate.php,
+	  /branches/release/Xml.php, /branches/release/httpdocs/public:
+	  Merged with release candidate, not quite sure how it got into
+	  this state
+
+2009-01-18 04:46  vmc
+
+	* /branches/release: Deleting this release, going to be copying it
+	  again from RC
+
+2009-01-18 04:46  vmc
+
+	* /branches/release: Creating release again to fix things
+
+2009-01-18 04:50  vmc
+
+	* /tags/v0.3a1/Artisan/Controller/View.php: New link() method to
+	  easily draw links in views
+
+2009-01-18 04:52  vmc
+
+	* /trunk/Artisan/Controller/View.php: Getting the trunk with the
+	  latest link() from Controller/View.php
+
+2009-01-18 04:54  vmc
+
+	* /branches/release_candidate/Artisan/Controller/View.php,
+	  /branches/release_candidate/httpdocs/Controllers,
+	  /branches/release_candidate/httpdocs/index.php: Getting latest
+	  from trunk
+
+2009-01-18 04:55  vmc
+
+	* /branches/release/Artisan/Controller/View.php,
+	  /branches/release/httpdocs/Controllers,
+	  /branches/release/httpdocs/index.php: Merged with
+	  release_candidate, everything is good now.
+
+2009-01-19 11:19  vmc
+
+	* /tags/v0.3a1/Artisan/Customer.php: Added the addComment()
+	  structure to add a comment to a customer record.
+
+2009-01-19 11:42  vmc
+
+	* /tags/v0.3a1/Artisan/Shipping, /tags/v0.3a1/Artisan/Shipping.php,
+	  /tags/v0.3a1/Artisan/Shipping/Module,
+	  /tags/v0.3a1/Artisan/Shipping/Module/Fedex.php,
+	  /tags/v0.3a1/Artisan/Shipping/Module/Flat.php,
+	  /tags/v0.3a1/Artisan/Shipping/Module/Percent.php,
+	  /tags/v0.3a1/Artisan/Shipping/Module/Table.php,
+	  /tags/v0.3a1/Artisan/Shipping/Module/Ups.php,
+	  /tags/v0.3a1/Artisan/Shipping/Module/Usps.php: Adding the base
+	  Shipping classes querying shipping api's to gather information.
+
+2009-01-19 11:44  vmc
+
+	* /tags/v0.3a1/Artisan/Shipping.php: Added base class for the
+	  Artisan_Shipping class
+
+2009-01-19 11:48  vmc
+
+	* /tags/v0.3a1/Artisan/Address.php: Initial address class creation.
+
+2009-01-19 11:49  vmc
+
+	* /tags/v0.3a1/Artisan/Address.php: Basic Artisan_Address skeleton
+	  class.
+
+2009-01-19 11:59  vmc
+
+	* /tags/v0.3a1/Artisan/Customer.php,
+	  /tags/v0.3a1/Artisan/Customer/Adapter/Db.php: Added a new feature
+	  to clone a previous customer which sets the parent_id as that
+	  customer ID and then resets the customer ID. This way, you can do
+	  = clone ; ->write() and it'll create a new customer record with
+	  identical data and save the parents ID. This is analogous to an
+	  svn cp
+
+2009-01-19 12:05  vmc
+
+	* /tags/v0.3a1/Artisan/Address.php: Added basic fromArray(),
+	  __set(), and __get() methods
+
+2009-01-20 02:30  tandreas
+
+	* /tags/v0.3a1/Artisan/Db/Iterator.php: Add the Artisan_Db_Iterator
+	  class. TDB: How do we load data into the object? For now it
+	  assuems the object has a load method that handles the model from
+	  the Db to the class.
+
+2009-01-20 02:47  vmc
+
+	* /tags/v0.3a1/Artisan/Db/Iterator.php: Updated some windows
+	  newlines to unix line endings
+
+2009-01-20 03:00  vmc
+
+	* /tags/v0.3a1/Install_Sql/tag0.3a1.027.alter_table_customer_add_parent_id.sql:
+	  Added the installation sql to add the parent id to the customer
+	  field
+
+2009-01-20 03:33  vmc
+
+	* /tags/v0.3a1/Artisan/Shipping/Interface.php: The new interface
+	  for how all modules should look
+
+2009-01-20 03:34  vmc
+
+	* /tags/v0.3a1/Artisan/Shipping/Module.php: The abstract base
+	  Module class that all other modules inherit from, this allows
+	  different configuration data to be sent to each module
+
+2009-01-20 03:34  vmc
+
+	* /tags/v0.3a1/Artisan/Shipping/Exception.php: The
+	  Artisan_Shipping_Exception class
+
+2009-01-20 03:35  vmc
+
+	* /tags/v0.3a1/Artisan/Shipping/Module/Flat.php: Updated the flat
+	  rate shipping module to use the common interface
+
+2009-01-20 10:52  vmc
+
+	* /tags/v0.3a1/Artisan/Shipping/Exception.php: Updated Doxygen
+	  comments
+
+2009-01-20 10:53  vmc
+
+	* /tags/v0.3a1/Artisan/Search, /tags/v0.3a1/Artisan/Search.php: The
+	  basic structure for the search classes
+
+2009-01-20 10:54  vmc
+
+	* /tags/v0.3a1/Artisan/Email/Adapter,
+	  /tags/v0.3a1/Artisan/Email/Adapter.php: Added the base adapter
+	  classes and files for the email
+
+2009-01-20 10:54  vmc
+
+	* /tags/v0.3a1/Artisan/Shipping/Module/Flat.php: Added the main
+	  methods to the Flat rate shipping module
+
+2009-01-20 10:55  vmc
+
+	* /tags/v0.3a1/Artisan/Address.php: Removed most of the main class
+	  and replaces it with an extension from the Artisan_Vo class
+
+2009-01-20 10:55  vmc
+
+	* /tags/v0.3a1/Artisan/Shipping.php: 'Added the main variables and
+	  the method addModule()
+
+2009-01-20 11:20  vmc
+
+	* /tags/v0.3a1/Artisan/Shipping/Module/Free.php: The free shipping
+	  module
+
+2009-01-20 11:27  vmc
+
+	* /tags/v0.3a1/Artisan/Shipping/Module/Percent.php: The base
+	  Percentage class with all of the required functions.
+
+2009-01-20 11:28  vmc
+
+	* /tags/v0.3a1/Artisan/Shipping.php: Added the method quote() and
+	  the body to the method addModule().
+
+2009-01-20 11:28  vmc
+
+	* /tags/v0.3a1/Artisan/Shipping/Module.php: Added the Doxygen
+	  comments for Artisan_Shipping_Module.
+
+2009-01-20 11:29  vmc
+
+	* /tags/v0.3a1/Artisan/Rss/Db.php: Updated the constructor to use a
+	  nicer variable name
+
+2009-01-20 11:30  vmc
+
+	* /tags/v0.3a1/Artisan/ASFW.php,
+	  /tags/v0.3a1/Artisan/Artisan_System.php: Removed these old
+	  classes, they aren't going to be used as Artisan System will be a
+	  loosely coupled framework for the time being.
+
+2009-01-20 11:34  vmc
+
+	* /tags/v0.3a1/Artisan/Search/Index,
+	  /tags/v0.3a1/Artisan/Search/Index/Index.php,
+	  /tags/v0.3a1/Artisan/Search/Index/Type,
+	  /tags/v0.3a1/Artisan/Search/Index/Type/Html.php,
+	  /tags/v0.3a1/Artisan/Search/Index/Type/Text.php: Added the base
+	  site structure for the indexer
+
+2009-01-20 11:36  vmc
+
+	* /tags/v0.3a1/Artisan/Search/Adapter,
+	  /tags/v0.3a1/Artisan/Search/Adapter.php,
+	  /tags/v0.3a1/Artisan/Search/Adapter/Lucene.php: Adding basic
+	  structure for the different search adapters
+
+2009-01-20 11:58  vmc
+
+	* /tags/v0.3a1/Artisan/Shipping/Module/Table.php: Updated the class
+	  to set the table, however, I accidentally did it wrong, so I have
+	  to come back and fix it
+
+2009-01-20 12:00  vmc
+
+	* /tags/v0.3a1/Artisan/Shipping/Module/Flat.php,
+	  /tags/v0.3a1/Artisan/Shipping/Module/Free.php: Added the
+	  Exception class.
+
+2009-01-20 12:35  vmc
+
+	* /tags/v0.3a1/Artisan/Shipping.php: Removed some newlines and old
+	  comments
+
+2009-01-20 12:35  vmc
+
+	* /tags/v0.3a1/Artisan/Shipping/Interface.php: Added Doxygen
+	  comments to the end of the file
+
+2009-01-20 13:06  vmc
+
+	* /tags/v0.3a1/Artisan/Shipping/Module/Flat.php,
+	  /tags/v0.3a1/Artisan/Shipping/Module/Free.php,
+	  /tags/v0.3a1/Artisan/Shipping/Module/Percent.php,
+	  /tags/v0.3a1/Artisan/Shipping/Module/Table.php: Updated all of
+	  the methods to be extended from Artisan_Shipping_Module abstract
+	  class rather than Artisan_Shipping.
+
+2009-01-20 13:07  vmc
+
+	* /tags/v0.3a1/Artisan/Shipping.php: Updated quote() to load all of
+	  the quotes, and addModule() to work correctly to ensure the
+	  module does not exist in the list
+
+2009-01-20 13:08  vmc
+
+	* /tags/v0.3a1/Artisan/Shipping/Module.php: The module abstract
+	  class now has the default destination and origin address passed
+	  into the constructor. Added method setWeight to set the weight of
+	  the shipment.
+
+2009-01-21 02:30  vmc
+
+	* /tags/v0.3a1/Artisan/Search/Index,
+	  /tags/v0.3a1/Artisan/Search/Indexer: Renamed Index to Indexer
+
+2009-01-21 03:43  vmc
+
+	* /tags/v0.3a1/Artisan/Cache/Adapter,
+	  /tags/v0.3a1/Artisan/Cache/Adapter/Apc.php,
+	  /tags/v0.3a1/Artisan/Cache/Adapter/File.php,
+	  /tags/v0.3a1/Artisan/Cache/Adapter/Memcache.php,
+	  /tags/v0.3a1/Artisan/Cache/Adapter/Session.php: Adding the
+	  directories of cache adapters.
+
+2009-01-21 03:43  vmc
+
+	* /tags/v0.3a1/Artisan/Cache/Adapter/Db.php,
+	  /tags/v0.3a1/Artisan/Cache/Db.php: Moved Db.php into the adapter
+	  directory
+
+2009-01-21 04:17  vmc
+
+	* /tags/v0.3a1/Artisan/Cache/Adapter.php: Added the basic Adapter
+	  class that the concrete classes are extended from
+
+2009-01-21 04:18  vmc
+
+	* /tags/v0.3a1/Artisan/Cache/Adapter/Apc.php: Wrote the basic
+	  structure of the constructor, add(), exists(), and remove()
+	  methods.
+
+2009-01-21 04:52  vmc
+
+	* /tags/v0.3a1/Artisan/Cache/Adapter.php: Added the abstract
+	  methods fetch() and clear(). fetch() returns a value from the
+	  cache based on its ID and clear() removes it.
+
+2009-01-21 04:52  vmc
+
+	* /tags/v0.3a1/Artisan/Cache/Adapter/File.php: Wrote the basic
+	  class structure to match up with the abstract methods
+
+2009-01-21 04:53  vmc
+
+	* /tags/v0.3a1/Artisan/Cache/Adapter/Apc.php: Added the methods
+	  clear() and fetch() to match the updated Adapter.
+
+2009-01-21 11:13  vmc
+
+	* /tags/v0.3a1/httpdocs/index.php: Updated index.php file with the
+	  test data taken out
+
+2009-01-21 11:47  vmc
+
+	* /tags/v0.3a1/Artisan/Controller.php: Added methods
+	  _executeView(), setCache(), and _createCacheId(). The setCache()
+	  method will set an Artisan_Cache_Adapter object so that data can
+	  be cached automatically.
+
+2009-01-21 11:47  vmc
+
+	* /tags/v0.3a1/Artisan/Cache/Adapter/Apc.php: Updated fetch() to
+	  return the data and to purge it if necessary.
+
+2009-01-21 11:48  vmc
+
+	* /tags/v0.3a1/Artisan/Cache/Adapter.php: Added the method
+	  started() which returns true if the cache has started, and false
+	  if it hasn't. Generally this is always true, unless the cache
+	  server goes down or can not be connected to.
+
+2009-01-22 11:16  vmc
+
+	* /tags/v0.3a1/Artisan/Session.php: Updated the start() method to
+	  only use the save_handler if it has been set, otherwise, use
+	  default PHP sessions.
+
+2009-01-24 02:34  vmc
+
+	* /tags/v0.3a1/httpdocs/public/javascript/jquery.js: Adding jQuery
+	  support by including it in the default global javascript
+	  directory. This is version 1.3.1
+
+2009-01-24 02:44  vmc
+
+	* /tags/v0.3a1/Artisan/Controller.php,
+	  /tags/v0.3a1/Artisan/Controller/View.php: The __execute() method
+	  of the Artisan_Controller_View class now does not require a
+	  layout file. If none is set, the data is simply returned from the
+	  executed view (such as if you would want to complete an AJAX
+	  request). However, if a layout file is specified, it is used (#7)
+
+2009-01-24 02:47  vmc
+
+	* /tags/v0.3a1/Artisan/Cache/Adapter.php: Required the exception
+	  class here rather than in all of the adapters to reduce the
+	  amount of code. (#41)
+
+2009-01-24 12:41  vmc
+
+	* /tags/v0.3a1/Artisan/Event.php: Added the _checkDb() method to
+	  ensure a valid database connection exists
+
+2009-01-24 12:46  vmc
+
+	* /tags/v0.3a1/Artisan/Cache/Adapter/Apc.php: Moved the Exception
+	  class up to the adapter and out of here (#42)
+
+2009-01-24 12:47  vmc
+
+	* /tags/v0.3a1/Artisan/Auth.php: Updated the vmc variable to be
+	  _artisanUser, a bit better name (#29)
+
+2009-01-24 13:29  vmc
+
+	* /tags/v0.3a1/Artisan/User.php: Made the Artisan_User class non
+	  abstract and all of the abstract methods return true. That way it
+	  removes the Artisan_User_Default class so creating a user with
+	  basic information is just doing new Artisan_User() (#29)
+
+2009-01-24 14:19  vmc
+
+	* /tags/v0.3a1/Artisan/Auth/Db.php: Major refactoring and updates
+	  to the authenticate() method. Now checks the password salt. Also,
+	  can now set the password_salt field through the constructor.
+	  (#29)
+
+2009-01-24 14:28  vmc
+
+	* /tags/v0.3a1/Artisan/Auth/Db.php: Updated Doxygen comments for
+	  the two hashed passwords (#29)
+
+2009-01-24 15:15  vmc
+
+	* /tags/v0.3a1/Artisan/Validate/Ipv4.php: Finished the validate()
+	  method, uses a regex now (that I mostly wrote) and now no longer
+	  extends the Artisan_Validate class because that class will be
+	  removed (#22)
+
+2009-01-24 23:17  vmc
+
+	* /tags/v0.3a1/Artisan/Validate/Alphanum.php: Updated the alphanum
+	  validator to trim the string first (#17)
+
+2009-01-24 23:19  vmc
+
+	* /tags/v0.3a1/Artisan/Validate/Alphanum.php,
+	  /tags/v0.3a1/Artisan/Validate/Between.php: Removed the
+	  require_once for the Artisan_Validator class because the class
+	  will be non existant.
+
+2009-01-24 23:23  vmc
+
+	* /tags/v0.3a1/Artisan/Validate/Alphanum.php,
+	  /tags/v0.3a1/Artisan/Validate/Between.php: Removed the
+	  require_once for the Artisan_Validator class because the class
+	  will be non existant.
+
+2009-01-24 23:28  vmc
+
+	* /tags/v0.3a1/Artisan/Validate/Alpha.php: Trimmed the string
+	  before attempting to validate it (#16)
+
+2009-01-25 04:00  vmc
+
+	* /tags/v0.3a1/Artisan/Validate/Cc.php: Updated the credit card
+	  validator to not require the number in the isValid() method (#15)
+
+2009-01-25 04:20  vmc
+
+	* /tags/v0.3a1/Artisan/Saveable.php,
+	  /tags/v0.3a1/Artisan/Versionable.php: Renamed Saveable to
+	  Versionable because its a better name for what the object
+	  represents.
+
+2009-01-25 04:21  vmc
+
+	* /tags/v0.3a1/Artisan/Versionable.php: And renamed the class to
+	  have the same name as the file for the versionable objects.
+
+2009-01-25 04:27  vmc
+
+	* /tags/v0.3a1/Artisan/Customer/Group.php: Basic customer group
+	  class, ignore this for now, reminder to add to the bug list.
+
+2009-01-25 13:44  vmc
+
+	* /tags/v0.3a1/Artisan/Db/Iterator.php: Fixed the errors with not
+	  referencing the correct variables in the Artisan_Db_Iterator
+	  class (#51)
+
+2009-01-25 15:58  vmc
+
+	* /tags/v0.3a1/Artisan/Db/Iterator.php: Removed the newline at the
+	  end of the class
+
+2009-01-25 15:59  vmc
+
+	* /tags/v0.3a1/Artisan/Db/Result.php: Added the , , and variables,
+	  and full new method aggregate() to run an aggregate function on a
+	  list of data.
+
+2009-01-25 16:00  vmc
+
+	* /tags/v0.3a1/Artisan/Db/Result/Aggregate.php: The base
+	  Artisan_Db_Result_Aggregate class for building aggregate methods.
+	  The methods in here are the only ones to defy the Artisan_System
+	  coding standards.
+
+2009-01-25 16:00  vmc
+
+	* /tags/v0.3a1/Artisan/Db.php: Now requires the iterator class,
+	  perhaps this should be required when necessary.
+
+2009-01-26 02:58  vmc
+
+	* /tags/v0.3a1/Install_Sql/tag0.3a1.028.create_table_customer_group.sql,
+	  /tags/v0.3a1/Install_Sql/tag0.3a1.029.create_table_customer_group_list.sql,
+	  /tags/v0.3a1/Install_Sql/tag0.3a1.030.create_table_customer_field_address.sql,
+	  /tags/v0.3a1/Install_Sql/tag0.3a1.alter_table_customer_address_make_date_modify_null.sql:
+	  Updates to the SQL building files to build the customer address
+	  support
+
+2009-01-26 11:09  vmc
+
+	* /tags/v0.3a1/Artisan/Interface,
+	  /tags/v0.3a1/Artisan/Interface/Iterator.php: Creating the base
+	  Interface directory to hold global interfaces that do not belong
+	  to a specific sub-class.
+
+2009-01-26 11:09  vmc
+
+	* /tags/v0.3a1/Artisan/Customer/Address.php: Outlined the way the
+	  address class will work (#11)
+
+2009-01-26 11:10  vmc
+
+	* /tags/v0.3a1/Artisan/Customer.php,
+	  /tags/v0.3a1/Artisan/Customer/Adapter/Db.php: Added the
+	  loadAddressList() method and variable (#11)
+
+2009-01-26 11:53  vmc
+
+	* /tags/v0.3a1/Artisan/Customer.php: Updated __get so that if
+	  'address' is passed to it, it returns false so it can't be
+	  directly modified. (#11)
+
+2009-01-26 11:54  vmc
+
+	* /tags/v0.3a1/Artisan/Db/Iterator.php: The variable passed to the
+	  construct can either be a new object or a string. If its already
+	  an object, it doesn't require building the object in each
+	  current() method which helps on objects that have a large
+	  construction time.
+
+2009-01-26 11:58  vmc
+
+	* /tags/v0.3a1/Artisan/Db/Iterator.php: Updated current() to not
+	  call another ->row() after the data is fetched, why is this like
+	  this?
+
+2009-01-26 12:00  vmc
+
+	* /tags/v0.3a1/Artisan/Customer/Adapter/Db.php: Reformatted the
+	  queries to be on multiple lines, made loadAddressList() private
+	  and now sets the iterator to the variable.
+
+2009-01-26 12:01  vmc
+
+	* /tags/v0.3a1/Artisan/Customer/Address.php: Added the base class
+	  layout with the __get(), __set(), and loadFromArray() methods.
+	  Updated the class definition to use the proper implements
+	  Artisan_Interface_Iterator rather than extends (#11)
+
+2009-01-27 11:27  vmc
+
+	* /tags/v0.3a1/httpdocs/index.php: Moved the configuration out to
+	  the configure.php file
+
+2009-01-27 11:28  vmc
+
+	* /tags/v0.3a1/httpdocs: Ignored configure.php
+
+2009-01-27 11:34  vmc
+
+	* /tags/v0.3a1/httpdocs/configure.template.php: Added the templated
+	  configuration file
+
+2009-01-28 02:48  vmc
+
+	* /tags/v0.3a1/Artisan/Interface/Iterable.php,
+	  /tags/v0.3a1/Artisan/Interface/Iterator.php: Renamed Iterator to
+	  Iterable because it creates an Iterable interface (#11).
+
+2009-01-28 02:48  vmc
+
+	* /tags/v0.3a1/Artisan/Customer/Address.php: Uses the new Iterable
+	  interface rather than the Iterator interface. (#11)
+
+2009-01-28 03:30  vmc
+
+	* /tags/v0.3a1/Artisan/Db/Iterator.php: Removed some old code,
+	  updated the methods that throw an exception to not return NULL
+	  because the exception has already been thrown.
+
+2009-01-28 03:31  vmc
+
+	* /tags/v0.3a1/Artisan/Customer/Address.php: Added more of the
+	  class structure (the CRUD methods) and added Doxygen comments to
+	  loadFromArray() and the constructor (#11)
+
+2009-01-28 03:33  vmc
+
+	* /tags/v0.3a1/Artisan/Controller/View.php: Added some basic
+	  comments
+
+2009-01-28 03:36  vmc
+
+	* /tags/v0.3a1/Artisan/Controller/View.php: And some more Doxygen
+	  comments
+
+2009-01-28 04:05  vmc
+
+	* /tags/v0.3a1/Artisan/Cache/Adapter.php,
+	  /tags/v0.3a1/Artisan/Cache/Adapter/Apc.php: Added Doxygen
+	  comments to these so the ticket could be closed. (#52)
+
+2009-01-29 11:44  vmc
+
+	* /tags/v0.3a1/Artisan/Email/Adapter.php: Wrote most of the adapter
+	  code to do basic things like sanitizing headers for injection
+	  attacks. (#48)
+
+2009-01-29 11:53  vmc
+
+	* /tags/v0.3a1/Artisan/Email/Adapter/Mail.php: Initial checkin of
+	  the mailing adapter to use the mail() method. (#49)
+
+2009-01-29 11:54  vmc
+
+	* /tags/v0.3a1/Artisan/Email/Adapter.php: Added setBody() method,
+	  this needs the ability to wrap text after a certain number of
+	  lines. (#48)
+
+2009-01-29 12:00  vmc
+
+	* /tags/v0.3a1/Artisan/Email.php: Removed the old constructor and
+	  destructor, replaced it with a factory() since this class will be
+	  static. (#48)
+
+2009-01-31 11:53  vmc
+
+	* /tags/v0.3a1/httpdocs/public/Artisan.php,
+	  /tags/v0.3a1/httpdocs/public/Artisan/css/default.css,
+	  /tags/v0.3a1/httpdocs/public/Artisan/images/artisan_system_logo.png,
+	  /tags/v0.3a1/httpdocs/public/Artisan/layout/default.phtml,
+	  /tags/v0.3a1/httpdocs/public/Artisan/views/index.phtml: Small
+	  updates before these are being checked in.
+
+2009-01-31 11:55  vmc
+
+	* /tags/v0.3a1/httpdocs/public/Artisan/css,
+	  /tags/v0.3a1/httpdocs/public/Artisan/images,
+	  /tags/v0.3a1/httpdocs/public/Artisan/javascript,
+	  /tags/v0.3a1/httpdocs/public/Artisan/layout: Removed old Artisan/
+	  files because they were moved to the root directory
+
+2009-01-31 11:58  vmc
+
+	* /tags/v0.3a1/httpdocs/public/Artisan,
+	  /tags/v0.3a1/httpdocs/public/Artisan.php: Removed the old Artisan
+	  controller, in hindsight, I should've just done an svn mv
+
+2009-01-31 12:12  vmc
+
+	* /tags/v0.3a1/httpdocs/public/css/default.css,
+	  /tags/v0.3a1/httpdocs/public/images/artisan_system_logo.png,
+	  /tags/v0.3a1/httpdocs/public/layout/default.phtml,
+	  /tags/v0.3a1/httpdocs/public/views/configuration.phtml,
+	  /tags/v0.3a1/httpdocs/public/views/controllers.phtml,
+	  /tags/v0.3a1/httpdocs/public/views/index.phtml,
+	  /tags/v0.3a1/httpdocs/public/views/users.phtml: Adding the new
+	  Admin files and views
+
+2009-01-31 12:12  vmc
+
+	* /tags/v0.3a1/httpdocs/public/Admin.php: Adding the Admin
+	  controller
+
+2009-01-31 12:28  vmc
+
+	* /tags/v0.3a1/httpdocs/configure.template.php: Updated the default
+	  controller to be Admin
+
+2009-01-31 12:28  vmc
+
+	* /tags/v0.3a1/httpdocs/public/Admin.php: Updated the comments
+
+2009-01-31 13:38  vmc
+
+	* /tags/v0.3a1/Artisan/Interface/Iterable.php: Added the method
+	  fromArray() which is different than loadFromArray() in that
+	  fromArray sets all of the internal variables and will not accept
+	  a primary key. (#11)
+
+2009-01-31 13:38  vmc
+
+	* /tags/v0.3a1/Artisan/Customer/Address.php: Added the method
+	  fromArray() to match the interface. (#11)
+
+2009-01-31 13:40  vmc
+
+	* /tags/v0.3a1/Artisan/Db/Iterator.php: Added new methods such as
+	  index() to return a specific object at an index, obj() to return
+	  a new object, and _load() so that current() and index() can
+	  specify an index to load from
+
+2009-01-31 13:57  vmc
+
+	* /tags/v0.3a1/Install_Sql/tag0.3a1.031.alter_table_customer_address_add_fields.sql:
+	  Adds all of the new fields to the customer_address data (#11)
+
+2009-01-31 14:12  vmc
+
+	* /tags/v0.3a1/Artisan/Customer/Adapter/Db.php,
+	  /tags/v0.3a1/Artisan/Customer/Db.php: Moved the Db.php file up a
+	  directory to here because the customer really doesn't have an
+	  adapter.
+
+2009-01-31 14:13  vmc
+
+	* /tags/v0.3a1/Artisan/Customer/Adapter: Removed the old Adapter
+	  directory
+
+2009-01-31 14:43  vmc
+
+	* /tags/v0.3a1/Artisan/Customer/Address,
+	  /tags/v0.3a1/Artisan/Customer/Address.php,
+	  /tags/v0.3a1/Artisan/Customer/Address/Db.php: Added the base
+	  Address/Db.php class for writing address data to the database,
+	  set up the basic abstraction with the Artisan_Customer_Address
+	  class. (#11)
+
+2009-01-31 14:44  vmc
+
+	* /tags/v0.3a1/Artisan/Customer/Db.php: Added the database
+	  connection to the iterator object created from the
+	  Artisan_Customer_Address_Db class. (#11)
+
+2009-01-31 15:25  vmc
+
+	* /tags/v0.3a1/Artisan/Customer/Db.php: Removed old outdated
+	  comments
+
+2009-01-31 15:25  vmc
+
+	* /tags/v0.3a1/Artisan/Customer/Address/Db.php: Wrote the body to
+	  load()
+
+2009-01-31 19:11  vmc
+
+	* /tags/v0.3a1/Artisan/Template/Db.php,
+	  /tags/v0.3a1/Artisan/Template/Filesystem.php: Removed the
+	  requiring of the exception class because it's required by the
+	  main Artisan_Template class.
+
+2009-02-09 01:49  vcherubini
+
+	* /tags/v0.3a1/Artisan/Controller/View.php: Made the link_tag
+	  defined as null to avoid an unitialized variable warning
+
+2009-02-09 01:51  vcherubini
+
+	* /tags/v0.3a1/Artisan/Controller/View.php: Made the directory
+	  separator defined as the global define in the variable
+	  initialization in addition to the constructor
+
+2009-02-09 02:02  vcherubini
+
+	* /tags/v0.3a1/Artisan/Session/Db.php: Now optimizes the
+	  artisan_session table after garbage collecting from it.
+
+2009-02-15 23:04  vcherubini
+
+	* /tags/v0.3a1/Artisan/Controller/View.php: Updated the link()
+	  method to take the controller to go to as well
+
+2009-02-16 02:17  vcherubini
+
+	* /tags/v0.3a1/Artisan/Auth/Db.php: Removed the old const
+	  TABLE_USER, now uses the class variable.
+
+2009-02-16 02:19  vcherubini
+
+	* /tags/v0.3a1/Artisan/Session.php: New method from() which returns
+	  a session variable if found in the session.
+
+2009-02-16 11:41  vcherubini
+
+	* /tags/v0.3a1/Artisan/Session/Db.php: Removed the inclusion of the
+	  session exception and db exception classes, those are already
+	  included implicitly.
+
+2009-02-16 11:42  vcherubini
+
+	* /tags/v0.3a1/Artisan/Template/Filesystem.php: Updated the
+	  template extension to .tpl
+
+2009-02-16 11:42  vcherubini
+
+	* /tags/v0.3a1/Artisan/Auth/Db.php: Removed some newlines.
+
+2009-02-16 11:42  vcherubini
+
+	* /tags/v0.3a1/Artisan/Exception.php: In the toString() method to
+	  set the internal class_name and function_name variables from the
+	  trace
+
+2009-02-16 11:43  vcherubini
+
+	* /tags/v0.3a1/Artisan/Controller/View.php: Added the method url()
+	  to create a plain URL for redirection.
+
+2009-02-17 17:44  vcherubini
+
+	* /trunk/Artisan/ASFW.php, /trunk/Artisan/Address.php,
+	  /trunk/Artisan/Artisan_System.php, /trunk/Artisan/Auth.php,
+	  /trunk/Artisan/Auth/Db.php, /trunk/Artisan/Cache/Adapter,
+	  /trunk/Artisan/Cache/Adapter.php, /trunk/Artisan/Cache/Db.php,
+	  /trunk/Artisan/Controller.php,
+	  /trunk/Artisan/Controller/View.php, /trunk/Artisan/Customer.php,
+	  /trunk/Artisan/Customer/Adapter, /trunk/Artisan/Customer/Address,
+	  /trunk/Artisan/Customer/Address.php,
+	  /trunk/Artisan/Customer/Db.php,
+	  /trunk/Artisan/Customer/Group.php, /trunk/Artisan/Db.php,
+	  /trunk/Artisan/Db/Iterator.php, /trunk/Artisan/Db/Result.php,
+	  /trunk/Artisan/Db/Result/Aggregate.php, /trunk/Artisan/Email.php,
+	  /trunk/Artisan/Email/Adapter, /trunk/Artisan/Email/Adapter.php,
+	  /trunk/Artisan/Event.php, /trunk/Artisan/Exception.php,
+	  /trunk/Artisan/Interface, /trunk/Artisan/Rss/Db.php,
+	  /trunk/Artisan/Saveable.php, /trunk/Artisan/Search,
+	  /trunk/Artisan/Search.php, /trunk/Artisan/Search/Indexer,
+	  /trunk/Artisan/Session.php, /trunk/Artisan/Session/Db.php,
+	  /trunk/Artisan/Shipping, /trunk/Artisan/Shipping.php,
+	  /trunk/Artisan/Template/Db.php,
+	  /trunk/Artisan/Template/Filesystem.php, /trunk/Artisan/User.php,
+	  /trunk/Artisan/Validate/Alpha.php,
+	  /trunk/Artisan/Validate/Alphanum.php,
+	  /trunk/Artisan/Validate/Between.php,
+	  /trunk/Artisan/Validate/Cc.php, /trunk/Artisan/Validate/Ipv4.php,
+	  /trunk/Artisan/Versionable.php,
+	  /trunk/Install_Sql/tag0.3a1.027.alter_table_customer_add_parent_id.sql,
+	  /trunk/Install_Sql/tag0.3a1.028.create_table_customer_group.sql,
+	  /trunk/Install_Sql/tag0.3a1.029.create_table_customer_group_list.sql,
+	  /trunk/Install_Sql/tag0.3a1.030.create_table_customer_field_address.sql,
+	  /trunk/Install_Sql/tag0.3a1.031.alter_table_customer_address_add_fields.sql,
+	  /trunk/Install_Sql/tag0.3a1.alter_table_customer_address_make_date_modify_null.sql,
+	  /trunk/httpdocs, /trunk/httpdocs/configure.template.php,
+	  /trunk/httpdocs/index.php, /trunk/httpdocs/public/Admin.php,
+	  /trunk/httpdocs/public/Artisan,
+	  /trunk/httpdocs/public/Artisan.php,
+	  /trunk/httpdocs/public/css/default.css,
+	  /trunk/httpdocs/public/images/artisan_system_logo.png,
+	  /trunk/httpdocs/public/javascript/jquery.js,
+	  /trunk/httpdocs/public/layout/default.phtml,
+	  /trunk/httpdocs/public/views/configuration.phtml,
+	  /trunk/httpdocs/public/views/controllers.phtml,
+	  /trunk/httpdocs/public/views/index.phtml,
+	  /trunk/httpdocs/public/views/users.phtml: Merged with the 0.3a1
+	  tag in order to bring everything up to date.
+
+2009-02-17 17:45  vcherubini
+
+	* /branches/release_candidate: Removed the RC branch because
+	  artisan_system really isn't a product that needs a release
+	  candidate, all of the testing is done in the trunk and then when
+	  its ready to be released, a separate release branch will be
+	  created to do so.
+
+2009-02-22 21:43  vcherubini
+
+	* /tags/v0.3a1/Artisan/Auth/Db.php: Added new variable idField that
+	  holds the value of the user_id field so that way the
+	  authenticate() method can return it's value so the user class can
+	  be made right after that.
+
+2009-02-23 11:07  vcherubini
+
+	* /tags/v0.3a1/Artisan/User.php: Added method setFromArray() to set
+	  the user data from a key/value array.
+
+2009-02-23 11:08  vcherubini
+
+	* /tags/v0.3a1/Artisan/Functions/String.php: Added method
+	  asfw_safe() that makes a string safe to print to the screen.
+
+2009-02-23 11:08  vcherubini
+
+	* /tags/v0.3a1/Artisan/Db/Sql/Update.php: Updated the loop in
+	  build() to ensure that a value is not empty before attempting to
+	  test that the 0th element is a backtick.
+
+2009-02-26 11:41  vmc
+
+	* /tags/v0.3a1/Artisan/Customer/Address/Db.php: Added the code in
+	  the _update() method to actually perform the update() and ensure
+	  that the date_modify is set. #11
+
+2009-02-26 11:41  vmc
+
+	* /tags/v0.3a1/Artisan/Functions/String.php: Added the Doxygen
+	  comments to asfw_safe()
+
+2009-02-26 11:42  vmc
+
+	* /tags/v0.3a1/Artisan/Email/Adapter.php: Added method _check() to
+	  ensure all of the appropriate variables are valid, and added a
+	  _sanitizeHeader() around all of the variables. #48
+
+2009-02-26 11:43  vmc
+
+	* /tags/v0.3a1/Artisan/Email/Adapter/Mail.php: Wrote the basics of
+	  send(), however, it's not complete until I hear back about using
+	  Swiftmailer. #49
+
+2009-02-26 11:46  vmc
+
+	* /tags/v0.3a1/Artisan/Address.php: Deleted the old Artisan_Address
+	  class, it's now part of the Customer data.
+
+2009-03-02 03:15  vcherubini
+
+	* /tags/v0.3a1/Artisan/User.php: Because using arrays for the
+	  dynamic user data is much more efficient, all user data has been
+	  changed from being in a Value_Object to being in an array.
+
+2009-03-03 03:22  vmc
+
+	* /tags/v0.3a1/Artisan/Db/Iterator.php: Added __get() to return the
+	  object, need a convinient way to have this work regardless of
+	  what value is passed.
+
+2009-03-03 03:22  vmc
+
+	* /tags/v0.3a1/Artisan/Customer/Db.php: Added the code to load in
+	  the address.
+
+2009-03-03 03:23  vmc
+
+	* /tags/v0.3a1/Artisan/Customer/Address/Db.php: Added method
+	  setCustomerId() to set the customerId that the address should
+	  load.
+
+2009-03-03 03:23  vmc
+
+	* /tags/v0.3a1/Artisan/Html/Element.php,
+	  /tags/v0.3a1/Artisan/Html/Exception.php,
+	  /tags/v0.3a1/Artisan/Html/Fieldset.php,
+	  /tags/v0.3a1/Artisan/Html/Form,
+	  /tags/v0.3a1/Artisan/Html/Form.php,
+	  /tags/v0.3a1/Artisan/Html/Form/Calendar.php,
+	  /tags/v0.3a1/Artisan/Html/Form/Checkbox.php,
+	  /tags/v0.3a1/Artisan/Html/Form/Element.php,
+	  /tags/v0.3a1/Artisan/Html/Form/Hash.php,
+	  /tags/v0.3a1/Artisan/Html/Form/Hidden.php,
+	  /tags/v0.3a1/Artisan/Html/Form/Password.php,
+	  /tags/v0.3a1/Artisan/Html/Form/Radio.php,
+	  /tags/v0.3a1/Artisan/Html/Form/Richtextarea.php,
+	  /tags/v0.3a1/Artisan/Html/Form/Select.php,
+	  /tags/v0.3a1/Artisan/Html/Form/Text.php,
+	  /tags/v0.3a1/Artisan/Html/Form/Textarea.php: Added the basic
+	  structure of the HTML form layout.
+
+2009-03-03 03:26  vmc
+
+	* /trunk/Artisan/Address.php, /trunk/Artisan/Auth/Db.php,
+	  /trunk/Artisan/Customer/Address/Db.php,
+	  /trunk/Artisan/Customer/Db.php, /trunk/Artisan/Db/Iterator.php,
+	  /trunk/Artisan/Db/Sql/Update.php,
+	  /trunk/Artisan/Email/Adapter.php,
+	  /trunk/Artisan/Email/Adapter/Mail.php,
+	  /trunk/Artisan/Functions/String.php,
+	  /trunk/Artisan/Html/Element.php,
+	  /trunk/Artisan/Html/Exception.php,
+	  /trunk/Artisan/Html/Fieldset.php, /trunk/Artisan/Html/Form,
+	  /trunk/Artisan/Html/Form.php, /trunk/Artisan/User.php: Merged
+	  with the 0.3a1 tag in order to sync up the trunk.
+
+2009-03-03 12:29  vmc
+
+	* /trunk/Artisan/Interface/Iterable.php: Commented out fromArray()
+	  for now, as loadFromArray() will do the same thing.
+
+2009-03-03 12:30  vmc
+
+	* /trunk/Artisan/Db.php: Added method _asfw_check_db() that ensures
+	  a db object has a database connection rather than having to
+	  duplicate this method in lots of different classes.
+
+2009-03-03 12:31  vmc
+
+	* /trunk/Artisan/Customer/Address.php: Moved all of the
+	  Artisan_Customer_Address_Db class code into this class because
+	  the address will only have access to a database.
+
+2009-03-03 12:49  vmc
+
+	* /trunk/httpdocs/index.php: Removed old customer loading code
+
+2009-03-03 13:14  vmc
+
+	* /trunk/Artisan/Customer.php: Added public method address() in
+	  order to provide access to the address management objects. (#11)
+
+2009-03-03 13:16  vmc
+
+	* /trunk/Artisan/Versionable.php: Wrote base skeleton of the
+	  Versionable class. (#36)
+
+2009-03-03 13:16  vmc
+
+	* /trunk/httpdocs/index.php: Updated the version number in the
+	  comments.
+
+2009-03-22 01:10  vmc
+
+	* /trunk/Artisan/Vo.php: Small change to test checkins
+
+2009-03-22 01:25  vmc
+
+	* /trunk/Artisan/Vo.php: Simple test for network connections
+
+2009-03-22 11:31  vmc
+
+	* /trunk/Artisan/Vo.php: Small change to test checkins
+
+2009-03-22 11:33  vmc
+
+	* /trunk/Artisan/Vo.php: Checking in with new credentials
+
+2009-03-22 11:39  vmc
+
+	* /trunk/httpdocs/index.php: Updatated the comments to be correct.
+
+2009-03-22 11:51  vmc
+
+	* /trunk/httpdocs/configure.template.php,
+	  /trunk/httpdocs/public/views/index.phtml: Updated the version
+	  number for release and removed a file from the configuration.
+
