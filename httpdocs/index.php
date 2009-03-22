@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Artisan System Framework SDK 0.3a1
+ * Artisan System Framework SDK 0.3beta
  * This file is the entry point for the site.
  */
 require_once 'configure.php';
@@ -20,17 +20,6 @@ try {
 } catch ( Artisan_Exception $e ) {
 	echo $e;
 }
-
-/*
-$result_agg = $db->select()
-	->from('agg', 'a', 'price', 'product')
-	->query()
-	->aggregate('Avg', 'price', 'avg_price')
-	->aggregate('Avg', 'price')
-	->aggregate('Sum', 'price')
-	->aggregate('Count', 'price');
-asfw_print_r($result_agg->_aggResultList);
-*/
 
 $db->disconnect();
 
