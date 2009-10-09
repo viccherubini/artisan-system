@@ -1,6 +1,6 @@
 <?php
 
-require_once 'Artisan/Functions/Array.php';
+require_once 'Artisan/Function/Array.php';
 
 define('ARTISAN_ERROR', 100, false);
 define('ARTISAN_WARNING', 200, false);

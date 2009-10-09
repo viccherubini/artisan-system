@@ -1,6 +1,6 @@
 <?php
 
-require_once 'Artisan/Functions/Array.php';
+require_once 'Artisan/Function/Array.php';
 
 abstract class Artisan_Controller_Model {
 	protected $_id = 0;

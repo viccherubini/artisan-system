@@ -1,6 +1,6 @@
 <?php
 
-require_once 'Artisan/Functions/Database.php';
+require_once 'Artisan/Function/Database.php';
 
 require_once 'Artisan/Db/Iterator.php';
 
@@ -43,7 +43,7 @@ abstract class Artisan_Db {
 	 * @param $C An Artisan_Config configuration instance, optional.
 	 * @retval object New database instance, ready for connection.
 	 */
-	public function __construct(Artisan_Config &$C = NULL) {
+	public function __construct(Artisan_Config $C = NULL) {
 		if ( true === is_object($C) ) {
 			$this->setConfig($C);
 		}

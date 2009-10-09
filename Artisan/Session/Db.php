@@ -10,7 +10,7 @@ require_once 'Artisan/Session.php';
  */
 require_once 'Artisan/Session/Interface.php';
 
-require_once 'Artisan/Functions/Input.php';
+require_once 'Artisan/Function/Input.php';
 
 /**
  * This class allows the storage of sessions in a database. It is database agnostic

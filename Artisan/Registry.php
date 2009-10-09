@@ -7,7 +7,6 @@ class Artisan_Registry {
 	
 	private static $_model_list = array();
 	
-	
 	public static function push($name, $item, $overwrite=true) {
 		$exists = asfw_exists($name, self::$_object_list);
 		if ( false === $exists || ( true === $exists && true === $overwrite ) ) {
@@ -23,22 +22,6 @@ class Artisan_Registry {
 		}
 		return $item;
 	}
-	
-	
-	public static function pushModel(Artisan_Controller_Model $model, $overwrite=true) {
-		$name = $model->getRegistryName() . '.' . $model->getId();
-		$exists = asfw_exists($name, self::$_model_list);
-		
-		if ( false === $exists || ( true === $exists && true === $overwrite ) ) {
-			self::$_model_list[$name] = $model;
-		}
-		return true;
-	}
-	
-	public static function popModel($model, $id, $delete=false) {
-		
-	}
-	
 	
 	public function build($model, $pkey=NULL) {
 		

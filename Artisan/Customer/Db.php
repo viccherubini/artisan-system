@@ -24,12 +24,12 @@ class Artisan_Customer_Db extends Artisan_Customer {
 		$this->_dbConn = $db;
 		
 		if ( false === empty($tableList) ) {
-			$this->setCustomerTable($tableList->customer);
-			$this->setCommentHistoryTable($tableList->comment_history);
-			$this->setFieldTable($tableList->field);
-			$this->setFieldTypeTable($tableList->field_type);
-			$this->setHistoryTable($tableList->history);
-			$this->setAddressTable($tableList->address);
+			$this->setCustomerTable($tableList->customer)
+				->setCommentHistoryTable($tableList->comment_history)
+				->setFieldTable($tableList->field)
+				->setFieldTypeTable($tableList->field_type)
+				->setHistoryTable($tableList->history)
+				->setAddressTable($tableList->address);
 		}
 		
 		$this->_loadFieldList();

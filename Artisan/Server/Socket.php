@@ -21,7 +21,7 @@ class Artisan_Server_Socket extends Artisan_Server {
 	 * @param $C The configuration object that contains the server address.
 	 * @retval Object New Artisan_Server_Socket object.
 	 */
-	public function __construct(Artisan_Config &$C) {
+	public function __construct(Artisan_Config $config) {
 		
 	}
 

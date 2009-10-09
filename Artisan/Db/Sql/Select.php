@@ -1,6 +1,6 @@
 <?php
 
-require_once 'Artisan/Functions/Database.php';
+require_once 'Artisan/Function/Database.php';
 
 /**
  * @see Artisan_Db_Sql
