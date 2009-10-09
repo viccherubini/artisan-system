@@ -33,6 +33,10 @@ abstract class Artisan_Db {
 	///< The instance of the Artisan_Sql_Delete_* class for executing DELETE queries.
 	protected $_delete = NULL;
 	
+	protected $_queryList = array();
+	
+	protected $_debug = false;
+	
 	/**
 	 * Default constructor.
 	 * @author vmc <vmc@leftnode.com>
@@ -42,6 +46,10 @@ abstract class Artisan_Db {
 	public function __construct(Artisan_Config &$C = NULL) {
 		if ( true === is_object($C) ) {
 			$this->setConfig($C);
+		}
+		
+		if ( true === $this->CONFIG->exists('debug') ) {
+			$this->_debug = $this->CONFIG->debug;
 		}
 	}
 
@@ -69,7 +77,7 @@ abstract class Artisan_Db {
 	 * @param $C A configuration object.
 	 * @retval boolean Returns true.
 	 */
-	public function setConfig(Artisan_Config &$C) {
+	public function setConfig(Artisan_Config $C) {
 		$this->CONFIG = $C;
 		return true;
 	}
@@ -79,10 +87,14 @@ abstract class Artisan_Db {
 	 * @author vmc <vmc@leftnode.com>
 	 * @retval Object Returns the configuration object.
 	 */
-	public function &getConfig() {
+	public function getConfig() {
 		return $this->CONFIG;
 	}
 
+	public function getQueryList() {
+		return $this->_queryList;
+	}
+	
 	/**
 	 * Whether or not the database currently has a connection.
 	 * @author vmc <vmc@leftnode.com>

@@ -1,15 +1,10 @@
 <?php
 
 /**
- * @see Artisan_Validate
- */
-require_once 'Artisan/Validate.php';
-
-/**
  * Static class that contains methods to validate date values.
  * @author rafshar <rafshar@gmail.com>
  */
-class Artisan_Validate_Date extends Artisan_Validate {
+class Artisan_Validate_Date {
 	private $_date = NULL;
 
 	public function __construct($date = NULL) {

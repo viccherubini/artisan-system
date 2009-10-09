@@ -4,7 +4,7 @@
  * Static class that contains methods to validate alphabetic strings.
  * @author rafshar <rafshar@gmail.com>
  */
-class Artisan_Validate_Alpha {
+class Artisan_Validate_Empty {
 	private $_s = NULL;
 
 	public function __construct($s = NULL) {
@@ -21,15 +21,6 @@ class Artisan_Validate_Alpha {
 		if ( true === empty($s) ) {
 			$s = $this->_s;
 		}
-		
-		if ( true === empty($s) ) {
-			return false;
-		}
-
-		$s = trim($s);
-		if ( 1 === preg_match("/[^a-z]/i", $s) ) {
-			return false;
-		}
-		return true;
+		return empty($s);
 	}	
 }

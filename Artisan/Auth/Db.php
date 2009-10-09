@@ -119,27 +119,15 @@ class Artisan_Auth_Db extends Artisan_Auth {
 	 * the method $this->setUser().
 	 * @author vmc <vmc@leftnode.com>
 	 * @param $validation_hook Optional hook/callback to call after validation to further validate the data.
-	 * @throw Artisan_Auth_Exception If the user of the class is not of type Artisan_User.
 	 * @throw Artisan_Auth_Exception If the user fails to authenticate because no records are found.
 	 * @throw Artisan_Auth_Exception If the user fails to authenticate because more than one record was found.
 	 * @throw Artisan_Auth_Exception If the hashed passwords do not match.
 	 * @retval boolean True if fully authenticated, false otherwise.
 	 */
-	public function authenticate($validation_hook = NULL) {
+	public function authenticate($user_name, $user_password, $validation_hook = NULL) {
 		$this->_checkDb();
 		
 		$authenticated = false;
-		
-		// See if a user has been set, if not, throw an exception
-		if ( false === $this->_artisanUser instanceof Artisan_User ) {
-			throw new Artisan_Auth_Exception(ARTISAN_ERROR, 'Failed to authenticate, the user object has not been set.');
-		}
-		
-		// Get the username and password from the user object
-		// Always assume the password is hashed already as it shouldn't be stored
-		// unhashed in the Artisan_User class.
-		$user_name = $this->_artisanUser->{$this->_userField};
-		$user_password = $this->_artisanUser->{$this->_passwordField};
 		
 		// First, attempt to authenticate on the $_userField to ensure only a single
 		// record is found.
@@ -204,7 +192,7 @@ class Artisan_Auth_Db extends Artisan_Auth {
 		}
 		
 		if ( true !== $authenticated ) {
-			$user_id = 0;
+			throw new Artisan_Auth_Exception(ARTISAN_WARNING, 'The user failed to pass the authentication hook and thus can not be validated.');
 		}
 		
 		return $user_id;
@@ -214,7 +202,7 @@ class Artisan_Auth_Db extends Artisan_Auth {
 	 * Ensures that a database connection exists.
 	 * @author vmc <vmc@leftnode.com>
 	 * @param $method The method this is being called from.
-	 * @throw Artisan_User_Exception If the database connection does not exist.
+	 * @throw Artisan_Auth_Exception If the database connection does not exist.
 	 * @retval boolean Returns true.
 	 */
 	private function _checkDb() {

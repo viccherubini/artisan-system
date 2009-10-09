@@ -44,6 +44,17 @@ function asfw_rename_controller_method($method) {
 }
 
 /**
+ * Alias for asfw_rename_controller_method().
+ * @author vmc <vmc@leftnode.com>
+ * @param $method The name of the method to rename.
+ * @retval string The new method name.
+ */
+function asfw_rename_view($view) {
+	$view = preg_replace('/[^a-z_0-9\-]/i', NULL, $view);
+	return strtolower($view);
+}
+
+/**
  * Removes any of the query string data from the request_uri to build
  * the controller/method/arguments heirarchy.
  * @author vmc <vmc@leftnode.com>
@@ -91,4 +102,10 @@ function asfw_strip_end_slashes($string) {
  */
 function asfw_safe($value) {
 	return htmlentities(stripslashes($value));
+}
+
+function asfw_initial_caps($value) {
+	$value = str_replace('_', ' ', $value);
+	$value = ucwords($value);
+	return $value;
 }

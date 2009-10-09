@@ -12,5 +12,5 @@ abstract class Artisan_Log_Writer {
 	 * @param $log A reference to the log data.
 	 * @retval boolean Returns true.
 	 */
-	abstract public function flush(&$log);
+	abstract public function flush($log);
 }

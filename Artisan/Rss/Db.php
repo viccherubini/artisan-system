@@ -97,12 +97,12 @@ class Artisan_Rss_Db extends Artisan_Rss {
 	 * Ensures that a database connection exists.
 	 * @author vmc <vmc@leftnode.com>
 	 * @param $method The method this is being called from.
-	 * @throw Artisan_User_Exception If the database connection does not exist.
+	 * @throw Artisan_Rss_Exception If the database connection does not exist.
 	 * @retval boolean Returns true.
 	 */
 	private function _checkDb() {
 		if ( false === $this->_dbConn->isConnected() ) {
-			throw new Artisan_Auth_Exception(ARTISAN_WARNING, 'The database does not have an active connection.');
+			throw new Artisan_Rss_Exception(ARTISAN_WARNING, 'The database does not have an active connection.');
 		}
 		return true;
 	}

@@ -24,6 +24,8 @@ class Artisan_Session_Db implements Artisan_Session_Interface {
 	///< The max_lifetime that the session runs before garbage collection executes.
 	private $_max_lifetime = 0;
 	
+	private $_table_name = NULL;
+
 	/**
 	 * Default constructor for saving session data in a database.
 	 * @author vmc <vmc@leftnode.com>
@@ -33,6 +35,7 @@ class Artisan_Session_Db implements Artisan_Session_Interface {
 	public function __construct(Artisan_Db &$DB) {
 		$this->DB = &$DB;
 		$this->_max_lifetime = intval(get_cfg_var("session.gc_maxlifetime"));
+		$this->_table_name = 'artisan_session';
 	}
 	
 	/**
@@ -41,6 +44,10 @@ class Artisan_Session_Db implements Artisan_Session_Interface {
 	 * @retval NULL Destroys the object.
 	 */
 	public function __destruct() {
+	}
+
+	public function setTableName($table_name) {
+		$this->_table_name = $table_name;
 	}
 	
 	/**
@@ -73,7 +80,7 @@ class Artisan_Session_Db implements Artisan_Session_Interface {
 		$session_data = NULL;
 		try {
 			$result_session = $this->DB->select()
-				->from('artisan_session', asfw_create_table_alias('artisan_session'), 'session_data')
+				->from($this->_table_name, asfw_create_table_alias($this->_table_name), 'session_data')
 				->where('session_id = ?', $session_id)
 				->query();
 			$session_data = $result_session->fetch('session_data');
@@ -104,7 +111,7 @@ class Artisan_Session_Db implements Artisan_Session_Interface {
 			$user_agent = asfw_get_user_agent();
 			$user_agent_hash = sha1($user_agent);
 			$this->DB->replace()
-				->into('artisan_session')
+				->into($this->_table_name)
 				->values($session_id, time(), $ipv4, $user_agent, $user_agent_hash, $session_data)
 				->query();
 		} catch ( Artisan_Db_Exception $e ) {
@@ -124,7 +131,7 @@ class Artisan_Session_Db implements Artisan_Session_Interface {
 		$error = false;
 		try {
 			$this->DB->delete()
-				->from('artisan_session')
+				->from($this->_table_name)
 				->where('session_id = ?', $session_id)
 				->query();
 		} catch ( Artisan_Db_Exception $e ) {
@@ -144,10 +151,10 @@ class Artisan_Session_Db implements Artisan_Session_Interface {
 		try {
 			$del_time = time() - $life;
 			$this->DB->delete()
-				->from('artisan_session')
+				->from($this->_table_name)
 				->where('session_expiration_time < ?', $del_time)
 				->query();
-			$this->DB->query('OPTIMIZE TABLE `artisan_session`');
+			$this->DB->query('OPTIMIZE TABLE `' . $this->_table_name . '`');
 		} catch ( Artisan_Db_Exception $e ) {
 			$error = true;
 		}

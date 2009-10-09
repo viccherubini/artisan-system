@@ -1,15 +1,10 @@
 <?php
 
 /**
- * @see Artisan_Validate
- */
-require_once 'Artisan/Validate.php';
-
-/**
  * Static class that contains methods to validate Ipv6 addresses.
   * @author vmc <vmc@leftnode.com>
  */
-class Artisan_Validate_Ipv6 extends Artisan_Validate {
+class Artisan_Validate_Ipv6 {
 	private $_ip = NULL;
 
 	public function __construct($ip = NULL) {

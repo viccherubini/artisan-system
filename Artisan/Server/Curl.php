@@ -18,12 +18,6 @@ class Artisan_Server_Curl extends Artisan_Server {
 	///< The server instance.
 	private $_server = NULL;
 	
-	///< The address of the server.
-	private $_server_address;
-	
-	///< Whether or not the server currently has a connection.
-	private $_is_connected = false;
-	
 	/**
 	 * Default constructor for connecting to a server.
 	 * @author vmc <vmc@leftnode.com>

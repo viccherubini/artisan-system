@@ -31,13 +31,13 @@ function asfw_print_r($array, $return = false) {
 function asfw_exists($key, $array) {
 	if ( true === is_object($array) ) {
 		if ( true === property_exists($array, $key) ) {
-			if ( false === empty($array->$key) ) {
+			if ( false === is_null($array->$key) ) {
 				return true;
 			}
 		}
 	} elseif ( true === is_array($array) ) {
 		if ( true === array_key_exists($key, $array) ) {
-			if ( false === empty($array[$key]) ) {
+			if ( false === is_null($array[$key]) ) {
 				return true;
 			}
 		}
@@ -64,6 +64,22 @@ function asfw_exists_return($key, $array) {
 	}
 	
 	return NULL;
+}
+
+function er($key, $array) {
+	return asfw_exists_return($key, $array);
+}
+
+/**
+ * If an element exists in an array or object, it returns it's value
+ * otherwise in a safe manner (htmlentities and stripslashes), otherwise this method returns NULL.
+ * @author vmc <vmc@leftnode.com>
+ * @param $key The key or variable to check for existence.
+ * @param $array The array or object to search.
+ * @retval mixed Returns value if found, NULL otherwise.
+ */
+function asfw_exists_return_safe($key, $array) {
+	return htmlentities(asfw_exists_return($key, $array));
 }
 
 /**
@@ -202,4 +218,23 @@ function asfw_array_slice_keys($keys, $hash) {
 		}
 	}
 	return $final;
+}
+
+/**
+ * Returns true if an array is empty regardless of if it has keys or not. Returns
+ * true if all of the values of the array are empty, false otherwise.
+ * @author vmc <vmc@leftnode.com>
+ * @param $a The array to test.
+ * @retval boolean Returns true if the array is truely empty, false otherwise.
+ */
+function asfw_empty($a) {
+	$empty = true;
+	if ( true === is_array($a) ) {
+		foreach ( $a as $i => $k ) {
+			if ( false === empty($k) ) {
+				$empty = false;
+			}
+		}
+	}
+	return $empty;
 }

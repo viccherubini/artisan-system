@@ -65,16 +65,6 @@ abstract class Artisan_Auth {
 	}
 	
 	/**
-	 * Sets the user if not set in the constructor.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval boolean Returns true.
-	 */
-	public function setUser(Artisan_User &$U) {
-		$this->_artisanUser = $U;
-		return true;
-	}
-	
-	/**
 	 * Gets the configuration.
 	 * @author vmc <vmc@leftnode.com>
 	 * @retval Object Returns the configuration object.
@@ -98,5 +88,5 @@ abstract class Artisan_Auth {
 	 * @param $validation_hook Optional hook to call after validation to further validate the data.
 	 * @retval boolean True if able to be authenticated, false otherwise.
 	 */
-	abstract public function authenticate($validation_hook = NULL);
+	abstract public function authenticate($user_name, $user_password, $validation_hook = NULL);
 }

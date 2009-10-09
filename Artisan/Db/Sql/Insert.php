@@ -77,7 +77,7 @@ abstract class Artisan_Db_Sql_Insert extends Artisan_Db_Sql {
 	public function values() {
 		$argc = func_num_args();
 		if ( 0 === $argc ) {
-			throw new Artisan_Db_Sql_Exception(ARTISAN_WARNING, 'The no values were passed into the method to insert.');
+			throw new Artisan_Db_Sql_Exception('The no values were passed into the method to insert.');
 		}
 
 		// See if only one argument was set and it's an array, if so
@@ -95,7 +95,7 @@ abstract class Artisan_Db_Sql_Insert extends Artisan_Db_Sql {
 			$ifl_len = count($this->_insert_field_list);
 			if ( $argc != $ifl_len && $ifl_len > 0 ) {
 				$exception = 'The number of values to insert does not match the column count: ' . $argc . ' value(s) and ' . $ifl_len . ' column(s).';
-				throw new Artisan_Db_Sql_Exception(ARTISAN_WARNING, $exception);
+				throw new Artisan_Db_Sql_Exception($exception);
 			}
 			$this->_insert_field_value_list = func_get_args();
 		}
@@ -135,7 +135,7 @@ abstract class Artisan_Db_Sql_Insert extends Artisan_Db_Sql {
 			$value = $this->DB->escape($value);
 			switch ( strtoupper($value) ) {
 				case NULL: {
-					$value_list[] = 'NULL';
+					$value_list[] = "''";
 					break;
 				}
 				

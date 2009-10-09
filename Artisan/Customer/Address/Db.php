@@ -93,7 +93,7 @@ class Artisan_Customer_Address_Db extends Artisan_Customer_Address {
 	 * Ensures that a database connection exists.
 	 * @author vmc <vmc@leftnode.com>
 	 * @param $method The method this is being called from.
-	 * @throw Artisan_User_Exception If the database connection does not exist.
+	 * @throw Artisan_Customer_Exception If the database connection does not exist.
 	 * @retval boolean Returns true.
 	 */
 	private function _checkDb() {

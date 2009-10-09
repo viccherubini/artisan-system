@@ -22,8 +22,8 @@ class Artisan_Log_Writer_Db extends Artisan_Log_Writer {
 	 * @param $DB An instance of a database object.
 	 * @retval Object Returns new Artisan_Log_Writer_Db class instance.
 	 */
-	public function __construct(Artisan_Db &$DB) {
-		$this->_dbConn = &$DB;
+	public function __construct(Artisan_Db $db) {
+		$this->_dbConn = $db;
 	}
 	
 	/**
@@ -46,20 +46,18 @@ class Artisan_Log_Writer_Db extends Artisan_Log_Writer {
 	 * @param $log The log data to write.
 	 * @retval boolean Returns true.
 	 */
-	public function flush(&$log) {
+	public function flush($log) {
 		if ( 0 === count($log) ) {
 			return true;
 		}
 
-		foreach ( $log as $l ) {
-			try {
-				$this->_dbConn->insert()
-					->into($this->_log_table)
-					->values($l)
-					->query();
-			} catch ( Artisan_Db_Exception $e ) {
-				exit($e);
-			}
+		try {
+			$this->_dbConn->insert()
+				->into($this->_log_table)
+				->values($log)
+				->query();
+		} catch ( Artisan_Db_Exception $e ) {
+			exit('Failed to write log entry.');
 		}
 		return true;
 	}

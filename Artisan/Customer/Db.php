@@ -86,7 +86,7 @@ class Artisan_Customer_Db extends Artisan_Customer {
 	 * Loads a user from the database based on their user ID.
 	 * @author vmc <vmc@leftnode.com>
 	 * @param $user_id The ID of the user to load.
-	 * @throw Artisan_User_Exception If the user can not be found.
+	 * @throw Artisan_Customer_Exception If the user can not be found.
 	 * @retval boolean Returns true.
 	 */
 	public function load($customer_id, $revision = self::REV_HEAD) {
@@ -120,8 +120,8 @@ class Artisan_Customer_Db extends Artisan_Customer {
 	 * Does the actual loading of the user from the database.
 	 * @author vmc <vmc@leftnode.com>
 	 * @param $user_id The ID of the user to load.
-	 * @throw Artisan_User_Exception If the user ID specified is not numeric or less than 0.
-	 * @throw Artisan_User_Exception If the user can not be found in the database.
+	 * @throw Artisan_Customer_Exception If the user ID specified is not numeric or less than 0.
+	 * @throw Artisan_Customer_Exception If the user can not be found in the database.
 	 * @retval boolean Returns true.
 	 */
 	protected function _load($customer_id, $revision) {
@@ -264,7 +264,7 @@ class Artisan_Customer_Db extends Artisan_Customer {
 	 * Ensures that a database connection exists.
 	 * @author vmc <vmc@leftnode.com>
 	 * @param $method The method this is being called from.
-	 * @throw Artisan_User_Exception If the database connection does not exist.
+	 * @throw Artisan_Customer_Exception If the database connection does not exist.
 	 * @retval boolean Returns true.
 	 */
 	private function _checkDb() {

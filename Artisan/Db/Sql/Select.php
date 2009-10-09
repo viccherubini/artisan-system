@@ -31,7 +31,7 @@ abstract class Artisan_Db_Sql_Select extends Artisan_Db_Sql {
 	protected $_group_field_list = array();
 	
 	///< The field to order by.
-	protected $_order_field;
+	protected $_order_list;
 	
 	///< The method to sort the field by.
 	protected $_order_method;
@@ -44,6 +44,9 @@ abstract class Artisan_Db_Sql_Select extends Artisan_Db_Sql {
 	
 	///< The limit of number of rows that should be returned.
 	protected $_limit = 0;
+	
+	///< The page number to return
+	protected $_page = -1;
 	
 	///< An INNER JOIN clause element.
 	const SQL_JOIN_INNER = 'INNER JOIN';
@@ -165,9 +168,8 @@ abstract class Artisan_Db_Sql_Select extends Artisan_Db_Sql {
 	 * @retval Object Returns itself for chaining.
 	 */
 	public function orderBy($field, $method = 'ASC') {
-		$order_fields = array();
 		if ( func_num_args() > 0 ) {
-			$this->_order_field = $field;
+			$this->_order_list[] = $field;
 			$this->_order_method = $method;
 		}
 		return $this;
@@ -184,6 +186,12 @@ abstract class Artisan_Db_Sql_Select extends Artisan_Db_Sql {
 		if ( $length > 0 ) {
 			$this->_limit = $length;
 		}
+		return $this;
+	}
+	
+	public function page($page) {
+		$page = abs($page);
+		$this->_page = $page;
 		return $this;
 	}
 
@@ -219,8 +227,8 @@ abstract class Artisan_Db_Sql_Select extends Artisan_Db_Sql {
 		$where_sql = $this->buildWhereClause();
 		
 		$order_sql = NULL;
-		if ( false === empty($this->_order_field) ) {
-			$order_sql = " ORDER BY " . $this->_order_field . " " . strtoupper($this->_order_method);
+		if ( count($this->_order_list) > 0 ) {
+			$order_sql = " ORDER BY " . implode(', ', $this->_order_list) . " " . strtoupper($this->_order_method);
 		}
 		
 		$group_sql = NULL;
@@ -230,12 +238,17 @@ abstract class Artisan_Db_Sql_Select extends Artisan_Db_Sql {
 		
 		$limit_sql = NULL;
 		if ( $this->_limit > 0 ) {
-			$limit_sql = " LIMIT " . $this->_limit;
+			$page_sql = NULL;
+			if ( $this->_page > -1 ) {
+				$page_sql = $this->_page * $this->_limit . ", ";
+			}
+			
+			$limit_sql = " LIMIT " . $page_sql . $this->_limit;
 		}
 		
 		$this->_sql = $select_sql . $join_sql . $where_sql . $group_sql . $order_sql . $limit_sql;
-		$this->_where_field_list = $this->_group_field_list = array();
-		$this->_order_field = $this->_order_method = NULL;
+		$this->_group_field_list = $this->_order_list = array();
+		$this->_order_method = NULL;
 		$this->_join_table_list = array();
 		$this->_limit = 0;
 		

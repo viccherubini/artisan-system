@@ -1,15 +1,10 @@
 <?php
 
 /**
- * @see Artisan_Validate
- */
-require_once 'Artisan/Validate.php';
-
-/**
  * Static class that contains methods to validate credit card numbers.
  * @author rafshar <rafshar@gmail.com>
  */
-class Artisan_Validate_Cc extends Artisan_Validate {
+class Artisan_Validate_Cc {
 	private $_number = NULL;
 
 	public function __construct($number = NULL) {
@@ -36,7 +31,7 @@ class Artisan_Validate_Cc extends Artisan_Validate {
 
 		$num_length =  strlen($number);
 		$double_number = false;
-		
+		$sum = 0;
 		for ( $i = $num_length - 1; $i >= 0; $i-- ) {
 			if ( true === $double_number ) {
 				$sum += $number[$i] * 2;

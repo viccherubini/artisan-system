@@ -1,11 +1,6 @@
 <?php
 
 /**
- * @see Artisan_Validate
- */
-require_once 'Artisan/Validate.php';
-
-/**
  * Static class that contains methods to validate Ipv4 addresses.
   * @author vmc <vmc@leftnode.com>
  */

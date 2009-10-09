@@ -56,7 +56,7 @@ abstract class Artisan_Db_Sql_Delete extends Artisan_Db_Sql {
 	 * @retval string Returns the built query.
 	 */
 	public function build() {
-		$where_sql = $this->buildWhereClause($this->_where_field_list);
+		$where_sql = $this->buildWhereClause();
 		
 		$limit_sql = NULL;
 		if ( $this->_limit > 0 ) {

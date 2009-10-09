@@ -22,10 +22,10 @@ define('LOG_EXCEPTION', 400, false);
  */
 class Artisan_Log {
 	///< Because this class is a singleton, the instance of this class.
-	private static $INST = NULL;
+	private static $_inst = NULL;
 
 	///< Instance of the writer class.
-	private $WRITER = NULL;
+	private $_writer = NULL;
 	
 	///< The array of log data to flush out.
 	private $_log = array();
@@ -60,10 +60,10 @@ class Artisan_Log {
 	 * @retval Object Returns the itself.
 	 */
 	public static function &get() {
-		if ( true === is_null(self::$INST) ) {
-			self::$INST = new self;
+		if ( true === is_null(self::$_inst) ) {
+			self::$_inst = new self;
 		}
-		return self::$INST;
+		return self::$_inst;
 	}
 	
 	/**
@@ -76,10 +76,21 @@ class Artisan_Log {
 	 * @param $trace If the log entry is an exception, this will contain the trace.
 	 * @retval boolean Return true.
 	 */
-	public function add($log_type, $entry, $class = NULL, $function = NULL, $trace = NULL) {
+	public function add($log_type, $entry, $include_trace=false) {
 		$ip_address = asfw_get_ipv4();
 
-		$this->_log[] = array(
+		$trace = debug_backtrace(false);
+		
+		$t = asfw_exists_return(1, $trace);
+		$class = asfw_exists_return('class', $t);
+		$function = asfw_exists_return('function', $t);
+
+		$trace = print_r($trace, true);
+		if ( false === $include_trace && $log_type != LOG_ERROR ) {
+			$trace = NULL;
+		}
+
+		$log = array(
 			'code_id' => NULL,
 			'log_date' => asfw_now(),
 			'entry' => $entry,
@@ -89,9 +100,12 @@ class Artisan_Log {
 			'ip_address' => $ip_address,
 			'type' => $log_type
 		);
+		
+		$this->_writer->flush($log);
+		
 		return true;
 	}
-	
+
 	/**
 	 * Adds an exception to the log class.
 	 * @author vmc <vmc@leftnode.com>
@@ -129,9 +143,9 @@ class Artisan_Log {
 	 * @param $W The Writer instance of type Artisan_Log_Writer.
 	 * @retval boolean Returns true.
 	 */
-	public function setWriter(Artisan_Log_Writer &$W) {
-		$this->WRITER = &$W;
-		return true;
+	public function setWriter(Artisan_Log_Writer $W) {
+		$this->_writer = $W;
+		return $this;
 	}
 
 	/**
@@ -139,10 +153,10 @@ class Artisan_Log {
 	 * @author vmc <vmc@leftnode.com>
 	 * @retval boolean True if the log was successfully flushed, false if the writer is not set up properly.
 	 */
-	public function flush() {
+	/*public function flush() {
 		$final_log = array();
 		
-		if ( true === is_null($this->WRITER) || false === $this->WRITER instanceof Artisan_Log_Writer ) {
+		if ( true === is_null($this->_writer) || false === $this->_writer instanceof Artisan_Log_Writer ) {
 			return false;
 		}
 		
@@ -154,22 +168,22 @@ class Artisan_Log {
 			}
 		}
 		
-		$this->WRITER->flush($final_log);
+		$this->_writer->flush($final_log);
 		$this->_log = array();
 		return true;
-	}
+	}*/
 
 	/**
 	 * Writes the first element of the log array only and resets the array.
 	 * @author vmc <vmc@leftnode.com>
 	 * @retval boolean Returns true.
 	 */
-	public function write() {
+	/*public function write() {
 		$log = array();
 		@reset($this->_log);
 		$log[] = current($this->_log);
 		$this->_log = $log;
 		$this->flush();
 		return true;
-	}
+	}*/
 }

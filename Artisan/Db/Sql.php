@@ -16,6 +16,10 @@ abstract class Artisan_Db_Sql {
 	///< The list of fields to use in the WHERE clause.
 	protected $_where_field_list = array();
 	
+	protected $_where_and_count = 0;
+	
+	protected $_where_or_count = 0;
+	
 	///< The SQL keyword AND
 	const SQL_AND = 'AND';
 	
@@ -30,6 +34,7 @@ abstract class Artisan_Db_Sql {
 	 */
 	public function __construct(Artisan_Db &$DB) {
 		$this->DB = &$DB;
+		$this->_resetWhereList();
 	}
 	
 	/**
@@ -65,8 +70,7 @@ abstract class Artisan_Db_Sql {
 	 */
 	public function orWhere() {
 		$argv = func_get_args();
-		$argv = array('NOT YET IMPLEMENTED!');
-		$this->_where(self::SQL_AND, $argv);
+		$this->_where(self::SQL_OR, $argv);
 		return $this;
 	}
 	
@@ -81,21 +85,12 @@ abstract class Artisan_Db_Sql {
 	public function inWhere($field, $value_list) {
 		// Ensure $value_list has a value
 		if ( count($value_list) > 0 && false === empty($field) ) {
-			$vl_len = count($value_list);
-			$is_numeric = true;
-			for ( $i=0; $i<$vl_len; $i++ ) {
-				if ( false === is_numeric($value_list[$i]) ) {
-					$is_numeric = false;
-					$value_list[$i] = $this->DB->escape($value_list[$i]);
-				}
+			foreach ( $value_list as $i => $v ) {
+				$value_list[$i] = $this->DB->escape($v);
 			}
 			
 			$where_item = NULL;
-			if ( true === $is_numeric ) {
-				$in_data = '(' . implode(',', $value_list) . ')';
-			} else {
-				$in_data = "('" . implode("', '", $value_list) . "')";
-			}
+			$in_data = "('" . implode("', '", $value_list) . "')";
 			
 			$where_item = $field . ' IN' . $in_data;
 			$this->_where_field_list[self::SQL_AND][] = $where_item;
@@ -126,12 +121,27 @@ abstract class Artisan_Db_Sql {
 	 */
 	public function buildWhereClause() {
 		$where_sql = NULL;
-		if ( count($this->_where_field_list) > 0 ) {
-			$where_sql = " WHERE (" . implode(") " . self::SQL_AND . " (", $this->_where_field_list[self::SQL_AND]) . ")";
+		$and_list = (array)asfw_exists_return(self::SQL_AND, $this->_where_field_list);
+		$or_list = (array)asfw_exists_return(self::SQL_OR, $this->_where_field_list);
+		$and_count = count($and_list);
+		$or_count = count($or_list);
+
+		if ( $and_count > 0 || $or_count > 0 ) {
+			$where_sql = ' WHERE ';
 			
-			// Ignore OR for now
-			//$where_sql .= " (" . implode(") " . self::SQL_OR . " (", $this->_where_field_list[self::SQL_OR]) . ")";
+			if ( $and_count > 0 ) {
+				$where_sql .= " (" . implode(") " . self::SQL_AND . " (", $this->_where_field_list[self::SQL_AND]) . ") ";
+			}
+			
+			if ( $or_count > 0 ) {
+				if ( 1 == $and_count ) {
+					$where_sql .= self::SQL_OR;
+				}
+				$where_sql .= " (" . implode(") " . self::SQL_OR . " (", $this->_where_field_list[self::SQL_OR]) . ") ";
+			}
 		}
+		
+		$this->_resetWhereList();
 		return $where_sql;
 	}
 
@@ -198,9 +208,7 @@ abstract class Artisan_Db_Sql {
 				if ( $qm_count == $fvl_len ) {
 					for ( $i=0; $i<$fvl_len; $i++ ) {
 						$fv = $this->DB->escape($fv_list[$i]);
-						if ( false === is_numeric($fv) ) {
-							$fv = " '" . $fv . "'";
-						}
+						$fv = " '" . $fv . "'";
 				
 						$field_op[$qm_loc[$i]] = $fv;
 					}
@@ -227,5 +235,12 @@ abstract class Artisan_Db_Sql {
 	 */
 	public function __toString() {
 		return $this->_sql;
+	}
+	
+	protected function _resetWhereList() {
+		$this->_where_field_list = array(
+			self::SQL_AND => array(),
+			self::SQL_OR => array()
+		);
 	}
 }

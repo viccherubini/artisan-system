@@ -2,13 +2,13 @@
 
 /**
  * Static class that contains methods to validate alphabetic strings.
- * @author rafshar <rafshar@gmail.com>
+ * @author vmc <vmc@leftnode.com>
  */
-class Artisan_Validate_Alpha {
-	private $_s = NULL;
+class Artisan_Validate_Email {
+	private $_e = NULL;
 
-	public function __construct($s = NULL) {
-		$this->_s = trim($s);
+	public function __construct($e = NULL) {
+		$this->_e = trim($e);
 	}
 	
 	/**
@@ -17,17 +17,17 @@ class Artisan_Validate_Alpha {
 	 * @param $s The string to test.
 	 * @retval boolean True if the value is all alphabetic, false otherwise.
 	 */
-	public function isValid($s = NULL) {
-		if ( true === empty($s) ) {
-			$s = $this->_s;
+	public function isValid($e = NULL) {
+		if ( true === empty($e) ) {
+			$e = $this->_e;
 		}
 		
-		if ( true === empty($s) ) {
+		if ( true === empty($e) ) {
 			return false;
 		}
 
-		$s = trim($s);
-		if ( 1 === preg_match("/[^a-z]/i", $s) ) {
+		$e = trim($e);
+		if ( 0 === preg_match("/([a-z0-9-_.!#$%^&*~`]+)(@[a-z0-9-]+\.[a-z]+)/i", $e) ) {
 			return false;
 		}
 		return true;

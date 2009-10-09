@@ -1,16 +1,11 @@
 <?php
 
 /**
- * @see Artisan_Validate
- */
-require_once 'Artisan/Validate.php';
-
-/**
  * Static class that contains methods to validate a Uri.
  * @author vmc <vmc@leftnode.com>
  * @author rafshar <rafshar@gmail.com>
  */
-class Artisan_Validate_Uri extends Artisan_Validate {
+class Artisan_Validate_Uri {
 	private $_u = NULL;
 
 	public function __construct($u = NULL) {

@@ -21,6 +21,10 @@ class Artisan_Exception extends Exception {
 	///< The file name the error occured in.
 	private $_file_name;
 	
+	private $_class_name = NULL;
+	
+	private $_function_name = NULL;
+	
 	/**
 	 * Default constructor.
 	 * @author vmc <vmc@leftnode.com>

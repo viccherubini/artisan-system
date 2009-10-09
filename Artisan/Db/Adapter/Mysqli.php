@@ -80,7 +80,7 @@ class Artisan_Db_Adapter_Mysqli extends Artisan_Db {
 
 		if ( 0 != mysqli_connect_errno() || false === $this->CONN ) {
 			$this->_is_connected = false;
-			throw new Artisan_Db_Exception(ARTISAN_WARNING, mysqli_connect_error());
+			throw new Artisan_Db_Exception(mysqli_connect_error());
 		}
 
 		$this->_is_connected = true;
@@ -107,29 +107,70 @@ class Artisan_Db_Adapter_Mysqli extends Artisan_Db {
 	 * @author vmc <vmc@leftnode.com>
 	 * @param $sql The query to execute.
 	 * @throw Artisan_Db_Exception If the SQL statement is empty.
-	 * @throw Artisan_Db_Exception If the query fails eo execute as a result of a syntax or log error.
+	 * @throw Artisan_Db_Exception If the query fails to execute as a result of a syntax or log error.
 	 * @retval mixed Returns a result object if the query returns data, boolean true/false otherwise.
 	 */
 	public function query($sql) {
 		$sql = trim($sql);
 		
 		if ( true === empty($sql) ) {
-			throw new Artisan_Db_Exception(ARTISAN_WARNING, 'The SQL statement is empty.');
+			throw new Artisan_Db_Exception('The SQL statement is empty.');
 		}
 		
 		if ( true === is_object($this->CONN) ) {
 			$result = $this->CONN->query($sql);
 			
 			if ( true === $result instanceof mysqli_result ) {
+				if ( true === $this->_debug ) {
+					$this->_queryList['success'][] = $sql;
+				}
+				
 				return new Artisan_Db_Result_Mysqli($result);
 			}
 		}
 		
 		if ( false === $result ) {
+			if ( true === $this->_debug ) {
+				$this->_queryList['error'][] = $sql;
+			}
+			
 			$error_string = $this->CONN->error;
-			throw new Artisan_Db_Exception(ARTISAN_WARNING, 'Failed to execute query: "' . $sql . '", MySQL said: ' . $error_string);
+			throw new Artisan_Db_Exception('Failed to execute query: "' . $sql . '", MySQL said: ' . $error_string);
 		}
 		return $result;
+	}
+	
+	public function multiQuery($sql) {
+		$sql = trim($sql);
+		
+		if ( true === empty($sql) ) {
+			throw new Artisan_Db_Exception('The SQL statement is empty.');
+		}
+		
+		if ( true === is_object($this->CONN) ) {
+			$result = $this->CONN->multi_query($sql);
+			
+			if ( true === $result ) {
+				if ( true === $this->_debug ) {
+					$this->_queryList['success'][] = $sql;
+				}
+				
+				/* Discard other results. */
+				do {
+					$result = $this->CONN->use_result();
+					if ( false !== $result ) {
+						$result->close();
+					}
+				} while ( $this->CONN->next_result() );
+				
+				return true;
+			} else {
+				$error_string = $this->CONN->error;
+				throw new Artisan_Db_Exception('Failed to execute query: "' . $sql . '", MySQL said: ' . $error_string);
+			}
+		}
+		
+		return false;
 	}
 	
 	/**

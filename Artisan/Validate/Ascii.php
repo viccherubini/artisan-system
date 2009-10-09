@@ -1,15 +1,10 @@
 <?php
 
 /**
- * @see Artisan_Validate
- */
-require_once 'Artisan/Validate.php';
-
-/**
  * Static class that contains methods to validate ASCII values.
  * @author rafshar <rafshar@gmail.com>
  */
-class Artisan_Validate_Ascii extends Artisan_Validate {
+class Artisan_Validate_Ascii {
 	private $_val = NULL;
 
 	public function __construct($val = NULL) {

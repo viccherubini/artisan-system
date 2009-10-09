@@ -9,298 +9,220 @@ require_once 'Artisan/Functions/String.php';
 
 require_once 'Artisan/Functions/Array.php';
 
-/**
- * @see Artisan_Controller_View
- */
+require_once 'Artisan/Controller/Router.php';
+
 require_once 'Artisan/Controller/View.php';
 
 /**
- * Handles the Model-View Controller design pattern. The Plugin architecture allows
- * one to easily push a class (Aritsan or not) into the controller so that children
- * classes can easily take advantage of them.
+ * Main abstract Artisan_Controller class for managing an application controller.
+ * All application controllers must extend this class to get the appropriate
+ * render() method for rendering views. It is recommended that a root controller
+ * class is created that extends this, and then each subsequent controller extends
+ * that to avoid repeating common methods.
  * @author vmc <vmc@leftnode.com>
  */
-class Artisan_Controller {
-	///< Because this class is a singleton, the instance of this class.
-	private static $INST = NULL;
+abstract class Artisan_Controller {
+	///< Artisan_Controller_View object for rendering data to the view.
+	public $view = NULL;
+	
+	///< A list of block's to render to the layout.
+	protected $_block_list = array();
 
-	///< Instance of the controller specified to use.
-	private $CONTROLLER = NULL;
+	///< The location of the different layout files.
+	protected $_layout_dir = NULL;
 	
-	///< The directory to load controllers from.
-	private $_directory = '';
-	
-	///< If no controller is specified, this one is used.
-	private $_default_controller = '';
-	
-	///< If no method is specified, this one is used.
-	private $_default_method = 'index';
-	
-	///< The name of the controller currently being used.
-	private $_controller_name = NULL;
-	
-	///< The method being executed in the controller.
-	private $_controller_method = NULL;
-
-	///< The list of arguments to pass into the controller method
-	private $_controller_argv = array();
-
-	///< Whether or not the configuration has been set.
-	private $_config_set = true;
-	
-	/// An instance of the Artisan_Cache_Adapter_* class for caching output. This has to be manually set in setCache()
-	private $_artisanCache = NULL;
-
-	/**
-	 * Private constructor because this class is a singleton.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval NULL Returns nothing.
-	 */
-	private function __construct() { }
+	///< The method from the URI of the controller to call.
+	protected $_method = NULL;
 	
 	/**
-	 * Private clone method because this class is a singleton.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval NULL Returns nothing.
+	 * The name of the layout file (minus the extension) to load.
+	 * This can be overwritten to NULL in a specific controller or
+	 * controller method to just return the rendered view.
 	 */
-	private function __clone() { }
+	protected $_layout = NULL;
+	
+	///< The string of the rendered view.
+	protected $_rendered_view = NULL;
+	
+	///< An array of arguments to pass to the controller method from the URI.
+	protected $_argv = array();
+	
+	///< The Artisan_Config configuration object passed into the router.
+	protected $_controllerConfig = NULL;
+	
+	///< The directory that models are held in.
+	const MODEL_DIR = 'Model';
+	
+	protected $_view_variable_list = array();
 	
 	/**
-	 * Destructor.
+	 * Constructor for the controller.
 	 * @author vmc <vmc@leftnode.com>
-	 * @retval NULL Returns nothing.
+	 * @param $config An Artisan_Config object that holds directory information and default controller information.
+	 * @param $method The method of the controller to execute.
+	 * @param $argv An array of arguments to pass to the controller method.
+	 * @retval Object Returns a new Artisan_Controller object.
 	 */
+	public function __construct(Artisan_Config $config, $method, $argv=array()) {
+		$this->_controllerConfig = $config;
+		
+		$this->_method = $method;
+		$this->_argv = (array)$argv;
+		
+		$this->view = new Artisan_Controller_View($config->root_dir);
+		$this->view->setSiteRoot($config->site_root)
+			->setSiteRootSecure($config->site_root_secure)
+			->setIsRewrite($config->rewrite);
+	}
+	
 	public function __destruct() {
-		unset($this->CONTROLLER);
+		$this->_controllerConfig = NULL;
 	}
 	
-	/**
-	 * Returns this class for usage as a singleton.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval Object Returns the itself.
-	 */
-	public static function &get() {
-		if ( true === is_null(self::$INST) ) {
-			self::$INST = new self;
-		}
-		return self::$INST;
+	public function __set($name, $value) {
+		$this->view->$name = $value;
 	}
 	
-	/**
-	 * Sets the configuration if not set through the constructor.
-	 * @author vmc <vmc@leftnode.com>
-	 * @param $C Configuration object.
-	 * @retval boolean Returns true.
-	 */
-	public function setConfig(Artisan_Config &$C) {
-		$this->setDirectory($C->directory);
-		$this->_default_method = $C->default_method;
-		$this->_default_controller = $C->default_controller;
-		$this->_config_set = true;
-		return true;
+	public function __get($name) {
+		return $this->view->$name;
 	}
 	
-	/**
-	 * Sets the directory that contains the controller classes.
-	 * @author vmc <vmc@leftnode.com>
-	 * @param $directory The name of the directory, must be valid.
-	 * @retval boolean Returns true.
-	 */
-	public function setDirectory($directory) {
-		$directory = trim($directory);
-		if ( true === is_dir($directory) ) {
-			$this->_directory = $directory;
-		}
-		return true;
+	public function setLayout($layout) {
+		$this->_layout = $layout;
 	}
-
-	/**
-	 * Sets the caching object to use for data after it has been executed. If the
-	 * Artisan_Cache_Adapter::setTtlOverride() has been set, the execute() 
-	 * will take that into account when caching data.
-	 */
-	public function setCache(Artisan_Cache_Adapter &$cache) {
-		$this->_artisanCache = NULL;
-		if ( true === $cache->started() ) {
-			$this->_artisanCache = &$cache;
-		}
-		return false;
+	
+	public function getLayout() {
+		return $this->_layout;
 	}
+	
+	public function load() {
+		$ds = DIRECTORY_SEPARATOR;
+		
+		/**
+		 * Methods are methodGet() or methodPost(). This allows
+		 * different methods for different request types.
+		 */
+		$rm = ucwords(strtolower($_SERVER['REQUEST_METHOD']));
+		$method = $this->_method.$rm;
 
-	/**
-	 * Executes the loaded controller and method.
-	 * @author vmc <vmc@leftnode.com>
-	 * @throw Artisan_Controller_Exception If the configuration has not been set.
-	 * @throw Artisan_Controller_Exception If parsing the URI does not execute correctly.
-	 * @throw Artisan_Controller_Exception If the controller file does not exist.
-	 * @throw Artisan_Controller_Exception If the controller class does not exist in the controller file.
-	 * @throw Artisan_Controller_Exception If the controller instance is not inherited from Artisan_Controller.
-	 * @throw Artisan_Controller_Exception If the method specified does not exist in the Controller.
-	 * @throw Artisan_Exception Any exception thrown from the specified Controller.
-	 * @retval boolean Returns true.
-	 */
-	public function execute() {
-		if ( false === $this->_config_set ) {
-			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The ' . __CLASS__ . ' Configuration was not set.');
-		}
-		
-		try {
-			$this->_parseUri();
-		} catch ( Artisan_Controller_Exception $e ) {
-			throw $e;
-		}
-		
-		$controller = trim($this->_controller_name);
-		
-		// See if that file exists in the directory
-		$controller_file = $this->_directory . DIRECTORY_SEPARATOR . $controller . '.php';
-		if ( false === is_file($controller_file) ) {
-			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'Controller file ' . $controller_file . ' was not found.');
-		}
+		$artisanMethod = new ReflectionMethod($this, $method);
 
-		// File exists, load it up
-		require_once $controller_file;
-
-		// Ensure the class exists
-		if ( false === class_exists($controller) ) {
-			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'Class ' . $this->_controller_name . ' not found in file ' . $controller_file . '.');
-		}
-		
-		// Create a new instance of the controller to work with
-		try {
-			$this->CONTROLLER = new $controller();
-		} catch ( Artisan_Exception $e ) {
-			throw $e;
-		}
-
-		if ( false === $this->CONTROLLER instanceof Artisan_Controller_View ) {
-			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The controller is not of inherited type Artisan_Controller_View.');
-		}
-		
-		$method = $this->_controller_method;
-		if ( false === method_exists($this->CONTROLLER, $method) ) {
-			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The method ' . $method . ' does not exist in the controller ' . $controller . '.');
-		}
-		
-		$M = new ReflectionMethod($this->CONTROLLER, $method);
-
-		$param_count = $M->getNumberOfRequiredParameters();
-		$argv = $this->_controller_argv;
-		$argc = count($argv);
+		$param_count = $artisanMethod->getNumberOfRequiredParameters();
+		$argv = $this->_argv;
+		$argc = count($this->_argv);
 		if ( $param_count != $argc ) {
 			if ( $param_count > $argc ) {
 				$argv = array_pad($argv, $param_count, NULL);
 			}
 		}
 
-		try {
-			if ( true === $M->isPublic() ) {
-				if ( true === $M->isStatic() ) {
-					$M->invokeArgs(NULL, $argv);
-				} else {
-					$M->invokeArgs($this->CONTROLLER, $argv);
-				}
+		if ( true === $artisanMethod->isPublic() ) {
+			if ( true === $artisanMethod->isStatic() ) {
+				$artisanMethod->invokeArgs(NULL, $argv);
+			} else {
+				$artisanMethod->invokeArgs($this, $argv);
 			}
-		} catch ( Artisan_Exception $e ) {
-			throw $e;
+		}
+
+		$layout_file = $this->_controllerConfig->layout_dir . $ds . $this->_layout . LAYOUT_EXT;
+
+		$content = $this->_rendered_view;
+		if ( true === is_file($layout_file) ) {
+			ob_start();
+			require_once $layout_file;
+			$content = ob_get_clean();
 		}
 		
-		// If the method starts with an _, it's not publically available per say, so
-		// do not execute the view part, just allow the method to handle viewing and
-		// redirection.
-		if ( '_' != $method[0] ) {
-			if ( false === is_null($this->_artisanCache) ) {
-				$cacheId = $this->_createCacheId();
-				if ( true === $this->_artisanCache->exists($cacheId) ) {
-					$content = $this->_artisanCache->fetch($cacheId);
-				} else {
-					$content = $this->_executeView();
-					$this->_artisanCache->add($cacheId, $content);
-				}
+		return $content;
+	}
+	
+	
+	public function render($name=NULL, $block_name=NULL) {
+		$controller = $this->_getControllerName();
+	
+		if ( true === empty($name) ) {
+			$view = $this->_method;
+		} else {
+			$name_bits = explode('/', $name);
+			$len = count($name_bits);
+			if ( 1 == $len ) {
+				$view = current($name_bits);
 			} else {
-				$content = $this->_executeView();
+				$controller = asfw_rename_controller($name_bits[0]);
+				$view = $name_bits[1];
 			}
-			return $content;
+		}
+		
+		$view = asfw_rename_view($view);
+		$this->_rendered_view = $this->view->render($controller, $view);
+		
+		if ( false === empty($block_name) ) {
+			$this->setBlock($block_name, $this->_rendered_view);
+		}
+		
+		return $this->_rendered_view;
+	}
+	
+	public function buildValidator() {
+		$ds = DIRECTORY_SEPARATOR;
+		
+		$controller = $this->_getControllerName();
+		$model_file = $this->_controllerConfig->root_dir . $ds . $controller . $ds . self::MODEL_DIR . $ds . $controller . CONTROLLER_EXT;
+
+		if ( false === is_file($model_file) ) {
+			throw new Artisan_Controller_Exception('The Model Validator file ' . $model_file . ' could not be found.');
+		}
+		
+		require_once $model_file;
+		
+		$model_validator = $controller . MODEL_VALIDATOR_SUFFIX;
+		if ( false === class_exists($model_validator) ) {
+			throw new Artisan_Controller_Exception('The class ' . $model_validator . ' can not be found.');
+		}
+		
+		$model_validator_obj = new $model_validator();
+		
+		if ( false === $model_validator_obj instanceof Artisan_Controller_Model_Validator ) {
+			throw new Artisan_Controller_Exception('The class ' . $model_validator . ' is not of type Artisan_Controller_Model_Validator.');
+		}
+		
+		return $model_validator_obj;
+	}
+	
+	public function getBlock($name) {
+		if ( true === isset($this->_block_list[$name]) ) {
+			return $this->_block_list[$name];
 		}
 		return NULL;
 	}
 	
-	/**
-	 * Executes the actual view and returns the content.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval string The parsed content from the executed controller.
-	 */
-	private function _executeView() {
-		$this->CONTROLLER->__setControllerDirectory($this->_directory);
-		try {
-			$content = $this->CONTROLLER->__execute($this->_controller_name, $this->_controller_method);
-		} catch ( Artisan_Exception $e ) {
-			throw $e;
-		}
-		return $content;
+	public function getParam($name) {
+		$value = asfw_exists_return($name, $_REQUEST);
+		return $value;
 	}
-
-	/**
-	 * Parses the URI to extract the appropriate parameters. Sets the appropriate internal
-	 * methods with the specified Controller, Method, and arguments.
-	 * @author vmc <vmc@leftnode.com>
-	 * @throw Artisan_Controller_Exception If the SCRIPT_NAME or REQUEST_URI is not specified in the $_SERVER superglobal.
-	 * @retval boolean Returns true.
-	 */
-	private function _parseUri() {
-		$script_name = asfw_exists_return('SCRIPT_NAME', $_SERVER);
-		$request_uri = asfw_exists_return('REQUEST_URI', $_SERVER);
-
-		if ( true === empty($script_name) || true === empty($request_uri) ) {
-			throw new Artisan_Controller_Exception(ARTISAN_ERROR, 'The SCRIPT_NAME or REQUEST_URI is empty.');
-		}
-
-		$script_name = asfw_strip_end_slashes($script_name);
-		$request_uri = asfw_strip_end_slashes(asfw_controller_create_base_uri($request_uri));
-
-		$request_uri = urldecode($request_uri);
-		$request_bits = explode('/', $request_uri);
-
-		// See if the first element of the array is also the script name, if so, remove it
-		if ( trim(current($request_bits)) == trim($script_name) ) {
-			$request_bits = array_slice($request_bits, 1);
-		}
-
-		/**
-		 * NORMALIZE THE BITS
-		 * Bit 0 is the Controller
-		 * Bit 1 is the Method
-		 * Any bit after that are the parameters to pass to the method.
-		 */
-		if ( false === asfw_exists(0, $request_bits) ) {
-			$request_bits[0] = $this->_default_controller;
-		}
-
-		if ( false === asfw_exists(1, $request_bits) ) {
-			$request_bits[1] = $this->_default_method;
-		}
-
-		$this->_controller_name = asfw_rename_controller($request_bits[0]);
-		$this->_controller_method = asfw_rename_controller_method($request_bits[1]);
-		
-		if ( count($request_bits) > 2 ) {
-			$this->_controller_argv = array_slice($request_bits, 2);
-		}
-		return true;
+	
+	public function getFilesParam($name) {
+		$value = asfw_exists_return($name, $_FILES);
+		return $value;
 	}
-
-	/**
-	 * Creates the ID for the cache by combining the controller name and method name:
-	 * Blog::index() would becoming Blog_index which is how it would be stored in 
-	 * the override table.
-	 * @author vmc <vmc@leftnode.com>
-	 * @param $controller The name of the controller to create the first part of the cache ID.
-	 * @param $method The name of the method to create the second part of the cache ID.
-	 * @retval string Returns the concatenated values of $controller_$method.
-	 */
-	private function _createCacheId() {
-		$controller = asfw_rename_controller($this->_controller_name);
-		$method = asfw_rename_controller_method($this->_controller_method);
-		return implode('_', array($controller, $method));
+	
+	public function setBlock($name, $value) {
+		$this->_block_list[$name] = $value;
+		return $this;
+	}
+	
+	public function setLayoutDir($layout_dir) {
+		$this->_layout_dir = rtrim($layout_dir, DIRECTORY_SEPARATOR);
+	}
+	
+	public function url($url) {
+		return $this->view->url($url);
+	}
+	
+	protected function _getControllerName() {
+		$class_name = get_class($this);
+		$class_name = str_replace(CONTROLLER_SUFFIX, NULL, $class_name);
+		$controller = asfw_rename_controller($class_name);
+		return $controller;
 	}
 }

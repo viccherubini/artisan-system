@@ -6,6 +6,9 @@
 require_once 'Artisan/Session/Exception.php';
 
 
+
+
+
 /**
  * Singleton class for handling sessions. It allows different session handlers,
  * such as a database and filesystem.
@@ -79,7 +82,7 @@ class Artisan_Session {
 		} catch ( Artisan_Session_Exception $e ) {
 			throw $e;
 		}
-		return true;
+		return $this;
 	}
 	
 	/**
@@ -99,7 +102,7 @@ class Artisan_Session {
 		}
 		
 		$this->SH = &$S;
-		return true;
+		return $this;
 	}
 	
 	/**
@@ -120,8 +123,10 @@ class Artisan_Session {
 		if ( false === empty($session_name) ) {
 			$this->_session_name = $session_name;
 			session_name($session_name);
+		} else {
+			$this->_session_name = session_name();
 		}
-
+		
 		// Only use the save handler if its set, otherwise, use default PHP sessions.
 		if ( false === is_null($this->SH) ) {
 			// Set up all of the save handlers
@@ -170,9 +175,6 @@ class Artisan_Session {
 	 * @retval boolean Returns true.
 	 */
 	public function destroy() {
-		// First, kill the session within PHP itself.
-		session_destroy();
-
 		/**
 		 * Really delete the session! Actually, this removes the entire session
 		 * and ensures all data is deleted. The second value of setcookie() is
@@ -180,8 +182,11 @@ class Artisan_Session {
 		 * Also, this is set at the beginning of time! :)
 		 */
 		if ( true === asfw_exists($this->_session_name, $_COOKIE) ) {
-			setcookie($this->_session_name, '', 1, '/');
+			setcookie($this->_session_name, $this->_session_id, 1, '/');
 		}
+
+		session_destroy();
+		
 		return true;
 	}
 	
@@ -196,7 +201,7 @@ class Artisan_Session {
 		if ( true === $this->_started ) {
 			$_SESSION[$name] = $value;
 		}
-		return true;
+		return $this;
 	}
 	
 	/**
@@ -222,7 +227,7 @@ class Artisan_Session {
 	 */
 	public function exists($name) {
 		if ( true === $this->_started ) {
-			if ( true === asfw_exists($name, $_SESSION) ) {
+			if ( true === array_key_exists($name, $_SESSION) ) {
 				return true;
 			}
 		}
@@ -240,5 +245,9 @@ class Artisan_Session {
 			return $_SESSION[$name];
 		}
 		return NULL;
+	}
+	
+	public function isStarted() {
+		return $this->_started;
 	}
 }

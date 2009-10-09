@@ -14,7 +14,7 @@ function asfw_get_ipv4() {
 		} elseif ( true === asfw_exists('HTTP_CLIENT_IP', $_SERVER)) {
 			$ip = $_SERVER['HTTP_CLIENT_IP'];
 		} else {
-			$ip = $_SERVER['REMOTE_ADDR'];
+			$ip = asfw_exists_return('REMOTE_ADDR', $_SERVER);
 		}
 	}
 	
@@ -33,4 +33,13 @@ function asfw_get_user_agent() {
 	}
 	
 	return NULL;
+}
+
+function asfw_clamp($val, $start, $end) {
+	if ( $val < $start ) {
+		$val = $start;
+	} elseif ( $val > $end ) {
+		$val = $end;
+	}
+	return $val;
 }

@@ -1,11 +1,6 @@
 <?php
 
-/**
- * @see Artisan_Validate
- */
-require_once 'Artisan/Validate.php';
-
-class Artisan_Validate_Zipcode extends Artisan_Validate {
+class Artisan_Validate_Zipcode {
 	private $_zip = NULL;
 
 	public function __construct($zip = NULL) {

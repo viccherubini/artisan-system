@@ -57,7 +57,7 @@ class Artisan_Db_Result_Mysqli extends Artisan_Db_Result {
 		if ( true === $this->RESULT instanceof mysqli_result ) {
 			$data = $this->RESULT->fetch_assoc();
 			if ( true === is_null($data) ) {
-				$this->free();
+				//$this->free();
 			} else {
 				reset($data);
 			}
@@ -115,6 +115,19 @@ class Artisan_Db_Result_Mysqli extends Artisan_Db_Result {
 		return $result_data;
 	}
 
+	public function fetchAllKv($key_field, $value_field) {
+		$result_data = array();
+		$row = $this->fetch();
+		
+		if ( true === asfw_exists($key_field, $row) && true === asfw_exists($value_field, $row) ) {
+			$this->row(0);
+			while ( $row = $this->fetch() ) {
+				$result_data[$row[$key_field]] = $row[$value_field];
+			}
+		}
+		
+		return $result_data;
+	}
 	/**
 	 * Frees memory from the result.
 	 * @author vmc <vmc@leftnode.com>

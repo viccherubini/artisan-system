@@ -1,11 +1,6 @@
 <?php
 
-/**
- * @see Artisan_Validate
- */
-require_once 'Artisan/Validate.php';
-
-class Artisan_Validate_Ssn extends Artisan_Validate {
+class Artisan_Validate_Ssn {
 	private $_ssn = NULL;
 	
 	//Maybe one day...
