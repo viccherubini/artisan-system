@@ -1,30 +1,65 @@
 <?php
 
 /**
- * @see Artisan_Cach_Exception
- */
-require_once 'Artisan/Cache/Exception.php';
-
-/**
- * The Artisan_Cache class allows one to store data in an easy to retrieve location,
- * typically a location that is quicker to retrieve data from than the original 
- * location.
+ * Allows for caching using the APC, Alternative PHP Cache. The APC is a PHP
+ * module that needs to be installed for this to work as it does not come installed
+ * with PHP by default.
  * @author vmc <vmc@leftnode.com>
  */
-abstract class Artisan_Cache {
+class Artisan_Cache {
+	private $_defaultTtl = 0;
+	private $_ttlOverride = array();
+	private $_started = false;
 
-	/**
-	 * Constructor to build a cache object.
-	 * @author vmc <vmc@leftnode.com>
-	 * @param $C Configuration object.
-	 * @retval Object Returns new Artisan_Cache object.
-	 */
-	public function __construct(Artisan_Config &$C) { }
+	public function __construct($defaultTtl = 0) {
+		$this->_defaultTtl = abs($defaultTtl);
+		
+		if ( false === extension_loaded('apc') ) {
+			throw new Artisan_Exception('The APC extension is not loaded and thus, this can not be used.');
+		}
+
+		$this->_started = true;
+	}
+
+	public function add($id, $value, $ttl = 0) {
+		$ttl = abs($ttl);
+		if ( 0 == $ttl ) {
+			$ttl = $this->_defaultTtl;
+		}
+		
+		// See if this ID exists in the override table.
+		if ( true === isset($this->_ttlOverride[$id]) ) {
+			$ttl = $this->_ttlOverride[$id];
+		}
+		
+		if ( false === is_null($value) ) {
+			apc_store($id, $value, $ttl);
+		}
+		return true;
+	}
 	
-	/**
-	 * Destructor.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval NULL Returns nothing.
-	 */
-	public function __destruct() { }
+	public function fetch($id, $purge = false) {
+		$value = apc_fetch($id);
+		if ( true === $purge ) {
+			apc_delete($id);
+		}
+		return $value;
+	}
+	
+	public function exists($id) {
+		// Ignore the value returned, and just set the value of $is_cached
+		$is_cached = false;
+		apc_fetch($id, $is_cached);
+		return $is_cached;
+	}
+	
+	public function remove($id) {
+		apc_delete($id);
+		return true;
+	}
+	
+	public function clear() {
+		apc_clear_cache();
+		return true;
+	}
 }
