@@ -1,7 +1,9 @@
 <?php
 
-require_once 'Artisan/Function/Array.php';
-
+/**
+ * Much nicer exception and error handling.
+ * @author vmc <vmc@leftnode.com>
+ */
 class Artisan_Exception extends Exception {
 	private $_class = NULL;
 	
@@ -10,7 +12,6 @@ class Artisan_Exception extends Exception {
 	/**
 	 * Default constructor.
 	 * @author vmc <vmc@leftnode.com>
-	 * @param $error_code A custom numeric error code defined above.
 	 * @param $error_message The specific error message.
 	 * @retval Object Returns new Artisan_Exception object.
 	 */
@@ -19,7 +20,7 @@ class Artisan_Exception extends Exception {
 	}
 	
 	/**
-	 * Overloaded Exception::__toString() to echo out the correct string
+	 * Overloaded Exception::__toString() to echo out the correct string.
 	 * @author vmc <vmc@leftnode.com>
 	 * @retval string Returns the string with exception data.
 	 */
