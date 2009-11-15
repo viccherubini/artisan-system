@@ -1,231 +1,202 @@
 <?php
 
-require_once 'Artisan/Functions/Database.php';
 
-require_once 'Artisan/Db/Iterator.php';
-
-/**
- * The abstract Database class from which other database classes are extended.
- * Because this class is abstract and contains many abstract members, it is necessary
- * to extend it to use it. For example, if you want to connect to a MySQL database
- * using mysqli, you would use new Artisan_Database_Mysqli($config) and go from there.
- * @author vmc <vmc@leftnode.com>
- */
-abstract class Artisan_Db {
-	///< Holds the database configuration information, must be of type Artisan_Config.
-	protected $CONFIG = NULL;
-
-	///< Whether or not a current connection exists.
-	protected $_is_connected = false;
+class Artisan_Db {
+	private $conn = NULL;
+	private $config = NULL;
+	private $connected = false;
+	private $select = NULL;
+	private $update = NULL;
+	private $insert = NULL;
+	private $delete = NULL;
+	private $query_list = array();
+	private $debug = false;
 	
-	///< Whether or not a transaction has been started.
-	private $_transaction_started = false;
-	
-	///< The instance of the Artisan_Sql_Select_* class for executing SELECT queries.
-	protected $_select = NULL;
-	
-	///< The instance of the Artisan_Sql_Update_* class for executing UPDATE queries.
-	protected $_update = NULL;
-	
-	///< The instance of the Artisan_Sql_Insert_* class for executing INSERT/UPDATE queries.
-	protected $_insert = NULL;
-	
-	///< The instance of the Artisan_Sql_Delete_* class for executing DELETE queries.
-	protected $_delete = NULL;
-	
-	protected $_queryList = array();
-	
-	protected $_debug = false;
-	
-	/**
-	 * Default constructor.
-	 * @author vmc <vmc@leftnode.com>
-	 * @param $C An Artisan_Config configuration instance, optional.
-	 * @retval object New database instance, ready for connection.
-	 */
-	public function __construct(Artisan_Config &$C = NULL) {
-		if ( true === is_object($C) ) {
-			$this->setConfig($C);
-		}
+	public function __construct() {
 		
-		if ( true === $this->CONFIG->exists('debug') ) {
-			$this->_debug = $this->CONFIG->debug;
-		}
 	}
 
-	/**
-	 * Default destructor.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval boolean Destroys configuration and returns true.
-	 */
 	public function __destruct() {
-		unset($this->CONFIG);
+		unset($this->config, $this->select, $this->insert, $this->delete, $this->query_list);
 	}
 
-	/**
-	 * Returns the name of this class.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval string Returns the name of the class.
-	 */
-	public function name() {
-		return __CLASS__;
+	public function setConfig($config) {
+		$this->config = $config;
+		return $this;
 	}
 
-	/**
-	 * Sets the configuration if not set through the constructor.
-	 * @author vmc <vmc@leftnode.com>
-	 * @param $C A configuration object.
-	 * @retval boolean Returns true.
-	 */
-	public function setConfig(Artisan_Config $C) {
-		$this->CONFIG = $C;
-		return true;
-	}
-
-	/**
-	 * Returns the configuration object.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval Object Returns the configuration object.
-	 */
 	public function getConfig() {
-		return $this->CONFIG;
+		return $this->config;
 	}
 
 	public function getQueryList() {
-		return $this->_queryList;
+		return $this->query_list;
 	}
 	
-	/**
-	 * Whether or not the database currently has a connection.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval boolean Returns true if the database has a connection, false otherwise.
-	 */
 	public function isConnected() {
-		return $this->_is_connected;
+		return $this->connected;
 	}
 	
-	/**
-	 * Alias for disconnect();
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval boolean Returns true upon successful disconnection, false otherwise.
-	 */
+	public function connect() {
+		$server = $this->config['server'];
+		$username = $this->config['username'];
+		$password = $this->config['password'];
+		$database = $this->config['database'];
+
+		$port = 3306;
+		if ( true === @isset($this->config['port']) ) {
+			if ( intval($this->config['port']) > 0 ) {
+				$port = intval($this->config['port']);
+			}
+		}
+
+		// Although generally against supressing errors, the @ is
+		// to supress a misconnection error
+		// to allow the framework to handle it gracefully
+		$this->conn = @new mysqli($server, $username, $password, $database, $port);
+
+		if ( 0 != mysqli_connect_errno() || false === $this->CONN ) {
+			$this->_is_connected = false;
+			throw new Artisan_Exception(mysqli_connect_error());
+		}
+
+		$this->connected = true;
+		return $this->conn;
+	}
+	
 	public function close() {
 		return $this->disconnect();
 	}
 	
-	/**
-	 * Connects to the specified database.
-	 * @author vmc <vmc@leftnode.com>
-	 * @throw Artisan_Database_Exception If the connection fails.
-	 * @retval object New connection to the database
-	 */
-	abstract public function connect();
-
-	/**
-	 * Disconnects from the specified database.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval boolean Returns true upon successful disconnection, false otherwise.
-	 */
-	abstract public function disconnect();
-
-	/**
-	 * Executes a query against the database server.
-	 * @author vmc <vmc@leftnode.com>
-	 * @param $sql The query to execute.
-	 * @retval mixed Returns a result object if the query returns data, boolean true/false otherwise.
-	 */
-	abstract public function query($sql);
-	
-	/**
-	 * Creates a new SELECT object to fetch data from the database. Uses Lazy Initialization.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval object Returns new Artisan_Db_Sql_Select_* object.
-	 */
-	abstract public function select();
-	
-	/**
-	 * Creates a new INSERT object to add data to the database. Uses Lazy Initialization.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval object Returns new Artisan_Db_Sql_Insert_* object.
-	 */
-	abstract public function insert();
-	
-	/**
-	 * Creates a new REPLACE object. Uses Lazy Initialization.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval object Returns new Artisan_Db_Sql_Insert_* object with the REPLACE parameter set.
-	 */
-	abstract public function replace();
-	
-	/**
-	 * Creates a new UPDATE object. Uses Lazy Initialization.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval object Returns new Artisan_Db_Sql_Update_* object.
-	 */
-	abstract public function update();
-	
-	/**
-	 * Creates a new DELETE object. Uses Lazy Initialization.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval Returns a new Artisan_Db_Sql_Delete_* object.
-	 */
-	abstract public function delete();
-	
-	/**
-	 * Starts a transaction if the database or table type supports transactions.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval boolean Returns true.
-	 */
-	abstract public function start();
-	
-	/**
-	 * Commits the transaction queries.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval boolean Returns true on success, false otherwise.
-	 */
-	abstract public function commit();
-	
-	/**
-	 * Rollbacks the transaction queries if any of them fail.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval boolean Returns true on success, false otherwise.
-	 */
-	abstract public function rollback();
-	
-	/**
-	 * Returns the last INSERT ID from the last INSERT query.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval int The INSERT ID.
-	 */
-	abstract public function insertId();
-	
-	/**
-	 * Returns the number of affected rows from the last UPDATE/INSERT/REPLACE query.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval int The number of affected rows.
-	 */
-	abstract public function affectedRows();
-	
-	/**
-	 * Escapes a value to make it safe for insertion into a database.
-	 * @author vmc <vmc@leftnode.com>
-	 * @param $value The value to escape.
-	 * @retval string The escaped value.
-	 */
-	abstract public function escape($value);
-}
-
-/**
- * Checks to see if a variable has an active connection to a database.
- * Because this method should not be used publically, it is prefixed with an underscore.
- * @author vmc <vmc@leftnode.com>
- * @param $dbConn An Artisan_Db object.
- * @throw Artisan_Db_Exception If the database does not have an active connection.
- * @retval boolean Returns true.
- */
-function _asfw_check_db(Artisan_Db $dbConn) {
-	if ( false === $dbConn->isConnected() ) {
-		throw new Artisan_Db_Exception(ARTISAN_WARNING, 'The database does not have an active connection.');
+	public function disconnect() {
+		if ( true === $this->connected ) {
+			$this->conn->close();
+			$this->conn = NULL;
+			$this->connected = false;
+		}
+		return true;
 	}
-	return true;
+
+	public function query($sql) {
+		$sql = trim($sql);
+		
+		if ( true === empty($sql) ) {
+			throw new Artisan_Exception('The SQL statement is empty.');
+		}
+		
+		if ( true === is_object($this->conn) ) {
+			$result = $this->conn->query($sql);
+			
+			if ( true === $result instanceof mysqli_result ) {
+				if ( true === $this->debug ) {
+					$this->query_list['success'][] = $sql;
+				}
+				
+				return new Artisan_Result($result);
+			}
+		}
+		
+		if ( false === $result ) {
+			if ( true === $this->debug ) {
+				$this->_queryList['error'][] = $sql;
+			}
+			
+			$error_string = $this->conn->error;
+			throw new Artisan_Exception("Failed to execute query: {$sql}. MySQL said: {$error_string}");
+		}
+		
+		return $result;
+	}
+	
+	public function multiQuery($sql) {
+		$sql = trim($sql);
+		
+		if ( true === empty($sql) ) {
+			throw new Artisan_Exception('The SQL statement is empty.');
+		}
+		
+		if ( true === is_object($this->conn) ) {
+			$result = $this->conn->multi_query($sql);
+			
+			if ( true === $result ) {
+				if ( true === $this->_debug ) {
+					$this->_queryList['success'][] = $sql;
+				}
+				
+				/* Discard other results. */
+				do {
+					$result = $this->conn->use_result();
+					if ( false !== $result ) {
+						$result->close();
+					}
+				} while ( $this->conn->next_result() );
+				
+				return true;
+			} else {
+				$error_string = $this->conn->error;
+				throw new Artisan_Exception("Failed to execute query: {$sql}. MySQL said: {$error_string}");
+			}
+		}
+		
+		return false;
+	}
+
+	public function select() {
+		if ( NULL === $this->select ) {
+			$this->select = new Artisan_Select($this);
+		}
+		return $this->select;
+	}
+	
+	public function insert() {
+		if ( NULL === $this->insert ) {
+			$this->insert = new Artisan_Insert($this);
+		}
+		$this->insert->setReplace(false);
+		return $this->insert;
+	}
+	
+	public function update() {
+		if ( NULL === $this->update ) {
+			$this->update = new Artisan_Update($this);
+		}
+		return $this->update;
+	}
+
+	public function delete() {
+		if ( NULL === $this->delete ) {
+			$this->delete = new Artisan_Delete($this);
+		}
+		return $this->delete;
+	}
+
+	public function replace() {
+		if ( NULL == $this->insert ) {
+			$this->insert = new Artisan_Insert($this);
+		}
+		$this->insert->setReplace(true);
+		return $this->insert;
+	}
+
+	public function insertId() {
+		if ( true === $this->conn instanceof mysqli ) {
+			return mysqli_insert_id($this->conn);
+		}
+		return 0;
+	}
+	
+	public function affectedRows() {
+		if ( true === $this->conn instanceof mysqli ) {
+			return $this->conn->affected_rows;
+		}
+		return 0;
+	}
+	
+	public function escape($value) {
+		if ( true === $this->conn instanceof mysqli ) {
+			return $this->conn->real_escape_string($value);
+		}
+		return addslashes($value);
+	}
+
 }
