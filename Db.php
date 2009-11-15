@@ -1,6 +1,12 @@
 <?php
 
 require_once 'Library.php';
+require_once 'Db.Result.php';
+require_once 'Db.Iterator.php';
+require_once 'Sql.Delete.php';
+require_once 'Sql.Insert.php';
+require_once 'Sql.Select.php';
+require_once 'Sql.Update.php';
 
 class Artisan_Db {
 	private $conn = NULL;
