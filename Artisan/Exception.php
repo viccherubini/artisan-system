@@ -5,10 +5,6 @@
  * @author vmc <vmc@leftnode.com>
  */
 class Artisan_Exception extends Exception {
-	private $_class = NULL;
-	
-	private $_function = NULL;
-	
 	/**
 	 * Default constructor.
 	 * @author vmc <vmc@leftnode.com>
@@ -30,17 +26,17 @@ class Artisan_Exception extends Exception {
 
 		$error_class = NULL;
 		if ( true === isset($trace['class']) ) {
-			$this->_class = $trace['class'];
-			$error_class = $this->_class . $trace['type'];
+			$class = $trace['class'];
+			$error_class = $class . $trace['type'];
 		}
 		
 		if ( true === isset($trace['function']) ) {
-			$this->_function = $trace['function'];
-			$error_class .= $this->_function . '() > ';
+			$function = $trace['function'];
+			$error_class .= $function . '() > ';
 		}
 		
-		$error_file = parent::getFile() . ' +' . parent::getLine();
-		$error_code = $this->message . ' (' . $error_file . ')';
+		$error_file = $this->getFile() . ' +' . $this->getLine();
+		$error_code = $this->getMessage() . ' (' . $error_file . ')';
 		
 		return $error_class . $error_code;
 	}
