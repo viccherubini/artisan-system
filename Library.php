@@ -1,5 +1,16 @@
 <?php
 
+function pre_print_r($array, $return = false) {
+	$str = '<pre>' . print_r($array, true) . '</pre>';
+	if ( true === $return ) {
+		return $str;
+	} else {
+		echo $str;
+	}
+	
+	return true;
+}
+
 function exs($k, $a) {
 	if ( true === is_object($a) && true === isset($a->$k) ) {
 		return true;
