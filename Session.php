@@ -1,15 +1,13 @@
 <?php
 
-/**
- * Singleton class for handling sessions.
- * @author vmc <vmc@leftnode.com>
- */
+require_once 'Library.php';
+
 class Artisan_Session {
-	private static $_instance = NULL;
+	private static $instance = NULL;
 	private $save_handler = NULL;
-	private $_session_name;
-	private $_session_id;
-	private $_started = false;
+	private $session_name;
+	private $session_id;
+	private $started = false;
 
 	private function __construct() { }
 	
@@ -33,16 +31,16 @@ class Artisan_Session {
 		}
 
 		if ( false === empty($session_name) ) {
-			$this->_session_name = $session_name;
+			$this->session_name = $session_name;
 			session_name($session_name);
 		} else {
-			$this->_session_name = session_name();
+			$this->session_name = session_name();
 		}
 		
 		$started = session_start();
-		$this->_session_id = session_id();
+		$this->session_id = session_id();
 
-		$this->_started = true;
+		$this->started = true;
 		
 		return $started;
 	}
@@ -52,8 +50,8 @@ class Artisan_Session {
 		// and ensures all data is deleted. The second value of setcookie() is
 		// intentionally not NULL because IE messes up if you send a NULL cookie.
 		// Also, this is set at the beginning of time! :)		
-		if ( true === isset($_COOKIE[$this->_session_name]) ) {
-			setcookie($this->_session_name, $this->_session_id, 1, '/');
+		if ( true === isset($_COOKIE[$this->session_name]) ) {
+			setcookie($this->session_name, $this->session_id, 1, '/');
 		}
 
 		session_destroy();
@@ -62,23 +60,21 @@ class Artisan_Session {
 	}
 	
 	public function add($name, $value) {
-		if ( true === $this->_started ) {
+		if ( true === $this->started ) {
 			$_SESSION[$name] = $value;
 		}
 		return $this;
 	}
 	
 	public function remove($name) {
-		if ( true === $this->_started ) {
-			if ( true === asfw_exists($name, $_SESSION) ) {
-				unset($_SESSION[$name]);
-			}
+		if ( true === $this->exists($name) ) {
+			unset($_SESSION[$name]);
 		}
 		return true;
 	}
 	
 	public function exists($name) {
-		if ( true === $this->_started && true === isset($_SESSION[$name]) ) {
+		if ( true === $this->started && true === isset($_SESSION[$name]) ) {
 			return true;
 		}
 		return false;
@@ -92,6 +88,6 @@ class Artisan_Session {
 	}
 	
 	public function isStarted() {
-		return $this->_started;
+		return $this->started;
 	}
 }

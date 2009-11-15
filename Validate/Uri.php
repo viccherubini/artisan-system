@@ -47,6 +47,5 @@ class Artisan_Validate_Uri {
 		$match_uri = preg_match('#^([a-z\-\+]+://)?([a-z0-9]+:[a-z0-9]+\@){0,1}([a-z0-9.]*[a-z0-9-]+\.[a-z]+){1}(:[0-9]{1,5}){0,1}(.*)#i', $u, $matches);
 		
 		echo $match_uri;
-		asfw_print_r($matches);
 	}
 }

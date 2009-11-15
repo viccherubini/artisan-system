@@ -54,8 +54,8 @@ abstract class Artisan_Sql {
 	
 	public function buildWhereClause() {
 		$where_sql = NULL;
-		$and_list = (array)asfw_exists_return(self::SQL_AND, $this->where_field_list);
-		$or_list = (array)asfw_exists_return(self::SQL_OR, $this->where_field_list);
+		$and_list = er(self::SQL_AND, $this->where_field_list, array());
+		$or_list = er(self::SQL_OR, $this->where_field_list, array());
 		$and_count = count($and_list);
 		$or_count = count($or_list);
 
