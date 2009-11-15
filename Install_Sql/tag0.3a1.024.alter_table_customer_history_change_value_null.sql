@@ -1,1 +1,0 @@
-ALTER TABLE `customer_history` CHANGE `value` `value` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL;

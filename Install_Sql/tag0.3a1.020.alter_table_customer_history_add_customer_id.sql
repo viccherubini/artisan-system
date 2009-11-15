@@ -1,1 +1,0 @@
-ALTER TABLE `customer_history` ADD `customer_id` INT( 10 ) NOT NULL AFTER `history_id`;

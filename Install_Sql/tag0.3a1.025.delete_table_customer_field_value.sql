@@ -1,1 +1,0 @@
-DROP TABLE `customer_field_value`;

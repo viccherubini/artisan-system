@@ -1,1 +1,0 @@
-ALTER TABLE `customer_history` ADD `type` CHAR( 1 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER `revision`;
