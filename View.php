@@ -1,5 +1,7 @@
 <?php
 
+require_once 'Func.Library.php';
+
 class Artisan_View {
 	private $app_root_dir = NULL;
 	private $is_rewrite = false;

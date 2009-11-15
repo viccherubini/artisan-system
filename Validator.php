@@ -1,20 +1,19 @@
 <?php
 
-require_once 'Library.php';
-require_once 'Validate/Email.php';
+require_once 'Func.Library.php';
 
 abstract class Artisan_Validator {
-	protected $_model = array();
-	protected $_model_data = array();
-	protected $_model_name = NULL;
-	protected $_error_list = array();
+	protected $model = array();
+	protected $model_data = array();
+	protected $model_name = NULL;
+	protected $error_list = array();
 	
 	public function __construct() {
-		$this->_model = array();
+		$this->model = array();
 	}
 	
 	public function __destruct() {
-		unset($this->_model, $this->_model_data, $this->_model_name, $this->_error_list);
+		unset($this->model, $this->model_data, $this->model_name, $this->error_list);
 	}
 	
 	public function load($model_name) {
@@ -23,22 +22,22 @@ abstract class Artisan_Validator {
 	}
 	
 	public function validate() {
-		$model = er($this->_model_name, $this->_model, array());
+		$model = er($this->model_name, $this->model, array());
 		$len_model = count($model);
-		$len_data = count($this->_model_data);
+		$len_data = count($this->model_data);
 		
 		if ( 0 == $len_model || 0 == $len_data ) {
 			return false;
 		}
 		
-		$this->_error_list = array();
+		$this->error_list = array();
 		
 		// First ensure the keys of the model are equal to the keys of the data.
 		// This prevents fake fields from being added through Firebug.
 		// This also means all keys must be defined in the list, even if they aren't
 		// being validated.
 		$model_keys = array_keys($model);
-		$data_keys = array_keys($this->_model_data);
+		$data_keys = array_keys($this->model_data);
 		
 		$bad_ley_list = array();
 		$bad_key = false;
@@ -55,7 +54,7 @@ abstract class Artisan_Validator {
 		
 		$success = true;
 		foreach ( $model as $key => $list ) {
-			$data_value = er($key, $this->_model_data);
+			$data_value = er($key, $this->model_data);
 			
 			$label = er('label', $list);
 			$rule_list = er('rule_list', $list, array());
@@ -111,8 +110,7 @@ abstract class Artisan_Validator {
 						}
 						
 						case 'email': {
-							$emailValidator = new Artisan_Validate_Email($data_value);
-							if ( false === $emailValidator->isValid() ) {
+							if ( false === validate_email($data_value) ) {
 								$error = sprintf('The field <strong>%s</strong> is not a valid e-mail address.', $label);
 							}
 							break;
@@ -131,7 +129,7 @@ abstract class Artisan_Validator {
 					
 					if ( false === empty($error) ) {
 						$success = false;
-						$this->_error_list[$key] = $error;
+						$this->error_list[$key] = $error;
 						break;
 					}
 				}
@@ -146,16 +144,16 @@ abstract class Artisan_Validator {
 	}
 	
 	public function setData(array $model) {
-		$this->_model_data = $model;
+		$this->model_data = $model;
 		return $this;
 	}
 	
 	public function getModel() {
-		return $this->_model;
+		return $this->model;
 	}
 	
 	public function getErrorList() {
-		return $this->_error_list;
+		return $this->error_list;
 	}
 	
 	abstract public function init($model);

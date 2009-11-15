@@ -2,7 +2,7 @@
 
 require_once 'Sql.php';
 
-class Artisan_Update extends Artisan_Sql {
+class Artisan_Sql_Update extends Artisan_Sql {
 	protected $table = NULL;
 	protected $update_field_list = array();
 
@@ -33,15 +33,10 @@ class Artisan_Update extends Artisan_Sql {
 		$i=0;
 		$field_list_sql = " SET ";
 		foreach ( $this->update_field_list as $field => $value ) {
-			//if ( false === empty($value) && '`' == $value[0] ) {
-			//	$field_list_sql .= $field . " = " . $this->db->escape($value);
-			//} else {
-				$field_list_sql .= $field . " = '" . $this->db->escape($value) . "'";
-			//}
+			$field_list_sql .= $field . " = '" . $this->db->escape($value) . "'";
 			if ( $i++ != $fl_len ) {
 				$field_list_sql .= ', ';
 			}
-			//$i++;
 		}
 		
 		$where_sql = $this->buildWhereClause();

@@ -1,15 +1,7 @@
 <?php
 
-require_once 'Library.php';
+require_once 'Func.Library.php';
 
-/**
- * Main abstract Artisan_Controller class for managing an application controller.
- * All application controllers must extend this class to get the appropriate
- * render() method for rendering views. It is recommended that a root controller
- * class is created that extends this, and then each subsequent controller extends
- * that to avoid repeating common methods.
- * @author vmc <vmc@leftnode.com>
- */
 abstract class Artisan_Controller {
 	public $view = NULL;
 	
@@ -52,8 +44,14 @@ abstract class Artisan_Controller {
 		return $this->view->$name;
 	}
 	
+	public function setConfig($config) {
+		$this->config = $config;
+		return $this;
+	}
+	
 	public function setLayout($layout) {
 		$this->layout = $layout;
+		return $this;
 	}
 	
 	public function getLayout() {
@@ -110,12 +108,12 @@ abstract class Artisan_Controller {
 			if ( 1 == $len ) {
 				$view = current($name_bits);
 			} else {
-				$controller = rename_controller($name_bits[0]);
+				$controller = lib_rename_controller($name_bits[0]);
 				$view = $name_bits[1];
 			}
 		}
 		
-		$view = rename_view($view);
+		$view = lib_rename_view($view);
 		$this->rendered_view = $this->view->render($this->controller, $view);
 		
 		if ( false === empty($block_name) ) {
@@ -184,7 +182,7 @@ abstract class Artisan_Controller {
 	public function getControllerName() {
 		$class_name = get_class($this);
 		$class_name = str_replace($this->suffix, NULL, $class_name);
-		$controller = rename_controller($class_name);
+		$controller = lib_rename_controller($class_name);
 		return $controller;
 	}
 }

@@ -1,13 +1,12 @@
 <?php
 
+require_once 'Func.Library.php';
+
 class Artisan_Xml {
 	private static $xml;
 	public static $count = 0;
 
 	public static function load($src) {
-		// See if source is a file or not. If it is, SimplexmlElement
-		// can load it. Must be a file on this server though,
-		// URL wrappers aren't supported.
 		if ( true === class_exists('SimpleXMLElement') ) {
 			if ( true === is_file($src) && true === is_readable($src) ) {
 				self::$xml = simplexml_load_file($src, NULL, LIBXML_NOERROR);

@@ -2,7 +2,7 @@
 
 require_once 'Sql.php';
 
-class Artisan_Select extends Artisan_Sql {
+class Artisan_Sql_Select extends Artisan_Sql {
 	protected $from_table = NULL;
 	protected $from_table_alias = NULL;
 	protected $distinct = false;
@@ -78,7 +78,7 @@ class Artisan_Select extends Artisan_Sql {
 			$group_fields = func_get_args();
 		}
 		if ( true === is_array($group_fields) && count($group_fields) > 0 ) {
-			$this->group_field_list = sanitize_field_list($group_fields);
+			$this->group_field_list = db_sanitize_field_list($group_fields);
 		}
 		return $this;
 	}
@@ -121,7 +121,7 @@ class Artisan_Select extends Artisan_Sql {
 		$join_sql = NULL;
 		if ( count($this->join_table_list) > 0 ) {
 			foreach ( $this->join_table_list as $join ) {
-				$table_alias = create_table_alias($join['table']);
+				$table_alias = db_create_table_alias($join['table']);
 				$join_sql .= $join['type'] . ' `' . $join['table'] . '` ';
 				$join_sql .= '`' . $table_alias . '` ';
 				$join_sql .= 'ON ' . $join['field_a'] . ' = ' . $join['field_b'];
@@ -147,7 +147,6 @@ class Artisan_Select extends Artisan_Sql {
 			if ( $this->page > -1 ) {
 				$page_sql = $this->page * $this->limit . ", ";
 			}
-			
 			$limit_sql = " LIMIT " . $page_sql . $this->limit;
 		}
 		

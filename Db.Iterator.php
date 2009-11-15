@@ -1,6 +1,6 @@
 <?php
 
-require_once 'Library.php';
+require_once 'Func.Library.php';
 
 class Artisan_Db_Iterator implements Iterator {
 	private $result = NULL;

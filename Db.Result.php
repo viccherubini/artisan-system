@@ -1,6 +1,6 @@
 <?php
 
-require_once 'Library.php';
+require_once 'Func.Library.php';
 
 class Artisan_Db_Result {
 	private $result = NULL;
@@ -24,7 +24,6 @@ class Artisan_Db_Result {
 
 	public function fetch($field = NULL) {
 		$data = $this->result->fetch_assoc();
-		reset($data);
 		if ( false === empty($field) && true === isset($data[$field]) ) {
 			$data = $data[$field];
 		}

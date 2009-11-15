@@ -29,7 +29,7 @@ class Artisan_Sql_Insert extends Artisan_Sql {
 				$insert_fields = $argv;
 			}
 		}
-		$this->insert_field_list = sanitize_field_list($insert_fields);
+		$this->insert_field_list = db_sanitize_field_list($insert_fields);
 		return $this;
 	}
 
@@ -46,8 +46,8 @@ class Artisan_Sql_Insert extends Artisan_Sql {
 			
 			// If this is an associative array, use the keys as the fields and values
 			// as the values to insert.
-			if ( true === is_assoc($arg) ) {
-				$this->insert_field_list = sanitize_field_list(array_keys($arg));
+			if ( true === lib_is_assoc($arg) ) {
+				$this->insert_field_list = db_sanitize_field_list(array_keys($arg));
 			}
 			$this->insert_field_value_list = array_values($arg);
 		} else {

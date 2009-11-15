@@ -1,35 +1,29 @@
 <?php
 
-/**
- * Allows for caching using the APC, Alternative PHP Cache. The APC is a PHP
- * module that needs to be installed for this to work as it does not come installed
- * with PHP by default.
- * @author vmc <vmc@leftnode.com>
- */
 class Artisan_Cache {
-	private $_defaultTtl = 0;
-	private $_ttlOverride = array();
-	private $_started = false;
+	private $defaultTtl = 0;
+	private $ttlOverride = array();
+	private $started = false;
 
 	public function __construct($defaultTtl = 0) {
-		$this->_defaultTtl = abs($defaultTtl);
+		$this->defaultTtl = abs($defaultTtl);
 		
 		if ( false === extension_loaded('apc') ) {
 			throw new Artisan_Exception('The APC extension is not loaded and thus, this can not be used.');
 		}
 
-		$this->_started = true;
+		$this->started = true;
 	}
 
 	public function add($id, $value, $ttl = 0) {
 		$ttl = abs($ttl);
 		if ( 0 == $ttl ) {
-			$ttl = $this->_defaultTtl;
+			$ttl = $this->defaultTtl;
 		}
 		
 		// See if this ID exists in the override table.
-		if ( true === isset($this->_ttlOverride[$id]) ) {
-			$ttl = $this->_ttlOverride[$id];
+		if ( true === isset($this->ttlOverride[$id]) ) {
+			$ttl = $this->ttlOverride[$id];
 		}
 		
 		if ( false === is_null($value) ) {

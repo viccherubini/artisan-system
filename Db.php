@@ -1,8 +1,9 @@
 <?php
 
-require_once 'Library.php';
+require_once 'Func.Library.php';
 require_once 'Db.Result.php';
 require_once 'Db.Iterator.php';
+require_once 'Sql.php';
 require_once 'Sql.Delete.php';
 require_once 'Sql.Insert.php';
 require_once 'Sql.Select.php';
@@ -19,8 +20,8 @@ class Artisan_Db {
 	private $query_list = array();
 	private $debug = false;
 	
-	public function __construct() {
-		
+	public function __construct($config = array()) {
+		$this->setConfig($config);
 	}
 
 	public function __destruct() {
@@ -62,8 +63,8 @@ class Artisan_Db {
 		// to allow the framework to handle it gracefully
 		$this->conn = @new mysqli($server, $username, $password, $database, $port);
 
-		if ( 0 != mysqli_connect_errno() || false === $this->CONN ) {
-			$this->_is_connected = false;
+		if ( 0 != mysqli_connect_errno() || false === $this->conn ) {
+			$this->connected = false;
 			throw new Artisan_Exception(mysqli_connect_error());
 		}
 
@@ -105,7 +106,7 @@ class Artisan_Db {
 		
 		if ( false === $result ) {
 			if ( true === $this->debug ) {
-				$this->_queryList['error'][] = $sql;
+				$this->queryList['error'][] = $sql;
 			}
 			
 			$error_string = $this->conn->error;
@@ -126,8 +127,8 @@ class Artisan_Db {
 			$result = $this->conn->multi_query($sql);
 			
 			if ( true === $result ) {
-				if ( true === $this->_debug ) {
-					$this->_queryList['success'][] = $sql;
+				if ( true === $this->debug ) {
+					$this->queryList['success'][] = $sql;
 				}
 				
 				/* Discard other results. */

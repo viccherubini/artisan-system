@@ -1,6 +1,6 @@
 <?php
 
-require_once 'Library.php';
+require_once 'Func.Library.php';
 
 class Artisan_Session {
 	private static $instance = NULL;
@@ -16,10 +16,10 @@ class Artisan_Session {
 	public function __destruct() { }
 	
 	public static function get() {
-		if ( true === is_null(self::$_instance) ) {
-			self::$_instance = new self;
+		if ( true === is_null(self::$instance) ) {
+			self::$instance = new self;
 		}
-		return self::$_instance;
+		return self::$instance;
 	}
 	
 	public function start($session_name = NULL) {

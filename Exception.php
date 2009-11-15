@@ -1,9 +1,5 @@
 <?php
 
-/**
- * Much nicer exception and error handling.
- * @author vmc <vmc@leftnode.com>
- */
 class Artisan_Exception extends Exception {
 
 	public function __construct($error_message) {

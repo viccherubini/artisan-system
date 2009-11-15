@@ -1,6 +1,6 @@
 <?php
 
-require_once 'Library.php';
+require_once 'Func.Library.php';
 
 abstract class Artisan_Sql {
 	protected $db = NULL;
@@ -22,13 +22,13 @@ abstract class Artisan_Sql {
 	
 	public function where() {
 		$argv = func_get_args();
-		$this->where(self::SQL_AND, $argv);
+		$this->pushWhere(self::SQL_AND, $argv);
 		return $this;
 	}
 	
 	public function orWhere() {
 		$argv = func_get_args();
-		$this->where(self::SQL_OR, $argv);
+		$this->pushWhere(self::SQL_OR, $argv);
 		return $this;
 	}
 	
@@ -85,7 +85,7 @@ abstract class Artisan_Sql {
 		return $this->db->query($this->sql);
 	}
 	
-	private function _where($type, $field_data) {
+	private function pushWhere($type, $field_data) {
 		$argc = count($field_data);
 		
 		if ( count($argc) > 0 ) {

@@ -1,6 +1,6 @@
 <?php
 
-require_once 'Library.php';
+require_once 'Func.Library.php';
 
 class Artisan_Router {
 	private $class = NULL;
@@ -12,7 +12,7 @@ class Artisan_Router {
 	private $suffix = '_Controller';
 	
 	public function __construct($config) {
-		$this->setRouterConfig($config);
+		$this->setConfig($config);
 	}
 
 	public function __destruct() {
@@ -47,7 +47,7 @@ class Artisan_Router {
 		$controller = strtolower(trim($controller));
 	
 		// Strip out non-ascii characters
-		$controller = rename_controller($controller);
+		$controller = lib_rename_controller($controller);
 		
 		$this->controller = $controller;
 		$this->file = $controller . $this->ext;
@@ -58,7 +58,7 @@ class Artisan_Router {
 			$method = $this->config['default_method'];
 		}
 		
-		$method = rename_method($method);
+		$method = lib_rename_method($method);
 		$this->method = $method;
 		
 		if ( count($uri_bits) > 2 ) {
