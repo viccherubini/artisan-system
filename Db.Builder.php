@@ -2,7 +2,7 @@
 
 require_once 'Library.php';
 
-class Artisan_Builder {
+class Artisan_Db_Builder {
 	private $db = NULL;
 	private $table_name = '_sql_schema';
 	private $build_dir = NULL;
@@ -31,7 +31,7 @@ class Artisan_Builder {
 		return $this;
 	}
 	
-	private function _load() {
+	private function load() {
 		$result_schema = $this->db->select()
 			->from($this->table_name)
 			->orderBy('script_name')
@@ -50,7 +50,7 @@ class Artisan_Builder {
 		$this->to_build_list = array_diff($this->script_list, $this->built_script_list);
 	}
 	
-	private function _execute() {
+	private function execute() {
 		if ( count($this->to_build_list) > 0 ) {
 			foreach ( $this->to_build_list as $file ) {
 				$sql_file = $this->build_dir . DIRECTORY_SEPARATOR . $file;
@@ -69,6 +69,7 @@ class Artisan_Builder {
 							echo '**** ERROR ****' . PHP_EOL;
 							echo 'Failed On: ' . $file . PHP_EOL;
 							echo $e . PHP_EOL;
+							break;
 						}
 					}
 				}
@@ -76,7 +77,7 @@ class Artisan_Builder {
 		}
 	}
 	
-	private function _init() {
+	private function init() {
 		$result_table = $this->db->query('SHOW TABLES');
 		
 		// Nice fresh clean database, create SQL schema.
