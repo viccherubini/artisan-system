@@ -1,5 +1,7 @@
 <?php
 
+require_once 'Library.php';
+
 abstract class Artisan_Sql {
 	protected $db = NULL;
 	protected $sql = NULL;

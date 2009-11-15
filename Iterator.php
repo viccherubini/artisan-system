@@ -1,5 +1,7 @@
 <?php
 
+require_once 'Library.php';
+
 class Artisan_Db_Iterator implements Iterator {
 	private $result = NULL;
 	private $object = NULL;
