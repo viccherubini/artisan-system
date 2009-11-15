@@ -1,5 +1,7 @@
 <?php
 
+require_once 'Library.php';
+
 class Artisan_Builder {
 	private $db = NULL;
 	private $table_name = '_sql_schema';

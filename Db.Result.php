@@ -1,6 +1,8 @@
 <?php
 
-class Artisan_Result {
+require_once 'Library.php';
+
+class Artisan_Db_Result {
 	private $result = NULL;
 
 	public function __construct(mysqli_result $result) {

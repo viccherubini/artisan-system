@@ -1,9 +1,8 @@
 <?php
 
-require_once 'Library.php';
 require_once 'Sql.php';
 
-class Artisan_Insert extends Artisan_Sql {
+class Artisan_Sql_Insert extends Artisan_Sql {
 	protected $into_table = NULL;
 	protected $insert_field_list = array();
 	protected $insert_field_value_list = array();

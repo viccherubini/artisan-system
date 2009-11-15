@@ -1,9 +1,8 @@
 <?php
 
-require_once 'Library.php';
 require_once 'Sql.php';
 
-class Artisan_Delete extends Artisan_Sql {
+class Artisan_Sql_Delete extends Artisan_Sql {
 	protected $from_table = NULL;
 	protected $limit = 0;
 	

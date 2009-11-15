@@ -1,6 +1,5 @@
 <?php
 
-require_once 'Library.php';
 require_once 'Sql.php';
 
 class Artisan_Select extends Artisan_Sql {

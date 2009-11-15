@@ -1,5 +1,6 @@
 <?php
 
+require_once 'Library.php';
 
 class Artisan_Db {
 	private $conn = NULL;
@@ -92,7 +93,7 @@ class Artisan_Db {
 					$this->query_list['success'][] = $sql;
 				}
 				
-				return new Artisan_Result($result);
+				return new Artisan_Db_Result($result);
 			}
 		}
 		
@@ -143,14 +144,14 @@ class Artisan_Db {
 
 	public function select() {
 		if ( NULL === $this->select ) {
-			$this->select = new Artisan_Select($this);
+			$this->select = new Artisan_Sql_Select($this);
 		}
 		return $this->select;
 	}
 	
 	public function insert() {
 		if ( NULL === $this->insert ) {
-			$this->insert = new Artisan_Insert($this);
+			$this->insert = new Artisan_Sql_Insert($this);
 		}
 		$this->insert->setReplace(false);
 		return $this->insert;
@@ -158,21 +159,21 @@ class Artisan_Db {
 	
 	public function update() {
 		if ( NULL === $this->update ) {
-			$this->update = new Artisan_Update($this);
+			$this->update = new Artisan_Sql_Update($this);
 		}
 		return $this->update;
 	}
 
 	public function delete() {
 		if ( NULL === $this->delete ) {
-			$this->delete = new Artisan_Delete($this);
+			$this->delete = new Artisan_Sql_Delete($this);
 		}
 		return $this->delete;
 	}
 
 	public function replace() {
 		if ( NULL == $this->insert ) {
-			$this->insert = new Artisan_Insert($this);
+			$this->insert = new Artisan_Sql_Insert($this);
 		}
 		$this->insert->setReplace(true);
 		return $this->insert;
