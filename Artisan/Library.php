@@ -23,3 +23,25 @@ function er($k, $a, $return = NULL) {
 	
 	return $return;
 }
+
+
+function rename_controller($controller) {
+	$controller = strtolower(trim($controller));
+	
+	$controller = preg_replace('/[^a-z_0-9]/i', NULL, $controller);
+	$controller = str_replace('_', ' ', $controller);
+	$controller = ucwords($controller);
+	$controller = str_replace(' ', '_', $controller);
+	
+	return $controller;
+}
+
+function rename_method($method) {
+	$method = preg_replace('/[^a-z_0-9]/i', NULL, $method);
+	return strtolower($method);
+}
+
+function rename_view($view) {
+	$view = preg_replace('/[^a-z_0-9\-]/i', NULL, $view);
+	return strtolower($view);
+}
