@@ -1,12 +1,6 @@
 <?php
 
 /**
- * @see Artisan_Template_Exception
- */
-require_once 'Artisan/Template/Exception.php';
-
-
-/**
  * The Artisan_Template class allows a programmer to use templates with their site.
  * A template can come from any source (the two most common are database and filesystem).
  * After being loaded, the values are replaced with values specified in the code.
