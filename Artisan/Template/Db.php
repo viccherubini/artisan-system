@@ -29,10 +29,10 @@ class Artisan_Template_Database extends Artisan_Template {
 	 * @param $DB Database object that already has a connection.
 	 * @retval Object The new Artisan_Template_Database object.
 	 */
-	public function __construct(Artisan_Db $DB) {
+	public function __construct(Artisan_Db &$DB) {
 		// We can only assume the database has a current connection
 		// as we don't want to attempt to connect.
-		$this->DB = $DB;
+		$this->DB = &$DB;
 	}
 
 	/**

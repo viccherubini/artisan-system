@@ -24,8 +24,8 @@ class Artisan_Server_Curl extends Artisan_Server {
 	 * @param $C The configuration object that contains the server address.
 	 * @retval Object New Artisan_Server_Curl object.
 	 */
-	public function __construct(Artisan_Config $config) {
-		$this->_server_address = $config->server_address;
+	public function __construct(Artisan_Config &$C) {
+		$this->_server_address = $C->server_address;
 	}
 	 
 	/**

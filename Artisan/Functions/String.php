@@ -32,6 +32,10 @@ function asfw_rename_controller($controller) {
 	return $controller;
 }
 
+function asfw_rename_model($model) {
+	return asfw_rename_controller($model);
+}
+
 /**
  * Renames a method in a controller, all lowercase with underscores for method names.
  * @author vmc <vmc@leftnode.com>

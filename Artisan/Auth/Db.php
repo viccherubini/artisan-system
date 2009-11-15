@@ -5,8 +5,8 @@
  */
 require_once 'Artisan/Auth.php';
 
-require_once 'Artisan/Function/Encryption.php';
-require_once 'Artisan/Function/Array.php';
+require_once 'Artisan/Functions/Encryption.php';
+require_once 'Artisan/Functions/Array.php';
 
 /**
  * This class authenticates a user against a database.

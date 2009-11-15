@@ -5,11 +5,11 @@
  */
 require_once 'Artisan/Log/Exception.php';
 
-require_once 'Artisan/Function/Array.php';
+require_once 'Artisan/Functions/Array.php';
 
-require_once 'Artisan/Function/Input.php';
+require_once 'Artisan/Functions/Input.php';
 
-require_once 'Artisan/Function/Database.php';
+require_once 'Artisan/Functions/Database.php';
 
 define('LOG_GENERAL', 100, false);
 define('LOG_ERROR', 200, false);
@@ -147,4 +147,43 @@ class Artisan_Log {
 		$this->_writer = $W;
 		return $this;
 	}
+
+	/**
+	 * Flushes out the log to a specific location.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval boolean True if the log was successfully flushed, false if the writer is not set up properly.
+	 */
+	/*public function flush() {
+		$final_log = array();
+		
+		if ( true === is_null($this->_writer) || false === $this->_writer instanceof Artisan_Log_Writer ) {
+			return false;
+		}
+		
+		// Swap the values of $fll to keys for quick lookups
+		$fll = asfw_make_values_keys($this->_flush_level_list);
+		foreach ( $this->_log as $log ) {
+			if ( true === asfw_exists($log['type'], $fll) ) {
+				$final_log[] = $log;
+			}
+		}
+		
+		$this->_writer->flush($final_log);
+		$this->_log = array();
+		return true;
+	}*/
+
+	/**
+	 * Writes the first element of the log array only and resets the array.
+	 * @author vmc <vmc@leftnode.com>
+	 * @retval boolean Returns true.
+	 */
+	/*public function write() {
+		$log = array();
+		@reset($this->_log);
+		$log[] = current($this->_log);
+		$this->_log = $log;
+		$this->flush();
+		return true;
+	}*/
 }

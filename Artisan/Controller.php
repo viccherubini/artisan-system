@@ -5,9 +5,9 @@
  */
 require_once 'Artisan/Controller/Exception.php';
 
-require_once 'Artisan/Function/String.php';
+require_once 'Artisan/Functions/String.php';
 
-require_once 'Artisan/Function/Array.php';
+require_once 'Artisan/Functions/Array.php';
 
 require_once 'Artisan/Controller/Router.php';
 
@@ -215,8 +215,9 @@ abstract class Artisan_Controller {
 		$this->_layout_dir = rtrim($layout_dir, DIRECTORY_SEPARATOR);
 	}
 	
-	public function url($url) {
-		return $this->view->url($url);
+	public function url() {
+		$argv = func_get_args();
+		return $this->view->url(implode('/', $argv));
 	}
 	
 	protected function _getControllerName() {

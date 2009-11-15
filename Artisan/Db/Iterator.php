@@ -9,11 +9,13 @@ class Artisan_Db_Iterator implements Iterator {
 	private $_filter_count = 0;
 	
 	private $_limit = -1;
+	private $_page = 0;
 	
 	public function __construct(Artisan_Db_Result $result, $object) {
+		$this->_reset();
+		
 		$this->_result = $result;
 		$this->_object = $object;
-		$this->_key = 0;
 	}
 
 	public function __destruct() {
@@ -22,20 +24,6 @@ class Artisan_Db_Iterator implements Iterator {
 			$this->_result->free();
 			$this->_result = NULL;
 		}
-	}
-
-	public function set($data) {
-		if ( true === is_array($data) ) {
-			$this->_object->loadFromArray($data);
-		}
-		return $this->_object;
-	}
-
-	public function setAdditionalData($addl) {
-		if ( true === is_array($addl) ) {
-			$this->_object->setAdditionalData($addl);
-		}
-		return $this->_object;
 	}
 
 	/**
@@ -47,10 +35,13 @@ class Artisan_Db_Iterator implements Iterator {
 		return $this->_load($this->_key);
 	}
 	
+	
+	
 	public function last() {
 		$num_rows = $this->_result->numRows()-1;
 		return $this->_load($num_rows);
 	}
+	
 	
 	/**
 	 * Returns the key of the current element.
@@ -60,6 +51,7 @@ class Artisan_Db_Iterator implements Iterator {
 	public function key() {
 		return $this->_key;
 	}
+	
 	
 	/**
 	 * Moves to the next element.
@@ -71,6 +63,7 @@ class Artisan_Db_Iterator implements Iterator {
 		return $this->_key;
 	}
 
+
 	/**
 	 * Rewinds to the first row of the result.
 	 * @author tandreas <tandreas@gmail.com>
@@ -81,6 +74,7 @@ class Artisan_Db_Iterator implements Iterator {
 		$this->_result->row(0);
 		return true;
 	}
+	
 	
 	/**
 	 * Determines if the next() or current() calls are valid.
@@ -102,25 +96,35 @@ class Artisan_Db_Iterator implements Iterator {
 		return $this->_object;
 	}
 	
-	public function fetch($field=NULL) {
+	public function fetch() {
 		$result_list = array();
+		
 		$i=0;
 		foreach ( $this as $obj ) {
-			if ( true === $this->_applyFilter($obj->getArray()) && ( -1 == $this->_limit || $i < $this->_limit) ) {
+			if ( true === $this->_applyFilter($obj->get()) && ( -1 == $this->_limit || $i < $this->_limit) ) {
 				$result_list[] = clone $obj;
 				$i++;
 			}
 		}
-
-		$this->_limit = -1;
-		$this->_filter = array();
-		$this->_filter_count = 0;
-
-		if ( false === empty($field) && 1 == $i && true === isset($result_list[0]->$field) ) {
-			return $result_list[0]->$field;
-		}
-
+		
+		$this->_reset();
+		
+		//if ( $this->_page > 0 && $this->_limit > -1 ) {
+		//	$offset = ( ($this->_page-1) * $this->_limit );
+		//	$length = ($this->_page * $this->_limit );
+		//	$result_list = array_slice($result_list, $offset, $length);
+		//}
+		
+		//if ( false === empty($field) && 1 == $length ) {
+		//	$item = current($result_list);
+		//	return $item->$field;
+		//}
+		
 		return new Artisan_Iterator($result_list);
+	}
+	
+	public function length() {
+		return $this->_result->numRows();
 	}
 	
 	public function limit($limit) {
@@ -130,6 +134,12 @@ class Artisan_Db_Iterator implements Iterator {
 		}
 		return $this;
 	}
+	
+	public function page($page) {
+		$this->_page = intval($page);
+		return $this;
+	}
+	
 	
 	public function filter($field, $value) {
 		$this->_limit = -1;
@@ -148,14 +158,13 @@ class Artisan_Db_Iterator implements Iterator {
 		$this->_result->row($i);
 		$row = $this->_result->fetch();
 
+		$model = clone $this->_object;
 		if ( true === is_array($row) ) {
-			$this->_object->loadFromArray($row);
+			$model->loadModel($row);
 		}
 
-		return $this->_object;
+		return $model;
 	}
-	
-	
 	
 	
 	private function _hasFilter() {
@@ -236,5 +245,13 @@ class Artisan_Db_Iterator implements Iterator {
 		}
 		
 		return $passed;
+	}
+	
+	private function _reset() {
+		$this->_page = 0;
+		$this->_limit = -1;
+		$this->_filter = array();
+		$this->_filter_count = 0;
+		return true;
 	}
 }

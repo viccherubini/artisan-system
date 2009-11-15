@@ -1,6 +1,6 @@
 <?php
 
-require_once 'Artisan/Function/String.php';
+require_once 'Artisan/Functions/String.php';
 
 class Artisan_Controller_View {
 	///< The root of the application in which to load up controllers and views.
@@ -108,6 +108,11 @@ class Artisan_Controller_View {
 		return $img;
 	}
 	
+	public function href($url, $text) {
+		$text = $this->safe($text);
+		$href = '<a href="' . $url . '">' . $text . '</a>';
+		return $href;
+	}
 	
 	public function url() {
 		$argc = func_num_args();

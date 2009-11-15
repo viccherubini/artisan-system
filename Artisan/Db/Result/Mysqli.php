@@ -1,6 +1,6 @@
 <?php
 
-require_once 'Artisan/Function/Array.php';
+require_once 'Artisan/Functions/Array.php';
 
 /**
  * @see Artisan_Db_Result
@@ -26,8 +26,8 @@ class Artisan_Db_Result_Mysqli extends Artisan_Db_Result {
 	 * @param $RES The result object from the mysqli driver.
 	 * @retval Object A new Artisan_Db_Result_Mysqli object.
 	 */
-	public function __construct(mysqli_result $RES) {
-		$this->RESULT = $RES;
+	public function __construct(mysqli_result &$RES) {
+		$this->RESULT = &$RES;
 	}
 	
 	/**

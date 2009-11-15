@@ -1,6 +1,6 @@
 <?php
 
-require_once 'Artisan/Function/String.php';
+require_once 'Artisan/Functions/String.php';
 
 require_once 'Artisan/Controller/Exception.php';
 

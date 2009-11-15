@@ -22,8 +22,4 @@ class Artisan_Registry {
 		}
 		return $item;
 	}
-	
-	public function build($model, $pkey=NULL) {
-		
-	}
 }
