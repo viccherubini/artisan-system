@@ -1,10 +1,6 @@
 <?php
 
-require_once 'Artisan/Functions/Array.php';
-
-define('ARTISAN_ERROR', 100, false);
-define('ARTISAN_WARNING', 200, false);
-define('ARTISAN_NOTICE', 300, false);
+require_once 'Artisan/Function/Array.php';
 
 /**
  * Artisan_Exception is a child of PHP's internal class Exception. As a result, it is *NOT* built
@@ -32,8 +28,8 @@ class Artisan_Exception extends Exception {
 	 * @param $error_message The specific error message.
 	 * @retval Object Returns new Artisan_Exception object.
 	 */
-	public function __construct($error_code, $error_message) {
-		parent::__construct($error_message, $error_code);
+	public function __construct($error_message) {
+		parent::__construct($error_message, 400);
 		
 		$this->_line_number = parent::getLine();
 		$this->_file_name = parent::getFile();
