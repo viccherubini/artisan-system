@@ -7,45 +7,21 @@
  * @todo Implement the ability to cache variables and parsed templates.
  */
 class Artisan_Template {
-	///< The code to parse.
 	protected $_template_code = NULL;
-	
-	///< The parsed code.
 	protected $_template_code_parsed = NULL;
-	
-	///< The list of variables in this template to replace. Key/value pair array.
 	protected $_replace_list = array();
-	
-	///< Turn debugging on or off, if on, unparsed variables will be left, if off, they will be replaced with nothing.
 	protected $_debug_mode = false;
 	
-	/**
-	 * The main constructor for the Artisan_Template class.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval object New template instance.
-	 */
 	public function __construct($template_code = NULL) {
 		$this->setTemplateCode($template_code);
 	}
 
-	/**
-	 * Destructor for the Artisan_Template class. Destroys all data.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval null Does not return a value.
-	 */
 	public function __destruct() {
 		unset($this->_template_code, $this->_replace_list, $this->_template_code_parsed);
 	}
 	
-	
-	/**
-	 * Sets the debugging mode. If in debugging mode, unparsed variables will remain, 
-	 * otherwise, if not in debugging mode, unparsed variables will be parsed out.
-	 * @author vmc <vmc@leftnode.com>
-	 * @param $debug_mode Boolean value, sets the current debugging mode.
-	 * @retval boolean Returns true;
-	 */
 	public function setDebugMode($debug_mode) {
+		// If in debug mode, unparsed variable will remain, otherwise, they'll be stripped out.
 		if ( true === is_bool($debug_mode) ) {
 			$this->_debug_mode = $debug_mode;
 		}
@@ -62,26 +38,12 @@ class Artisan_Template {
 		return $this;
 	}
 	
-	/**
-	 * Loads a template from the currently set theme and
-	 * replaces it with variables in $replace_list.
-	 * @author vmc <vmc@leftnode.com>
-	 * @param $template The name of the template to load from the filesystem or database.
-	 * @param $replace_list A hash array of variables to replace. Key is the variable name, value is the replacement value.
-	 * @retval string Returns the parsed template.
-	 */	
 	public function parse($replace_list = array()) {
 		$this->_replace_list = $replace_list;
 		$this->_parse();
 		return $this->_template_code_parsed;
 	}
 	
-	/**
-	 * Parsed out all of the variables in a template. Sets the internal code to be the
-	 * parsed code.
-	 * @author vmc <vmc@leftnode.com>
-	 * @retval boolean Returns true.
-	 */
 	protected function _parse() {
 		$result_list = array();
 		preg_match_all("/\{(\w+)\}/i", $this->_template_code, $result_list, PREG_SET_ORDER);
