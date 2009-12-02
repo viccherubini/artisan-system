@@ -163,7 +163,7 @@ class Artisan_View {
 		return NULL;
 	}
 	
-	private function _makeUrl($argc, $argv) {
+	private function makeUrl($argc, $argv) {
 		if ( 0 == $argc ) {
 			return NULL;
 		}
