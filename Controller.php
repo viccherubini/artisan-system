@@ -100,6 +100,8 @@ abstract class Artisan_Controller {
 	}
 	
 	public function render($name=NULL, $block_name=NULL) {
+		$controller = $this->controller;
+		
 		if ( true === empty($name) ) {
 			$view = $this->method;
 		} else {
@@ -114,7 +116,7 @@ abstract class Artisan_Controller {
 		}
 		
 		$view = lib_rename_view($view);
-		$this->rendered_view = $this->view->render($this->controller, $view);
+		$this->rendered_view = $this->view->render($controller, $view);
 		
 		if ( false === empty($block_name) ) {
 			$this->setBlock($block_name, $this->rendered_view);
