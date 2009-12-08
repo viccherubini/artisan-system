@@ -3,68 +3,68 @@
 require_once 'Func.Library.php';
 
 class Artisan_Iterator implements Iterator {
-	private $_list = array();
-	private $_key = 0;
+	private $list = array();
+	private $key = 0;
 	
-	private $_length = 0;
-	private $_filter = array();
+	private $length = 0;
+	private $filter = array();
 	
-	private $_limit = -1;
-	private $_page = 0;
+	private $limit = -1;
+	private $page = 0;
 	
 	public function __construct(array $list) {
-		$this->_list = $list;
-		$this->_key = 0;
-		$this->_length = count($list);
+		$this->list = $list;
+		$this->key = 0;
+		$this->length = count($list);
 	}
 
 	public function rewind() {
-		if ( $this->_page > 0 && $this->_limit > -1 ) {
-			$this->_key = ( ($this->_page-1) * $this->_limit );
-			$this->_length = ($this->_page * $this->_limit );
+		if ( $this->page > 0 && $this->limit > -1 ) {
+			$this->key = ( ($this->page-1) * $this->limit );
+			$this->length = ($this->page * $this->limit );
 		} else {
-			$this->_key = 0;
+			$this->key = 0;
 		}
 
-		reset($this->_list);
+		reset($this->list);
 	}
 	
 	public function current() {
-		return $this->_list[$this->_key];
+		return $this->list[$this->key];
 	}
 	
 	public function last() {
-		return $this->_list[$this->_length-1];
+		return $this->list[$this->length-1];
 	}
 	
 	public function key() {
-		return $this->_key;
+		return $this->key;
 	}
 	
 	public function next() {
-		$this->_key++;
-		return next($this->_list);
+		$this->key++;
+		return next($this->list);
 	}
 	
 	public function valid() {
-		return ( $this->_key != $this->_length && true === isset($this->_list[$this->_key]) );
+		return ( $this->key != $this->length && true === isset($this->list[$this->key]) );
 	}
 
 	public function page($page) {
-		$this->_page = intval($page);
+		$this->page = intval($page);
 		return $this;
 	}
 
 	public function limit($limit) {
-		$this->_limit = $limit;
+		$this->limit = $limit;
 		return $this;
 	}
 
 	public function length() {
-		return $this->_length;
+		return $this->length;
 	}
 	
 	public function getAll() {
-		return $this->_list;
+		return $this->list;
 	}
 }
