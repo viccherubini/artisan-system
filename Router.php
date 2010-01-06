@@ -21,6 +21,7 @@ class Artisan_Router {
 	
 	public function setConfig($config) {
 		$this->config = $config;
+		return $this;
 	}
 	
 	public function dispatch() {
