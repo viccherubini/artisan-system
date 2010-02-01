@@ -110,8 +110,15 @@ abstract class Artisan_Validator {
 						}
 						
 						case 'email': {
-							if ( false === validate_email($data_value) ) {
-								$error = sprintf('The field <strong>%s</strong> is not a valid e-mail address.', $label);
+							if ( false === filter_var($data_value, FILTER_VALIDATE_EMAIL) ) {
+								$error = sprintf('The field <strong>%s</strong> is not a valid email address.', $label);
+							}
+							break;
+						}
+						
+						case 'url': {
+							if ( false === filter_var($data_value, FILTER_VALIDATE_URL) ) {
+								$error = sprintf('The field <strong>%s</strong> is not a valid URL.', $label);
 							}
 							break;
 						}

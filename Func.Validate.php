@@ -94,39 +94,3 @@ function validate_creditcard($v) {
 	}
 	return $sum % 10 == 0;
 }
-
-function validate_email($v) {
-	if ( true === empty($v) ) {
-		return false;
-	}
-
-	$v = trim($v);
-	if ( 0 === preg_match("/([a-z0-9-_.!#$%^&*~`]+)(@[a-z0-9-]+\.[a-z]+)/i", $v) ) {
-		return false;
-	}
-	return true;
-}
-
-function validate_uri($v) {
-	/**
-	 * $matches will look like:
-	 * @code
-	 * $matches => Array(
-	 *  [0] => $u,
-	 *  [1] => http:// (also supports svn+ssh:// or other protocols)
-	 *  [2] => username:password@
-	 *  [3] => (www.|subdomain.)example.com -- If there is a subdomain or www., it is included here
-	 *  [4] => :443
-	 *  [5] => /index.php?query_string#anchor
-	 * );
-	 * @endcode
-	 * I'm kinda proud of that RegEx :)
-	 */
-	if ( true === empty($v) ) {
-		return false;
-	}
-	
-	$matches = array();
-	$match_uri = preg_match('#^([a-z\-\+]+://)?([a-z0-9]+:[a-z0-9]+\@){0,1}([a-z0-9.]*[a-z0-9-]+\.[a-z]+){1}(:[0-9]{1,5}){0,1}(.*)#i', $v, $matches);
-	echo $match_uri;
-}

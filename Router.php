@@ -12,9 +12,9 @@ class Artisan_Router {
 	private $ext = '.php';
 	private $suffix = '_Controller';
 	
-	public function __construct($config, $alias) {
+	public function __construct($config) {
 		$this->setConfig($config);
-		$this->setAlias($alias);
+		//$this->setAlias($alias);
 	}
 
 	public function __destruct() {
@@ -27,7 +27,7 @@ class Artisan_Router {
 	}
 
 	public function setAlias($alias) {
-		$this->alias= $alias;
+		$this->alias = $alias;
 		return $this;
 	}
 	

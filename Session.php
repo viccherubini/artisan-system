@@ -23,24 +23,33 @@ class Artisan_Session {
 	}
 	
 	public function start($session_name = NULL) {
-		if ( false === empty($session_name) ) {
-			$match_alpha_num = preg_match('/^[a-zA-Z0-9]+$/', $session_name);
-			if ( false === $match_alpha_num || true === is_numeric($session_name) ) {
-				$session_name = NULL;
-			}
-		}
-
-		if ( false === empty($session_name) ) {
-			$this->session_name = $session_name;
-			session_name($session_name);
-		} else {
-			$this->session_name = session_name();
-		}
+		$started = false;
 		
-		$started = session_start();
-		$this->session_id = session_id();
+		if ( php_sapi_name() != 'cli' ) {
+			if ( 0 == @ini_get('session.auto_start') && false === defined('SID') ) {
+				if ( false === empty($session_name) ) {
+					$match_alpha_num = preg_match('/^[a-zA-Z0-9]+$/', $session_name);
+					if ( false === $match_alpha_num || true === is_numeric($session_name) ) {
+						$session_name = NULL;
+					}
+				}
 
-		$this->started = true;
+				if ( false === empty($session_name) ) {
+					$this->session_name = $session_name;
+					session_name($session_name);
+				} else {
+					$this->session_name = session_name();
+				}
+				
+				$started = session_start();
+			} else {
+				$started = true;
+			}
+			
+			$this->session_id = session_id();
+
+			$this->started = true;
+		}
 		
 		return $started;
 	}
