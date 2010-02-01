@@ -58,6 +58,10 @@ abstract class Artisan_Controller {
 		return $this->layout;
 	}
 	
+	public function getView() {
+		return $this->view;
+	}
+	
 	public function load() {
 		$ds = DIRECTORY_SEPARATOR;
 		
