@@ -32,9 +32,7 @@ class Artisan_Template {
 		return $this;
 	}
 	
-	public function parse($replace_list = array()) {
-		$this->replace_list = $replace_list;
-
+	public function parse() {
 		$result_list = array();
 		preg_match_all("/\{(\w+)\}/i", $this->template_code, $result_list, PREG_SET_ORDER);
 	
