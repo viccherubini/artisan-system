@@ -1,0 +1,51 @@
+#!/usr/bin/perl -w
+
+# Integration with Mantis Bug Tracker for writing messages to bugs from the command line.
+# Invoke by adding #{bug_id} to any commit message:
+# git ci file.php -m "Fixed #103 by adding an updated regular expression."
+
+use strict;
+use DBI;
+
+my $commit_msg = `git log -1 --format="%s" HEAD`;
+my $changed_files = `git diff --name-only HEAD^`;
+
+my $gitbot_user_id = 3; # A user with this ID has been created in the bug tracker
+
+if ( $commit_msg =~ m/\#(\d*)/i ) {
+	# Only connect to the database if necessary.
+	my $dbh = DBI->connect('DBI:mysql:##DBNAME##:##DBSERVER##', '##DBUSERNAME##', '##DBPASSWORD##') or die;
+	
+	# ID of the bug from the commit message.
+	my $bug_id = $1;
+	
+	# Get a nicer looking commit message.
+	$commit_msg = `git log -1 --format="<%cn> %s (%h)" HEAD`;
+	
+	# First, ensure the bug actually exists
+	my $stm = $dbh->prepare('SELECT * FROM `mantis_bug_table` WHERE id = ?');
+	$stm->execute($bug_id);
+
+	$commit_msg  = $commit_msg . "\n";
+	$commit_msg .= "=== Changed Files ===\n";
+	$commit_msg .= '&lt;pre&gt;' . $changed_files . '&lt;/pre&gt;';
+
+	# If the bug exists, add a note.
+	if ( $stm->rows == 1 ) {
+		$stm = $dbh->prepare("INSERT INTO `mantis_bugnote_table` (bug_id, reporter_id, bugnote_text_id, date_submitted, last_modified) VALUES (?, ?, ?, NOW(), NOW())");
+		$stm->execute($bug_id, $gitbot_user_id, 1);
+		my $insert_id = $dbh->last_insert_id(undef, undef, qw(mantis_bugnote_table id));
+		
+		$stm = $dbh->prepare("INSERT INTO `mantis_bugnote_text_table` (id, note) VALUES (?, ?)");
+		$stm->execute($insert_id, $commit_msg);
+
+		$stm = $dbh->prepare("UPDATE `mantis_bugnote_table` SET bugnote_text_id = ? WHERE id = ?");
+		$stm->execute($insert_id, $insert_id);
+	}
+
+	undef $stm;
+	
+	$dbh->disconnect();
+}
+
+exit 0;
